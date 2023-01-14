@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="msvalidate.01" content="9BDlx6FiNE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wangkejie.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="这是一篇对Run Loop开发文档《Threading Program Guide:Run Loops》的翻译，来源于苹果开发文档。 Run loops 是和线程相关的基础部分。一个run loop是一个用来调度工作和协调接受的事件的循环。一个run loop的目的是有任务的时候保持线程忙碌，没有任务的时候线程休眠。 Runloop的管理并不是完全自动的，你必须编写线程代码在合适的时间点启动run">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RunLoop翻译">
+<meta property="og:url" content="https://wangkejie.com/iOS/RunLoop/runloopfanyi.html">
+<meta property="og:site_name" content="王科杰">
+<meta property="og:description" content="这是一篇对Run Loop开发文档《Threading Program Guide:Run Loops》的翻译，来源于苹果开发文档。 Run loops 是和线程相关的基础部分。一个run loop是一个用来调度工作和协调接受的事件的循环。一个run loop的目的是有任务的时候保持线程忙碌，没有任务的时候线程休眠。 Runloop的管理并不是完全自动的，你必须编写线程代码在合适的时间点启动run">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-09-15T03:26:39.000Z">
+<meta property="article:modified_time" content="2023-01-14T03:12:23.774Z">
+<meta property="article:author" content="Jack Wang">
+<meta property="article:tag" content="RunLoop">
+<meta property="article:tag" content="RunLoop翻译">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wangkejie.com/iOS/RunLoop/runloopfanyi.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>RunLoop翻译 | 王科杰</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?93e26277de0cf2c5851167f2c6dcaa7d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">王科杰</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Jack's Notes</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">71</span></a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/me/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签<span class="badge">78</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类<span class="badge">70</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL29yZ3Mvd2FuZ2tlamllL3JlcG9zaXRvcmllcw==" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/iOS/RunLoop/runloopfanyi.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack Wang">
+      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王科杰">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RunLoop翻译
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-09-15 11:26:39" itemprop="dateCreated datePublished" datetime="2017-09-15T11:26:39+08:00">2017-09-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">面试总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93/RunLoop%E7%BF%BB%E8%AF%91/" itemprop="url" rel="index"><span itemprop="name">RunLoop翻译</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/iOS/RunLoop/runloopfanyi.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/iOS/RunLoop/runloopfanyi.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这是一篇对Run Loop开发文档《Threading Program Guide:Run Loops》的翻译，来源于苹果开发文档。</p>
+<p>Run loops 是和线程相关的基础部分。一个run loop是一个用来调度工作和协调接受的事件的循环。一个run loop的目的是有任务的时候保持线程忙碌，没有任务的时候线程休眠。</p>
+<p>Runloop的管理并不是完全自动的，你必须编写线程代码在合适的时间点启动runloop，并且响应接收的事件。Cocoa和Core框架都提供了runloop对象供开发者配置和管理线程的runloop。然而你的应用显示不需要创建这些对象，app的框架在程序启动的过程中已经自动设置并且运行了在主线程的runloop。</p>
+<p>下面的章节提供了更多关于run loops和怎么在应用中配置run loops的信息，更多的关于runloop 对象的信息查看NSRunLoop Class Reference和CFRunLoop Reference</p>
+<h2 id="Run-Loop解析"><a href="#Run-Loop解析" class="headerlink" title="Run Loop解析"></a>Run Loop解析</h2><p>一个run loop和它的名字听起来非常相似，它是一个你的线程进入的循环，并且用户使用它运行事件处理程序来应答事件。 你的代码控制实现runloop的真正的循环部分。换句话说，你的代码提供了for或者while用来驱动run loop。在你的循环内，你使用一个run loop对象来启动事件处理代码—-这些代码能够接收事件并且调用已安装的事件处理程序。</p>
+<p>runloop接收的事件来自两个不同类型的源，input source负责分发异步事件，消息通常来自其他的线程或者一个不同的应用程序。timer source 分发同步事件，这些事件发生在计划的时间点或者重复的时间间隔。两种类型的事件源都用一个应用程序特定的程序处理方式来处理到来的事件。</p>
+<p>图标3-1展示了runloop和各种各样的事件源的概念结构，输入源异步地将事件发送给相应的处理程序，并且导致 runUntilDate:方法被在特定线程相关的run loop调用使得runloop终止，定时器源会给把事件传递给处理程序，但是不会导致runloop的终止。</p>
+<p>图略，自己查看<br>除了处理输入源，run loops也会生成关于run loop的行为的通知，注册run-loop 观察者可以接收这些通知并且可以使用这些通知在线程上做额外的处理。你可以使用Core Foundation在线程上添加run loop观察者。</p>
+<p>下面的节提供了更多关于run loop组成和run loop处理模式的信息，同样描述了runloop在处理事件的不同时刻获取到的通知。</p>
+<h2 id="Run-Loop模式"><a href="#Run-Loop模式" class="headerlink" title="Run Loop模式"></a>Run Loop模式</h2><p>一个run loop模式是一个将要被监听额输入源和定时器的集合，以及等待run loop通知的观察者集合。你每次启动run loop，你显示或者隐士的指定一个“模式”来运行，在run loop的运行过程中，只有和指定模式相关的源才会被监听和分发它们的事件（相似的，只有和指定模式关联的观察者才能获得run loop运行进度的通知），和其他模式相关的输入源会将任何接收到的事件保存起来，直到后来以合适的模式运行run loop。</p>
+<p>在你的代码中，你可以通过名字识别运行模式，Cocoa和Core Foundation都定义了一个默认的模式和其他几个通用的模式，可以通过字符串在代码中指定。你可以通过简单为自定义的模式指定字符串名的方式实现自定义模式。虽然你在自定义模式下赋值的名字是任意的，但是这些模式的内容却不是随意的，你必须确保为你创建的模式添加一个或多个输入源、定时器或者run loop观察者，这样自定义的模式才会可用。</p>
+<p>你使用模式可以在特定run loop运行中过滤掉不想要的源的事件。大多数情况下，你会在“default”模式运行代码。一个模态的面板，然而可能运行在“modal”模式下，因为在这种模式下，只有和模态面板相关的源才能够把事件传递到线程上。（这里是Mac开发的吧，不理解） ,对于次要的线程，你可以使用自定义的模式阻止低优先级的输入源在时间要求比较严格的操作期间传递事件。</p>
+<blockquote>
+<p>注意:模式和事件的输入源要区别对待，模式不是事件的类型。比如：你不能使用模式去单独匹配鼠标按下事件或者单独匹配键盘事件。你可以使用模式来监听一组不同的端口（ports）,暂时挂起定时器。也可以改变正在被监控的源和run loop的观察者。</p>
+</blockquote>
+<p>表3-1列举了Cocoa和Core Foundationd的标准模式和使用的描述信息，name这一栏列举了在代码中指定模式所使用的常量。图略。。。</p>
+<p><code>Default</code>:大多数操作都使用的模式，大多数情况下你应该在这个模式下开启run loop，配置输入源。</p>
+<p><code>Connection</code>:Cocoa使用这个模式结合NSConnection对象来检查依赖。你自己几乎不会用到这种模式</p>
+<p><code>Modal</code>：Cocoa使用这个模式区分发送到模态面板的事件。</p>
+<p><code>Event tracking</code>:Cocoa用这个模式在鼠标拖拽和其他类型用户界面操作跟踪过程中限制输入的事件。</p>
+<p><code>Common modes</code>:这是一个可以通常使用的模式的课配置的组合，和这个模式相关的输入源同样会和组里面的任意一个模式关联。对于Cocoa application，这个组默认包含了default、modal、event tracking模式，Core Foundation初始化时仅仅包含了default模式，你可以使用CFRunLoopAddCommonMode 添加自定义的模式。</p>
+<h2 id="输入源"><a href="#输入源" class="headerlink" title="输入源"></a>输入源</h2><p>输入源异步的向你的线程分发事件，事件的来源取决于输入源的类型，通常是两种类型的一种，基于端口的输入源监控你的应用程序的Mach端口，自定义的输入源监控自定义事件源。就你的run loop而言，它不会关心一个输入源是自定义还是基于端口的。系统通常会实现两种输入源，你只管使用就可以了。两种输入源的唯一区别是他们的信号是怎么获得的。基于端口的源由内核发送信号，自定义的源必须手动的在其他线程发信号。</p>
+<p>当你创建了一个输入源，你给它指定一种或者多种运行模式，模式决定了那些输入源在任意给定的时刻会被监视。大多数时间你在default模式下运行，但是也可以指定自定义的模式。如果一个输入源并不在当前模式的监视范围，它产生的任意事件都会被保存直到run loop运行在正确的模式。</p>
+<h3 id="基于端口的源"><a href="#基于端口的源" class="headerlink" title="基于端口的源"></a>基于端口的源</h3><p>Cocoa和Core Foundation为使用端口相关对象和功能创建基于端口的输入源提供内置支持，比如在Cocoa里面，你从来不需要直接创建输入源，你只需要创建一个端口对象，调用NSPort的方法在run loop上添加端口，端口对象处理需要的输入源的创建和配置。</p>
+<p>在Core Foundation，你必须手动的创建端口和run loop输入源。在创建端口和输入源的情况下，需要使用和对外不透透明的(开发文档没有描述)的类型（CFMachPortRef, CFMessagePortRef, or CFSocketRef）相关的函数创建合适的对象。</p>
+<p>比如怎么创建一个和配置一个定制的基于端口的输入源，参考 7.7 配置基于端口的输入源</p>
+<h3 id="自定义输入源"><a href="#自定义输入源" class="headerlink" title="自定义输入源"></a>自定义输入源</h3><p>创建一个定制的输入源，必须使用在Core Foundation中不透明类CFRunLoopSourceRef相关的函数，配置定制的输入源用到几个回调函数。Core Foundation会在不同的点调用这些函数配置源、处理到来的事件、在源从run loop移除的时候销毁源。</p>
+<p>除了定义自定输入源在事件到来时的行为，你必须也定义事件的传递机制，输入源的这部分运行在一个单独的线程上，并且负责提供输入源的数据、在数据准备处理的时候发信号给输入源。事件的传递机制取决于你，但是不需要过于复杂。</p>
+<p>有关如何创建自定义输入源的示例，请7.1 定义一个自定义的输入源。有关自定义输入源的参考信息，请参阅“CFRunLoopSource”。</p>
+<h3 id="Cocoa执行消息选择器源–（Cocoa-Perform-Selector-Sources）"><a href="#Cocoa执行消息选择器源–（Cocoa-Perform-Selector-Sources）" class="headerlink" title="Cocoa执行消息选择器源–（Cocoa Perform Selector Sources）"></a>Cocoa执行消息选择器源–（Cocoa Perform Selector Sources）</h3><p>除了基于端口的输入源，Cocoa定义了一个自定义的输入源允许你在任意线程上执行selector的，就像基于端口的输入源，在目标线程上执行selector的请求被序列化了，减少了许多在多个方法同时执行在一个线程的情况下发生的同步问题。和基于端口不同的是，一个perform selector输入源在执行完selector后会自动把自己从run loop移除。</p>
+<p>在10.5 之前的OS X上，perform selector 输入源主要给主线程发信息，在OS X10.5之后，可以给任意线程发消息。</p>
+<p>当在线程上执行一个selector的时候，该线程必须有一个活跃的run loop，对于你创建的线程，这意味着一直等待到你的代码显示的开启run loop。因为主线程已经开启它的run loop了，所以程序一调用applicationDidFinishLaunching:就向该线程发出调用，run loop每进行一次循环就会处理队列化的perform selector的调用，而不是每次run loop循环处理队列中的选一个处理。</p>
+<p>表3-2列举了定义在NSObject可以在其他线程上执行selecors的方法,因为这些方法定义在NSObject类里面，你可以在任何你可以访问到Objective-C对象的线程中使用，包括POSIX线程。这些方法实际上并不创建新的线程去执行selector。  </p>
+<p>表略。。。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">performSelectorOnMainThread:withObject:waitUntilDone:</span><br><span class="line">performSelectorOnMainThread:withObject:waitUntilDone:modes:</span><br></pre></td></tr></table></figure>
+
+<p>执行特定的selector在主线程的下一个run loop回路。这两个方法给你提供了选项来阻断当前线程直到selector被执行完毕。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">performSelector:onThread:withObject:waitUntilDone:</span><br><span class="line">performSelector:onThread:withObject:waitUntilDone:modes:</span><br></pre></td></tr></table></figure>
+
+<p>执行特定的selector在任意线程上，这些线程通过NSThread对象表示。同样提供了阻断当前线程直到selector被执行。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">performSelector:withObject:afterDelay:</span><br><span class="line">performSelector:withObject:afterDelay:inModes:</span><br></pre></td></tr></table></figure>
+
+<p>在当前线程上下一个run loop回路中执行selector，并附加了延迟选项。因为它等待下一个run loop回路到来才执行selector，这些方法从当前执行的代码中提供了一个自动的微小延迟。多个排队的selector会按照顺序一个一个的执行。</p>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">cancelPreviousPerformRequestsWithTarget:</span></span><br><span class="line"><span class="symbol">cancelPreviousPerformRequestsWithTarget:</span>selector:<span class="type">object</span>:</span><br></pre></td></tr></table></figure>
+
+<p>让你取消一个通过performSelector:withObject:afterDelay: or performSelector:withObject:afterDelay:inModes: method方法发送到当前线程的消息。</p>
+<p>每个方法更多详细信息见NSObject Class Reference.</p>
+<h3 id="定时器源"><a href="#定时器源" class="headerlink" title="定时器源"></a>定时器源</h3><p>定时器源在一个未来预先设置的时间同步地传递事件给你的线程，定时器也是一种线程通知自己做某些事情的实现方式。比如一个搜索框可以使用一个定时器去初始化一个自动搜索，在用户用户连续输入关键字的时间间隔大于某个数时触发搜索。延时的使用给了用户一个在搜索开始之前尽可能多的去打印期望的关键字的机会。</p>
+<p>虽然定时器产生了基于时间的通知，但是一个定时器并不是真正实时机制。就像输入源一样，定时器关联了你的run loop里的特定的模式。如果一个timer并不是处于run loop当前监控的模式，定时器在你以定时器支持的模式运行run loop之前就不会启动。</p>
+<p>相似的，一个定时器如果在run loop执行处理代码的过程中开启了，定时器会等到下一次run loop调用它的处理程序。如果run loop没有运行，定时器永远不会启动。</p>
+<p>你可以配置定时器一次或者重复的产生事件，一个重复的定时器自动的在一个预定的启动(fire)时间开始重复调度自己，并不是从真正的定时器fire的时间开始算。比如，一个定时器被设定在特定的时间点启动而且从那以后5秒钟一次。预定的fire时间将永远会落在于原来5s的时间间隔，如果真正的启动时间延迟。如果启动的时间延迟非常多以至于定时器错过了一次或多次预定的fire时间点，定时器只会在错过的时间片段内启动一次，在错过的时间段fire后，定时器会重新设定下次预设的fire时间。</p>
+<p>配置定时器更多参考 7.6 配置定时器, NSTimer Class Reference or CFRunLoopTimer Reference.</p>
+<h2 id="run-loop-观察者"><a href="#run-loop-观察者" class="headerlink" title="run loop 观察者"></a>run loop 观察者</h2><p>与输入源相反，当一个合适的同步或者异步事件发生时输入源会fire.而run loop观察者在run loop本身自己执行的过程中会在一个特殊的地方fire。你可以用run loop观察者让你的线程去处理一个给定的事件或者为run loop将要进入睡眠准备线程。你同样可以将run loop观察者和run loop下面的事件关联起来。</p>
+<p>run loop的入口</p>
+<p>run loop将要处理一个定时器</p>
+<p>run loop 将要处理一个输入源</p>
+<p>run loop 将要进入睡眠</p>
+<p>run loop 已经唤醒，但是还没有处理唤醒run loop的事件</p>
+<p>退出run loop</p>
+<p>你可以给app用 Core Foundation 添加run loop观察者，创建一个run loop观察者，你创建了一个CFRunLoopObserverRef的类型的对象，这个类型持续跟踪你自定义的回调和它关心的run loop活动部分。</p>
+<p>和定时器相似，run loop观察者可以重复或者单次使用，一个单次使用的观察者会在它fire后在run loop中移除，一个重复的观察者依然依附在run loop上。单次还是重复可以在创建的时候指定。</p>
+<p>有关如何创建run loop 观察者的示例，请参阅6.2 配置run loop。有关参考信息，请参阅CFRunLoopObserver。</p>
+<h2 id="run-loop一些列的事件"><a href="#run-loop一些列的事件" class="headerlink" title="run loop一些列的事件"></a>run loop一些列的事件</h2><p>每次你运行run loop，你的线程的run loop会处理挂起的事件，并且会给它的观察者发送通知。处理的顺序是非常特别的，就是下面顺序。</p>
+<p>1.通知观察者run loop已经进入了循环。</p>
+<p>2.通知观察者所有准备就绪的定时器将要 fire</p>
+<p>3.通知观察者所有非基于端口的输入源将要 fire</p>
+<p>4.fire所有非基于端口的准备fire的输入源</p>
+<p>5.如果一个基于端口的输入源准备好了并且等待fire。立刻fire。到第9部。</p>
+<p>6.通知观察者线程将要睡眠</p>
+<p>7.将线程睡眠直到下面任意一个事件发生。</p>
+<p>一个事件到达了基于端口的源</p>
+<p>定时器fire</p>
+<p>run loop设置了到期的超时事件</p>
+<p>显示的指定run loop唤醒</p>
+<p>8.通知观察者线程已经唤醒。</p>
+<p>9.处理挂起的事件。</p>
+<p>如果一个用户定义的定时器fire。处理定时器事件并且重新启动run loop。到步骤2.</p>
+<p>如果一个输入源fire，传递事件。</p>
+<p>如果run loop是被显示的被唤醒，但超时事件还没有到，重新启动run loop进入步骤2.</p>
+<p>10.通知观察者run loop已经退出。</p>
+<p>因为观察者从定时器和输入源来的通知会在那些事件实际发生之前被传递过来，可能在事件发生的时刻和收到通知的时刻之间有间隔，如果在事件上时效性是非常严格的，你可以使用睡眠和从睡眠中醒来的通知来帮助你关联事件之间的时间。</p>
+<p>因为定时器和其他的周期性的事件会在你运行run loop的时候传递，所以要避免run loop对事件传递的打断。一个经典行为：每当你通过一个循环不断的从应用程序请求事件来实现一个鼠标的跟踪程序的时候。因为你的代码是直接捕获的事件，而不是让应用程序正常的分发这些事件，活跃的定时器将在你的鼠标跟踪程序退出并将控制权返回给应用程序后失效。</p>
+<p>一个run loop可以用run loop对象显示的唤醒，其他的事件同样可以使run loop唤醒。比如添加其他的非基于端口的输入源可以唤醒run loop可以使得输入源可以立即被处理，而不是等到其他事件发生的时候。</p>
+<h2 id="什么时候会用一个run-loop"><a href="#什么时候会用一个run-loop" class="headerlink" title="什么时候会用一个run loop"></a>什么时候会用一个run loop</h2><p>唯一需要显示的运行一个run loop的场景是在应用程序中创建了辅助线程。应用程序主线程的run loop是基础设施的关键部分。所以app的框架提供了运行主线程run loop的代码并且自动开启。iOS的UIAppliaction的run方法（或者OS X 的NSApplication）开启一个应用程序的main loop作为一些列程序启动流程的一部分。如果你使用xcode模板工程创建应用，你应该从来不显示的调用这些例程。</p>
+<p>对于辅助线程，你需要决定一个run loop是不是必要的，如果是，就配置并开启它。你并不需要在任意情况下都开启一个线程的run loop。比如：如果你使用一个线程执行某些长时间运行并且是事先确定的任务，你可以避免开启run loop。run loops的目的是为了应用在你想和线程有更多的交互的场合上的。比如：如果你想做下面的任何事情你就需要开启run loop。</p>
+<p>使用端口或者自定义的输入源和其他线程通信</p>
+<p>在线程上使用定时器</p>
+<p>在cocoa应用中使用任意一个performSelector…方法</p>
+<p>使得线程不被杀死去做周期性任务</p>
+<p>如果你选择使用一个run loop，配置和创建是非常简单的。和所有的线程编程一样，你为在合适的场合下结束你的辅助线程指定计划。通常来说让线程以结束的退出（exit）的方式要比强制让线程终止的办法好。怎么配置和退出run loop的描述信息在 6. 使用run loop对象.</p>
+<h2 id="使用run-loop对象"><a href="#使用run-loop对象" class="headerlink" title="使用run loop对象"></a>使用run loop对象</h2><p>一个run loop对象提供了添加输入源，定时器，观察者和运行run loop的主要接口，每一个线程都单独有一个run loop对象和它关联。在 Cocoa中这个对象是NSRunLoop类的一个实例，在低层次的应用中，是一个CFRunLoopRef类型的指针。</p>
+<p>6.1 获取一个run loop对象</p>
+<p>获取当前线程的run loop只需要用下面的一种方法：</p>
+<p>在Cocoa应用，使用NSRunLoop类的类方法currentRunLoop返回一个NSRunLoop对象</p>
+<p>使用CFRunLoopGetCurrent函数</p>
+<p>虽然这两个并不是可以自由的桥接类型，但是你在必要的时候可以从一个NSRunLoop对象中获取一个CFRunLoop类型。 通过NSRunLoop的getCFRunLoop方法获得，然后传递给Core Foundation的代码。因为两个对象引用了相同的run loop，你可以根据需要随意调用。</p>
+<p>6.2 配置run loop</p>
+<p>当你在一个辅助线程上开启run loop之前，必须给run loop添加至少一个输入源或者一个定时器。如果一个run loop没有任何源来监控，就会立刻退出。参考Configuring Run Loop Sources</p>
+<p>除了添加输入源，你可以添加run loop观察者，并且使用他们监测run loop不同阶段的操作，添加观察者要创建一个 CFRunLoopObserverRef 类型的对象，用CFRunLoopAddObserve函数添加到run loop上。观察者必须用Core Foundation创建，即使在Cocoa应用中。</p>
+<p>3-1是一个绑定了观察者的线程开启它的run loop的代码。这个案例主要展示怎么创建run loop观察者，所以代码只是简单的创建了一个观察者来监控run loop的所有的活动。基本的处理程序（没有展示）简单地在处理定时器请求的时候记录了run loop的活动。</p>
+<p>Listing 3-1 Creating a run loop observer</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)threadMain</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// The application uses garbage collection, so no autorelease pool is needed.</span></span><br><span class="line">    <span class="built_in">NSRunLoop</span>* myRunLoop = [<span class="built_in">NSRunLoop</span> currentRunLoop];</span><br><span class="line">    <span class="comment">// Create a run loop observer and attach it to the run loop.</span></span><br><span class="line">    <span class="built_in">CFRunLoopObserverContext</span>  context = &#123;<span class="number">0</span>, <span class="keyword">self</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>&#125;;</span><br><span class="line">    <span class="built_in">CFRunLoopObserverRef</span>    observer = <span class="built_in">CFRunLoopObserverCreate</span>(kCFAllocatorDefault,</span><br><span class="line">            kCFRunLoopAllActivities, <span class="literal">YES</span>, <span class="number">0</span>, &amp;myRunLoopObserver, &amp;context);</span><br><span class="line">    <span class="keyword">if</span> (observer)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">CFRunLoopRef</span>    cfLoop = [myRunLoop getCFRunLoop];</span><br><span class="line">        <span class="built_in">CFRunLoopAddObserver</span>(cfLoop, observer, kCFRunLoopDefaultMode);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Create and schedule the timer.</span></span><br><span class="line">    [<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:<span class="number">0.1</span> target:<span class="keyword">self</span></span><br><span class="line">                selector:<span class="keyword">@selector</span>(doFireTimer:) userInfo:<span class="literal">nil</span> repeats:<span class="literal">YES</span>];</span><br><span class="line">    <span class="built_in">NSInteger</span>    loopCount = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Run the run loop 10 times to let the timer fire.</span></span><br><span class="line">        [myRunLoop runUntilDate:[<span class="built_in">NSDate</span> dateWithTimeIntervalSinceNow:<span class="number">1</span>]];</span><br><span class="line">        loopCount--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (loopCount);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当给长时间存在的线程配置run loop时，最好添加一个输入源来接收消息。即使你可以进入一个只有一个定时器的run loop，一旦定时器fire，就无效了。会导致run loop退出。绑定一个重复的定时器可以使得run loop在一个长的时间段运行。但是需要定期的触发定时器唤醒你的线程。这实际上是另一种形式的轮询。相反，一个输入源会等待事件的发生，在次之前会保持线程的休眠。</p>
+<p>6.3 开启run loop</p>
+<p>在应用中开启run loop仅仅对于辅助线程是必要的，run loop必须有至少一个输入源或者定时器去监控，如果一个都没有就会立刻结束。</p>
+<p>下面是几种开启run loop的方法：</p>
+<p>无条件的（Unconditionally）</p>
+<p>带有时间限制设置的（With a set time limit）</p>
+<p>在特定的模式下（In a particular mode）</p>
+<p>无条件的进入run loop是最简单的选项，但是也是最不需要的。无条件的运行run loop将线程放在一个永久的循环中，对run loop本身的控制就非常少。你可以添加或者移除输入源或者定时器，但是唯一使得run loop停止的方式是杀死它，而且没有办法在定制的模式下运行run loop。</p>
+<p>与其无条件启动run loop，不如给run loop设置一个超时时间运行反而更好。当你用一个超时时间值时，run loop会一直运行直到事件的到来或者分配的时间用完。如果一个事件到来了，事件就会被分发给处理程序去处理，然后run loop退出。如果分配的时间过期了，你可以简单的重启run loop或者花时间处理任何需要的事物。</p>
+<p>除了设置超时事件值外，你也可以给run loop以指定的模式运行run loop，模式和超时时间值并不互斥，可以同时添加。模式限制了传递给run loop事件的输入源的类型。（详细信息1. Run Loop模式.）</p>
+<p>3-2 是一个线程的主要代码结构，关键部分是这个案例展示了run loop的基本结构，实际上你可以给run loop添加自己的输入源和定时器然后重复的从多个程序例程中调用一个来启动run loop。每次run loop例程程序返回，你检查看看是否有任何可能导致线程结束的条件出现了。这个例子用了Core Foundation run loop程序，所以它可以检查返回结果并且知道为什么run loop退出了，如果你用Cocoa，同样可以用 NSRunLoop的方法以一个相似的方式运行run loop而且不用检查返回值，在3-14.</p>
+<p>Listing 3-2 Running a run loop</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">- (void)skeletonThreadMain</span><br><span class="line">&#123;</span><br><span class="line">    <span class="regexp">//</span> Set up an autorelease pool here <span class="keyword">if</span> not using garbage collection.</span><br><span class="line">    BOOL done = NO;</span><br><span class="line">    <span class="regexp">//</span> Add your sources or timers to the run loop and <span class="keyword">do</span> any other setup.</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="regexp">//</span> Start the run loop but return after each source is handled.</span><br><span class="line">        SInt32    result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, <span class="number">10</span>, YES);</span><br><span class="line">        <span class="regexp">//</span> If a source explicitly stopped the run loop, or <span class="keyword">if</span> there are no</span><br><span class="line">        <span class="regexp">//</span> sources or timers, go ahead and <span class="keyword">exit</span>.</span><br><span class="line">        <span class="keyword">if</span> ((result == kCFRunLoopRunStopped) || (result == kCFRunLoopRunFinished))</span><br><span class="line">            done = YES;</span><br><span class="line">        <span class="regexp">//</span> Check <span class="keyword">for</span> any other <span class="keyword">exit</span> conditions here and set the</span><br><span class="line">        <span class="regexp">//</span> done variable as needed.</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (!done);</span><br><span class="line">    </span><br><span class="line">    <span class="regexp">//</span> Clean up code here. Be sure to release any allocated autorelease pools.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>递归的运行一个run loop是有可能的，换句话说，你可以在输入源或者定时器的处理程序中调用CFRunLoopRun,CFRunLoopRunInMode,或者其他的任意的NSRunLoop方法。当这样做的时候，你可以使用任何你想要的模式运行嵌套的run loop，包括外层的run loop使用的模式。</p>
+<p>6.4 退出 Run Loop</p>
+<p>在使得一个run loop处理事件之前有两种办法结束run loop。</p>
+<p>给run loop配置一个超时时间。</p>
+<p>告诉run loop停止</p>
+<p>使用超时时间当然是最好的，你可以管理它。指定超时时间让run loop结束它所有的在退出之前通常进行的操作，包括给观察者发通知。</p>
+<p>用CFRunLoopStop函数显示的让run loop和通过设置超时时间产生的效果是相似的。run loop会发出所有剩下run loop相关的通知然后退出，区别在于你可以在无条件启动的run loop上使用这个技术</p>
+<p>虽然移除run loop的输入源和定时器同样会导致run loop退出，但是这并不是一个可靠的停止run loop的方式。有些系统程序给run loop增加输入源处理必要的事件。因为你代码可能没有意识到这些输入源的存在，它不能移除掉这些输入源，这会阻止run loop的退出。</p>
+<h2 id="线程安全和Run-Loop对象-7"><a href="#线程安全和Run-Loop对象-7" class="headerlink" title="线程安全和Run Loop对象 7"></a>线程安全和Run Loop对象 7</h2><p>线程安全的差异取决于你操作run loop所使用的API，在Core Foundation的函数通常是线程安全的，而且可以被任何线程调用。然而如果你在执行run loop配置的操作，尽可能的从该run loop对应的线程上操作依然是一个好的做法。</p>
+<p>Cocoa的NSRunLoop类并不是像在Core Foundation中那样线程安全的，如果你使用NSRunLoop来修改你的run loop，你应该仅仅在run loop对应的那个线程上操作。添加一个输入源或者定时器给非当前线程的run loop会导致你的代码崩溃或者产生不可预测的行为。</p>
+<h2 id="8-配置-Run-Loop-资源"><a href="#8-配置-Run-Loop-资源" class="headerlink" title="8. 配置 Run Loop 资源"></a>8. 配置 Run Loop 资源</h2><p>下面章节的代码是一些如何设置不同类型输入源的案例（Cocoa和Foundation）</p>
+<ul>
+<li>8.1 定义一个自定义的输入源</li>
+</ul>
+<p>创建一个自定义的输入源包含如下定义选项</p>
+<p>输入源希望处理的信息</p>
+<p>一个调度程序让感兴趣的客户（client）知道怎么和你的输入源取得联系</p>
+<p>一个处理程序负责执行客户（client）发来的请求</p>
+<p>一个取消程序让你输入源无效</p>
+<p>因为你自己创建一个自定义的输入源来处理自定义的信息，实际的配置的设计是灵活的。调度程序和取消程序是关键程序，你的自定义输入源几乎总是需要的，剩下的大部分输入源行为发生在这些程序之外。比如你可以定义传递数据给你的输入源的机制和将输入源的存在传递给其他线程。</p>
+<p>图3-2是一个自定义输入源配置的案例。这案例中程序的主线程维护对输入源、自定义输入源的自定义命令缓冲区、输入源所在的run loop的引用。当主线程有一个任务要交给工作线程的时候，它会向命令缓冲区发送一个命令和工作线程需要的所有开始任务所需要的信息。（因为主线程和工作线程都有访问命令缓冲区的权限，访问必须是同步的）一旦受到唤醒的命令，run loop调用输入源的处理程序来处理在命令缓冲区的命令。</p>
+<p>3-2 操作一个自定义的输入源.png</p>
+<p>下面的章节解释了上面图标自定义输入源的实现，和关键要实现的代码</p>
+<ul>
+<li>7.2 定义输入源</li>
+</ul>
+<p>自定义一个输入源需要用Core Foundation的代码来配置run loop资源，并且将它和run loop依附在一起。虽然基础的处理程序是C函数，但是并不排除你需要用OC或者C++来封装这些函数来实现你的代码主体。</p>
+<p>图3-2中介绍的输入源使用了OC对象来管理一个命令行缓冲区，协调run loop。3-3展示的是这个对象的定义，RunLoopSource对象管理一个命令行缓冲区，用缓冲区接收其他线程的消息。3-3同样展示了RunLoopContext对象的定义，这是一个真正的用来传递一个RunLoopSource对象和run loop的引用到应用程序主线程的容器对象。</p>
+<p>Listing 3-3 The custom input source object definition</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">RunLoopSource</span> : <span class="title">NSObject</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CFRunLoopSourceRef</span> runLoopSource;</span><br><span class="line">    <span class="built_in">NSMutableArray</span>* commands;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">id</span>)init;</span><br><span class="line">- (<span class="type">void</span>)addToCurrentRunLoop;</span><br><span class="line">- (<span class="type">void</span>)invalidate;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Handler method</span></span><br><span class="line">- (<span class="type">void</span>)sourceFired;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Client interface for registering commands to process</span></span><br><span class="line">- (<span class="type">void</span>)addCommand:(<span class="built_in">NSInteger</span>)command withData:(<span class="type">id</span>)data;</span><br><span class="line">- (<span class="type">void</span>)fireAllCommandsOnRunLoop:(<span class="built_in">CFRunLoopRef</span>)runloop;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// These are the CFRunLoopSourceRef callback functions.</span></span><br><span class="line"><span class="type">void</span> RunLoopSourceScheduleRoutine (<span class="type">void</span> *info, <span class="built_in">CFRunLoopRef</span> rl, <span class="built_in">CFStringRef</span> mode);</span><br><span class="line"><span class="type">void</span> RunLoopSourcePerformRoutine (<span class="type">void</span> *info);</span><br><span class="line"><span class="type">void</span> RunLoopSourceCancelRoutine (<span class="type">void</span> *info, <span class="built_in">CFRunLoopRef</span> rl, <span class="built_in">CFStringRef</span> mode);</span><br><span class="line"></span><br><span class="line"><span class="comment">// RunLoopContext is a container object used during registration of the input source.</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">RunLoopContext</span> : <span class="title">NSObject</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CFRunLoopRef</span>        runLoop;</span><br><span class="line">    RunLoopSource*        source;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>) <span class="built_in">CFRunLoopRef</span> runLoop;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>) RunLoopSource* source;</span><br><span class="line"></span><br><span class="line">- (<span class="type">id</span>)initWithSource:(RunLoopSource*)src andLoop:(<span class="built_in">CFRunLoopRef</span>)loop;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>虽然输入源的自定义的数据是OC代码管理的，但是将输入源和run loop关联在一起的代码需要基于C的回调函数，这些函数的第一个会在你真正将run loop源和run loop绑定的时候调用，在3-4，因为输入源只有一个客户（主线程）它使用调度程序中的函数发送一个信息来将自己在那个线程的应用代理上注册自己。当代理想和输入源取得联系的时候，就会使用RunLoopContext对象来实现。</p>
+<p>Listing 3-4 Scheduling a run loop source</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">RunLoopSourceScheduleRoutine</span> <span class="params">(<span class="type">void</span> *info, CFRunLoopRef rl, CFStringRef mode)</span></span><br><span class="line">&#123;</span><br><span class="line">    RunLoopSource* obj = (RunLoopSource*)info;</span><br><span class="line">    AppDelegate*   del = [AppDelegate sharedAppDelegate];</span><br><span class="line">    RunLoopContext* theContext = [[RunLoopContext alloc] initWithSource:obj andLoop:rl];</span><br><span class="line">    [del performSelectorOnMainThread:@selector(registerSource:)</span><br><span class="line">                                withObject:theContext waitUntilDone:NO];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最重要的回调程序之一是用来在输入源收到到信号时处理自定义数据的，3-5展示了执行和RunLoopSource对象相关的回调代码。这个函数简单的转发了工作请求给sourceFired方法，这个方法会在以后处理命令缓冲区内出现的任何命令。</p>
+<p>Listing 3-5 Performing work in the input source</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">RunLoopSourcePerformRoutine</span> <span class="params">(<span class="type">void</span> *info)</span></span><br><span class="line">&#123;</span><br><span class="line">    RunLoopSource*  obj = (RunLoopSource*)info;</span><br><span class="line">    [obj sourceFired];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你使用CFRunLoopSourceInvalidate函数将输入源移除，系统会调用输入源的取消代码。你可以用这个代码通知客户们你的输入源已经不再有效了，他们应该移除和它的所有的关联。3-6是RunLoopSource对象注册的取消回调代码。这个函数发送另一个RunLoopContext对象给应用代理，但是这次是请求代理移除run loop源的关联。</p>
+<p>Listing 3-6 Invalidating an input source</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">RunLoopSourceCancelRoutine</span> <span class="params">(<span class="type">void</span> *info, CFRunLoopRef rl, CFStringRef mode)</span></span><br><span class="line">&#123;</span><br><span class="line">    RunLoopSource* obj = (RunLoopSource*)info;</span><br><span class="line">    AppDelegate* del = [AppDelegate sharedAppDelegate];</span><br><span class="line">    RunLoopContext* theContext = [[RunLoopContext alloc] initWithSource:obj andLoop:rl];</span><br><span class="line"></span><br><span class="line">    [del performSelectorOnMainThread:@selector(removeSource:)</span><br><span class="line">                                withObject:theContext waitUntilDone:YES];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>备注：应用程序代理的registerSource: and removeSource:方法在Coordinating with Clients of the Input Source</p>
+<ul>
+<li>8.3 在run loop上添加输入源</li>
+</ul>
+<p>3-7展示了RunLoopSource的init和addToCurrentRunLoop方法。init方法创建了必须依附到RunLoop上的CFRunLoopSourceRef非透明类型对象，它通过传递RunLoopSource对象本身作为上下文信息，所以回调程序会有指向该对象的指针。输入源的安装工作不会在工作线程调用addToCurrentRunLoop方法前进行，addToCurrentRunLoop调用时RunLoopSourceScheduleRoutine的回调函数就会被调用，一旦输入源添加到run loop，线程就可以运行它的run loop来等待事件。</p>
+<p>Listing 3-7 Installing the run loop source</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">id</span>)init</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CFRunLoopSourceContext</span>    context = &#123;<span class="number">0</span>, <span class="keyword">self</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>,</span><br><span class="line">                                        &amp;RunLoopSourceScheduleRoutine,</span><br><span class="line">                                        RunLoopSourceCancelRoutine,</span><br><span class="line">                                        RunLoopSourcePerformRoutine&#125;;</span><br><span class="line">    runLoopSource = <span class="built_in">CFRunLoopSourceCreate</span>(<span class="literal">NULL</span>, <span class="number">0</span>, &amp;context);</span><br><span class="line">    commands = [[<span class="built_in">NSMutableArray</span> alloc] init];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="type">void</span>)addToCurrentRunLoop</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CFRunLoopRef</span> runLoop = <span class="built_in">CFRunLoopGetCurrent</span>();</span><br><span class="line">    <span class="built_in">CFRunLoopAddSource</span>(runLoop, runLoopSource, kCFRunLoopDefaultMode);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>8.4 协调输入源的客户</li>
+</ul>
+<p>为了输入输入源起作用，你应该巧妙控制它并且在另一个线程给它发信号。输入源的要点让和它关联的线程睡眠直到有事可做。所以让其他的线程能够获得输入源的信息和并且和输入源进行通信是现实的需求。</p>
+<p>一个通知输入源的客户的方式是当输入源第一次安装在run loop上的时候发送注册请求。可以为一个输入源注册多个客户，也可以简单的注册到一些中心机构，然后在把输入源给感兴趣的客户。3-8展示了应用程序代理的注册并在RunLoopSource对象的调度函数被调用时执行的注册方法，这个方法接收RunLoopSource对象提供的RunLoopContext对象，并且把它添加到源列表上，下面的代码也包含了在从run loop移除的时候如何反注册输入源。</p>
+<p>Listing 3-8 Registering and removing an input source with the application delegate</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- <span class="params">(void)</span>registerSource:<span class="params">(RunLoopContext*)</span>sourceInfo;</span><br><span class="line">&#123;</span><br><span class="line">    [sourcesToPing addObject:sourceInfo];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- <span class="params">(void)</span>removeSource:<span class="params">(RunLoopContext*)</span>sourceInfo</span><br><span class="line">&#123;</span><br><span class="line">    id    objToRemove = nil;</span><br><span class="line"></span><br><span class="line">    for <span class="params">(RunLoopContext* context in sourcesToPing)</span></span><br><span class="line">    &#123;</span><br><span class="line">        if <span class="params">([context isEqual:sourceInfo])</span></span><br><span class="line">        &#123;</span><br><span class="line">            objToRemove = context;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if <span class="params">(objToRemove)</span></span><br><span class="line">        [sourcesToPing removeObject:objToRemove];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>回调函数调用的方法在上面的3-4和3-6</p>
+<ul>
+<li>8.5 给输入源发信号</li>
+</ul>
+<p>当一个客户把它的数据传递给输入源后，必须给输入源发信号唤醒它的run loop，给输入源发信号让run loop知道输入源已经准备好，等待处理。因为一个信号发生的时候线程可能正在休眠，你应该总是显示的唤醒run loop。如果不这样做可能会导致处理输入源的数据上产生延迟。</p>
+<p>3-9展示了RunLoopSource 对象的fireCommandsOnRunLoop方法，客户在他们为输入源做好处理缓冲区数据的准备时调用这个方法。</p>
+<p>Listing 3-9 Waking up the run loop</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (void)fireCommandsOnRunLoop:(CFRunLoopRef)runloop</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CFRunLoopSourceSignal</span>(runLoopSource);</span><br><span class="line">    <span class="built_in">CFRunLoopWakeUp</span>(runloop);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>备注：你不应该尝试通过发送自定义输入源来处理SIGHUP或其他类型的进程级信号，用于唤醒Run Loop的Core Foundation功能不是信号安全的，不应该在应用程序的信号处理程序中使用。 有关信号处理程序例程的更多信息，请参阅sigaction手册页。</p>
+<ul>
+<li>8.6 配置定时器</li>
+</ul>
+<p>要创建定时器源，你只需创建一个定时器对象并在Run Loop中调度。 在Cocoa中，您可以使用NSTimer类来创建新的定时器对象，而在Core Foundation中，您可以使用CFRunLoopTimerRef类型。 在内部，NSTimer类只是Core Foundation的扩展，它提供了一些方便的功能，例如使用相同方法创建和计划定时器的能力。</p>
+<p>在Cocoa中，您可以使用以下任一类方法一次创建和调度定时器器：</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">scheduledTimerWithTimeInterval:</span>target:selector:userInfo:repeats:</span><br><span class="line"><span class="symbol">scheduledTimerWithTimeInterval:</span>invocation:repeats:</span><br></pre></td></tr></table></figure>
+<p>这些方法创建定时器，并以默认模式（NSDefaultRunLoopMode）将其添加到当前线程的Run Loop中。 如果您想通过创建NSTimer对象然后使用NSRunLoop的addTimer：forMode：方法将其添加到运行循环中，也可以手动调度计时器。这两种技术基本上都是一样的，但是给你不同级别的控制定时器配置。 例如，如果创建定时器并手动将其添加到运行循环中，则可以使用除默认模式之外的模式来执行此操作。 清单3-10显示了如何使用这两种技术创建定时器。 第一个定时器的初始延迟为1秒，但随后每0.1秒钟定时fire。 第二个定时器在初始0.2秒延迟后开始首次fire，然后每0.2秒fire一次。</p>
+<p>Listing 3-10 Creating and scheduling timers using NSTimer</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSRunLoop</span>* myRunLoop = [<span class="built_in">NSRunLoop</span> currentRunLoop];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create and schedule the first timer.</span></span><br><span class="line"><span class="built_in">NSDate</span>* futureDate = [<span class="built_in">NSDate</span> dateWithTimeIntervalSinceNow:<span class="number">1.0</span>];</span><br><span class="line"><span class="built_in">NSTimer</span>* myTimer = [[<span class="built_in">NSTimer</span> alloc] initWithFireDate:futureDate</span><br><span class="line">                        interval:<span class="number">0.1</span></span><br><span class="line">                        target:<span class="keyword">self</span></span><br><span class="line">                        selector:<span class="keyword">@selector</span>(myDoFireTimer1:)</span><br><span class="line">                        userInfo:<span class="literal">nil</span></span><br><span class="line">                        repeats:<span class="literal">YES</span>];</span><br><span class="line">[myRunLoop addTimer:myTimer forMode:<span class="built_in">NSDefaultRunLoopMode</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create and schedule the second timer.</span></span><br><span class="line">[<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:<span class="number">0.2</span></span><br><span class="line">                        target:<span class="keyword">self</span></span><br><span class="line">                        selector:<span class="keyword">@selector</span>(myDoFireTimer2:)</span><br><span class="line">                        userInfo:<span class="literal">nil</span></span><br><span class="line">                        repeats:<span class="literal">YES</span>];</span><br></pre></td></tr></table></figure>
+<p>清单3-11显示了使用Core Foundation函数配置定时器所需的代码。 虽然此示例不会在上下文结构中传递任何用户定义的信息，但您可以使用此结构传递定时器所需的任何自定义数据。 有关此结构的内容的更多信息，请参阅CFRunLoopTimer参考中的描述。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CFRunLoopRef</span> runLoop = <span class="built_in">CFRunLoopGetCurrent</span>();</span><br><span class="line"><span class="built_in">CFRunLoopTimerContext</span> context = &#123;<span class="number">0</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>&#125;;</span><br><span class="line"><span class="built_in">CFRunLoopTimerRef</span> timer = <span class="built_in">CFRunLoopTimerCreate</span>(kCFAllocatorDefault, <span class="number">0.1</span>, <span class="number">0.3</span>, <span class="number">0</span>, <span class="number">0</span>,</span><br><span class="line">                                        &amp;myCFTimerCallback, &amp;context);</span><br><span class="line"></span><br><span class="line"><span class="built_in">CFRunLoopAddTimer</span>(runLoop, timer, kCFRunLoopCommonModes);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>8.7 配置基于端口的输入源</li>
+</ul>
+<p>Cocoa和Core Foundation都提供基于端口的对象，用于线程之间或进程之间的通信。 以下部分将介绍如何使用几种不同类型的端口设置端口通信。</p>
+<ul>
+<li>8.7.1 配置NSMachPort对象</li>
+</ul>
+<p>要建立与NSMachPort对象的本地连接，你将创建端口对象并将其添加到主线程的Run Loop中。 启动辅助线程时，将相同的对象传递给线程的入口点函数。 辅助线程可以使用相同的对象将消息发送回主线程。</p>
+<ul>
+<li>8.7.2 实现主线程代码</li>
+</ul>
+<p>清单3-12显示了启动辅助工作线程的主线程代码。 因为Cocoa框架执行了许多用于配置端口和run loop的介入步骤，所以launchThread方法明显短于其Core Foundation中等效的配置（清单3-17）;然而，两者的行为几乎相同。 一个区别是，该方法不是将本地端口的名称发送给工作线程，而是直接发送NSPort对象。</p>
+<p>Listing 3-12 Main thread launch method</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)launchThread</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSPort</span>* myPort = [<span class="built_in">NSMachPort</span> port];</span><br><span class="line">    <span class="keyword">if</span> (myPort)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// This class handles incoming port messages.</span></span><br><span class="line">        [myPort setDelegate:<span class="keyword">self</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Install the port as an input source on the current run loop.</span></span><br><span class="line">        [[<span class="built_in">NSRunLoop</span> currentRunLoop] addPort:myPort forMode:<span class="built_in">NSDefaultRunLoopMode</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Detach the thread. Let the worker release the port.</span></span><br><span class="line">        [<span class="built_in">NSThread</span> detachNewThreadSelector:<span class="keyword">@selector</span>(LaunchThreadWithPort:)</span><br><span class="line">               toTarget:[MyWorkerClass <span class="keyword">class</span>] withObject:myPort];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了在线程之间建立一个双向通信通道，你可能希望工作线程在登录消息中将自己的本地端口发送到主线程。 接收签入消息让你的主线程知道在启动第二个线程时一切顺利，并且还可以向你发送更多消息到该线程。清单3-13显示了主线程的handlePortMessage：方法。 当数据到达线程自己的本地端口时调用此方法。 当一个签到消息到达时，该方法直接从端口消息中检索次要线程的端口，并保存以备以后使用。</p>
+<p>Listing 3-13 Handling Mach port messages</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> kCheckinMessage 100</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Handle responses from the worker thread.</span></span><br><span class="line">- (<span class="type">void</span>)handlePortMessage:(<span class="built_in">NSPortMessage</span> *)portMessage</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> message = [portMessage msgid];</span><br><span class="line">    <span class="built_in">NSPort</span>* distantPort = <span class="literal">nil</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (message == kCheckinMessage)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Get the worker thread’s communications port.</span></span><br><span class="line">        distantPort = [portMessage sendPort];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Retain and save the worker port for later use.</span></span><br><span class="line">        [<span class="keyword">self</span> storeDistantPort:distantPort];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Handle other messages.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>8.7.3实现次要线程代码</li>
+</ul>
+<p>对于辅助工作线程，你必须配置线程并使用指定的端口将信息传回主线程。</p>
+<p>清单3-14显示了设置工作线程的代码。 为线程创建自动释放池后，该方法将创建一个工作对象来驱动线程执行。 工作对象的sendCheckinMessage：方法（如清单3-15所示）为工作线程创建一个本地端口，并将一个签入消息发送回主线程。</p>
+<p>Listing 3-14 Launching the worker thread using Mach ports</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">+</span>(void)<span class="type">LaunchThreadWithPort</span>:(id)inData</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">NSAutoreleasePool</span><span class="operator">*</span>  pool <span class="operator">=</span> [[<span class="type">NSAutoreleasePool</span> alloc] <span class="keyword">init</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Set up the connection between this thread and the main thread.</span></span><br><span class="line">    <span class="type">NSPort</span><span class="operator">*</span> distantPort <span class="operator">=</span> (<span class="type">NSPort</span><span class="operator">*</span>)inData;</span><br><span class="line"></span><br><span class="line">    <span class="type">MyWorkerClass</span><span class="operator">*</span>  workerObj <span class="operator">=</span> [[<span class="keyword">self</span> alloc] <span class="keyword">init</span>];</span><br><span class="line">    [workerObj sendCheckinMessage:distantPort];</span><br><span class="line">    [distantPort release];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Let the run loop process things.</span></span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">    &#123;</span><br><span class="line">        [[<span class="type">NSRunLoop</span> currentRunLoop] runMode:<span class="type">NSDefaultRunLoopMode</span></span><br><span class="line">                            beforeDate:[<span class="type">NSDate</span> distantFuture]];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (<span class="operator">!</span>[workerObj shouldExit]);</span><br><span class="line"></span><br><span class="line">    [workerObj release];</span><br><span class="line">    [pool release];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当使用NSMachPort时，本地和远程线程可以使用相同的端口对象进行线程之间的单向通信。 换句话说，由一个线程创建的本地端口对象将成为另一个线程的远程端口对象。</p>
+<p>清单3-15显示了次要线程的签入例程。 该方法设置自己的本地端口用于将来的通信，然后发送一个检入消息回主线程。 该方法使用在LaunchThreadWithPort：方法中接收的端口对象作为消息的目标。</p>
+<p>Listing 3-15 Sending the check-in message using Mach ports</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)sendCheckinMessage:(<span class="built_in">NSPort</span>*)outPort</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Retain and save the remote port for future use.</span></span><br><span class="line">    [<span class="keyword">self</span> setRemotePort:outPort];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create and configure the worker thread port.</span></span><br><span class="line">    <span class="built_in">NSPort</span>* myPort = [<span class="built_in">NSMachPort</span> port];</span><br><span class="line">    [myPort setDelegate:<span class="keyword">self</span>];</span><br><span class="line">    [[<span class="built_in">NSRunLoop</span> currentRunLoop] addPort:myPort forMode:<span class="built_in">NSDefaultRunLoopMode</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create the check-in message.</span></span><br><span class="line">    <span class="built_in">NSPortMessage</span>* messageObj = [[<span class="built_in">NSPortMessage</span> alloc] initWithSendPort:outPort</span><br><span class="line">                                         receivePort:myPort components:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (messageObj)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Finish configuring the message and send it immediately.</span></span><br><span class="line">        [messageObj setMsgId:setMsgid:kCheckinMessage];</span><br><span class="line">        [messageObj sendBeforeDate:[<span class="built_in">NSDate</span> date]];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>8.7.4 配置一个NSMessagePort对象</li>
+</ul>
+<p>要建立与NSMessagePort对象的本地连接，您不能简单地在线程之间传递端口对象。 远程消息端口必须以名称获取。 在Cocoa中可能需要使用特定的名称注册本地端口，然后将该名称传递给远程线程，以便它可以获取适当的端口对象进行通信。 清单3-16显示了要使用消息端口的端口创建和注册过程。</p>
+<p>Listing 3-16 Registering a message port</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">NSPort</span><span class="operator">*</span> localPort <span class="operator">=</span> [[<span class="type">NSMessagePort</span> alloc] <span class="keyword">init</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Configure the object and add it to the current run loop.</span></span><br><span class="line">[localPort setDelegate:<span class="keyword">self</span>];</span><br><span class="line">[[<span class="type">NSRunLoop</span> currentRunLoop] addPort:localPort forMode:<span class="type">NSDefaultRunLoopMode</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Register the port using a specific name. The name must be unique.</span></span><br><span class="line"><span class="type">NSString</span><span class="operator">*</span> localPortName <span class="operator">=</span> [<span class="type">NSString</span> stringWithFormat:@<span class="string">&quot;MyPortName&quot;</span>];</span><br><span class="line">[[<span class="type">NSMessagePortNameServer</span> sharedInstance] registerPort:localPort</span><br><span class="line">                     name:localPortName];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>8.7.6 Core Foundation中配置基于端口的输入源</li>
+</ul>
+<p>本节介绍如何使用Core Foundation在应用程序的主线程和工作线程之间设置双向通信通道。清单3-17显示了应用程序主线程调用的代码，以启动工作线程。 代码的第一件事是设置一个CFMessagePortRef opaque类型来监听来自工作线程的消息。 工作线程需要进行连接的端口名称，以便将字符串值传递给工作线程的入口点函数。 端口名称通常在当前用户上下文中是唯一的; 否则，您可能会遇到冲突。</p>
+<p>Listing 3-17 ：将Core Foundation消息端口附加到新线程</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> kThreadStackSize        (8 *4096)</span></span><br><span class="line"></span><br><span class="line">OSStatus <span class="title function_">MySpawnThread</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Create a local port for receiving responses.</span></span><br><span class="line">    CFStringRef myPortName;</span><br><span class="line">    CFMessagePortRef myPort;</span><br><span class="line">    CFRunLoopSourceRef rlSource;</span><br><span class="line">    CFMessagePortContext context = &#123;<span class="number">0</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>&#125;;</span><br><span class="line">    Boolean shouldFreeInfo;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create a string with the port name.</span></span><br><span class="line">    myPortName = CFStringCreateWithFormat(<span class="literal">NULL</span>, <span class="literal">NULL</span>, CFSTR(<span class="string">&quot;com.myapp.MainThread&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create the port.</span></span><br><span class="line">    myPort = CFMessagePortCreateLocal(<span class="literal">NULL</span>,</span><br><span class="line">                myPortName,</span><br><span class="line">                &amp;MainThreadResponseHandler,</span><br><span class="line">                &amp;context,</span><br><span class="line">                &amp;shouldFreeInfo);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (myPort != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// The port was successfully created.</span></span><br><span class="line">        <span class="comment">// Now create a run loop source for it.</span></span><br><span class="line">        rlSource = CFMessagePortCreateRunLoopSource(<span class="literal">NULL</span>, myPort, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (rlSource)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Add the source to the current run loop.</span></span><br><span class="line">            CFRunLoopAddSource(CFRunLoopGetCurrent(), rlSource, kCFRunLoopDefaultMode);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Once installed, these can be freed.</span></span><br><span class="line">            CFRelease(myPort);</span><br><span class="line">            CFRelease(rlSource);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create the thread and continue processing.</span></span><br><span class="line">    MPTaskID        taskID;</span><br><span class="line">    <span class="keyword">return</span>(MPCreateTask(&amp;ServerThreadEntryPoint,</span><br><span class="line">                    (<span class="type">void</span>*)myPortName,</span><br><span class="line">                    kThreadStackSize,</span><br><span class="line">                    <span class="literal">NULL</span>,</span><br><span class="line">                    <span class="literal">NULL</span>,</span><br><span class="line">                    <span class="literal">NULL</span>,</span><br><span class="line">                    <span class="number">0</span>,</span><br><span class="line">                    &amp;taskID));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在安装端口并启动线程的情况下，主线程可以在等待线程检入时继续其正常执行。当检入消息到达时，它将被分派到主线程的MainThreadResponseHandler函数，如清单3- 18。 此函数提取工作线程的端口名称，并创建未来通信的管道。</p>
+<p>Listing 3-18 Receiving the checkin message</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> kCheckinMessage 100</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Main thread port message handler</span></span><br><span class="line">CFDataRef <span class="title function_">MainThreadResponseHandler</span><span class="params">(CFMessagePortRef local,</span></span><br><span class="line"><span class="params">                    SInt32 msgid,</span></span><br><span class="line"><span class="params">                    CFDataRef data,</span></span><br><span class="line"><span class="params">                    <span class="type">void</span>* info)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (msgid == kCheckinMessage)</span><br><span class="line">    &#123;</span><br><span class="line">        CFMessagePortRef messagePort;</span><br><span class="line">        CFStringRef threadPortName;</span><br><span class="line">        CFIndex bufferLength = CFDataGetLength(data);</span><br><span class="line">        UInt8* buffer = CFAllocatorAllocate(<span class="literal">NULL</span>, bufferLength, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">        CFDataGetBytes(data, CFRangeMake(<span class="number">0</span>, bufferLength), buffer);</span><br><span class="line">        threadPortName = CFStringCreateWithBytes (<span class="literal">NULL</span>, buffer, bufferLength, kCFStringEncodingASCII, FALSE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// You must obtain a remote message port by name.</span></span><br><span class="line">        messagePort = CFMessagePortCreateRemote(<span class="literal">NULL</span>, (CFStringRef)threadPortName);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (messagePort)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Retain and save the thread’s comm port for future reference.</span></span><br><span class="line">            AddPortToListOfActiveThreads(messagePort);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Since the port is retained by the previous function, release</span></span><br><span class="line">            <span class="comment">// it here.</span></span><br><span class="line">            CFRelease(messagePort);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Clean up.</span></span><br><span class="line">        CFRelease(threadPortName);</span><br><span class="line">        CFAllocatorDeallocate(<span class="literal">NULL</span>, buffer);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Process other messages.</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在配置主线程之后，唯一剩下的就是新创建的工作线程创建自己的端口并签入。清单3-19显示了工作线程的入口点函数。 该函数提取主线程的端口名称，并使用它来创建一个远程连接回主线程。 该函数然后为其自身创建本地端口，将端口安装在线程的运行循环上，并向包含本地端口名称的主线程发送检入消息。</p>
+<p>Listing 3-19 Setting up the thread structures</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">OSStatus <span class="title function_">ServerThreadEntryPoint</span><span class="params">(<span class="type">void</span>* param)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Create the remote port to the main thread.</span></span><br><span class="line">    CFMessagePortRef mainThreadPort;</span><br><span class="line">    CFStringRef portName = (CFStringRef)param;</span><br><span class="line"></span><br><span class="line">    mainThreadPort = CFMessagePortCreateRemote(<span class="literal">NULL</span>, portName);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Free the string that was passed in param.</span></span><br><span class="line">    CFRelease(portName);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create a port for the worker thread.</span></span><br><span class="line">    CFStringRef myPortName = CFStringCreateWithFormat(<span class="literal">NULL</span>, <span class="literal">NULL</span>, CFSTR(<span class="string">&quot;com.MyApp.Thread-%d&quot;</span>), MPCurrentTaskID());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Store the port in this thread’s context info for later reference.</span></span><br><span class="line">    CFMessagePortContext context = &#123;<span class="number">0</span>, mainThreadPort, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>&#125;;</span><br><span class="line">    Boolean shouldFreeInfo;</span><br><span class="line">    Boolean shouldAbort = TRUE;</span><br><span class="line"></span><br><span class="line">    CFMessagePortRef myPort = CFMessagePortCreateLocal(<span class="literal">NULL</span>,</span><br><span class="line">                myPortName,</span><br><span class="line">                &amp;ProcessClientRequest,</span><br><span class="line">                &amp;context,</span><br><span class="line">                &amp;shouldFreeInfo);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (shouldFreeInfo)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Couldn&#x27;t create a local port, so kill the thread.</span></span><br><span class="line">        MPExit(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    CFRunLoopSourceRef rlSource = CFMessagePortCreateRunLoopSource(<span class="literal">NULL</span>, myPort, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (!rlSource)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Couldn&#x27;t create a local port, so kill the thread.</span></span><br><span class="line">        MPExit(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add the source to the current run loop.</span></span><br><span class="line">    CFRunLoopAddSource(CFRunLoopGetCurrent(), rlSource, kCFRunLoopDefaultMode);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Once installed, these can be freed.</span></span><br><span class="line">    CFRelease(myPort);</span><br><span class="line">    CFRelease(rlSource);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Package up the port name and send the check-in message.</span></span><br><span class="line">    CFDataRef returnData = nil;</span><br><span class="line">    CFDataRef outData;</span><br><span class="line">    CFIndex stringLength = CFStringGetLength(myPortName);</span><br><span class="line">    UInt8* buffer = CFAllocatorAllocate(<span class="literal">NULL</span>, stringLength, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    CFStringGetBytes(myPortName,</span><br><span class="line">                CFRangeMake(<span class="number">0</span>,stringLength),</span><br><span class="line">                kCFStringEncodingASCII,</span><br><span class="line">                <span class="number">0</span>,</span><br><span class="line">                FALSE,</span><br><span class="line">                buffer,</span><br><span class="line">                stringLength,</span><br><span class="line">                <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    outData = CFDataCreate(<span class="literal">NULL</span>, buffer, stringLength);</span><br><span class="line"></span><br><span class="line">    CFMessagePortSendRequest(mainThreadPort, kCheckinMessage, outData, <span class="number">0.1</span>, <span class="number">0.0</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Clean up thread data structures.</span></span><br><span class="line">    CFRelease(outData);</span><br><span class="line">    CFAllocatorDeallocate(<span class="literal">NULL</span>, buffer);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Enter the run loop.</span></span><br><span class="line">    CFRunLoopRun();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一旦进入其run loop，发送到线程端口的所有未来事件都将由ProcessClientRequest函数处理。 该功能的实现取决于线程工作的类型，此处未显示。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>希望对您有所帮助，您的支持将是我莫大的动力！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Jack Wang 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Jack Wang 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RunLoop/" rel="tag"># RunLoop</a>
+              <a href="/tags/RunLoop%E7%BF%BB%E8%AF%91/" rel="tag"># RunLoop翻译</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/iOS/RunTime/index.html" rel="prev" title="RunTime知识">
+      <i class="fa fa-chevron-left"></i> RunTime知识
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/iOS/RunLoop/runloop.html" rel="next" title="RunLoop的一些场景">
+      RunLoop的一些场景 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Run-Loop%E8%A7%A3%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">Run Loop解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Run-Loop%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">Run Loop模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%BA%90"><span class="nav-number">3.</span> <span class="nav-text">输入源</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%AB%AF%E5%8F%A3%E7%9A%84%E6%BA%90"><span class="nav-number">3.1.</span> <span class="nav-text">基于端口的源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BE%93%E5%85%A5%E6%BA%90"><span class="nav-number">3.2.</span> <span class="nav-text">自定义输入源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cocoa%E6%89%A7%E8%A1%8C%E6%B6%88%E6%81%AF%E9%80%89%E6%8B%A9%E5%99%A8%E6%BA%90%E2%80%93%EF%BC%88Cocoa-Perform-Selector-Sources%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">Cocoa执行消息选择器源–（Cocoa Perform Selector Sources）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E6%BA%90"><span class="nav-number">3.4.</span> <span class="nav-text">定时器源</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#run-loop-%E8%A7%82%E5%AF%9F%E8%80%85"><span class="nav-number">4.</span> <span class="nav-text">run loop 观察者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#run-loop%E4%B8%80%E4%BA%9B%E5%88%97%E7%9A%84%E4%BA%8B%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">run loop一些列的事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BC%9A%E7%94%A8%E4%B8%80%E4%B8%AArun-loop"><span class="nav-number">6.</span> <span class="nav-text">什么时候会用一个run loop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8run-loop%E5%AF%B9%E8%B1%A1"><span class="nav-number">7.</span> <span class="nav-text">使用run loop对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E5%92%8CRun-Loop%E5%AF%B9%E8%B1%A1-7"><span class="nav-number">8.</span> <span class="nav-text">线程安全和Run Loop对象 7</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E9%85%8D%E7%BD%AE-Run-Loop-%E8%B5%84%E6%BA%90"><span class="nav-number">9.</span> <span class="nav-text">8. 配置 Run Loop 资源</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jack Wang"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Jack Wang</p>
+  <div class="site-description" itemprop="description">书山有路勤为径，学海无涯苦作舟！</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL29yZ3Mvd2FuZ2tlamllL3JlcG9zaXRvcmllcw==" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;orgs&#x2F;wangkejie&#x2F;repositories"><i class="github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOjcyNzg4MTk0NUBxcS5jb20=" title="E-Mail → mailto:727881945@qq.com"><i class="envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">京ICP备16036665号-2 </span>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack Wang</span>
+</div>
+
+        
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1277804316&web_id=1277804316"></script>
+  </div>
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'S7tR3Qqx6JSg8P5ChLXjLWt8-gzGzoHsz',
+      appKey     : 'hHRdJzqrf8zU1xQElb7km39u',
+      placeholder: "上面也可以填入联系方式，感谢您宝贵的建议~",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

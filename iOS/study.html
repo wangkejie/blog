@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="msvalidate.01" content="9BDlx6FiNE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wangkejie.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="iOS的一些基础梳理，方便求职者能有一些参考。 还是那句话，书山有路勤为径，学海无涯苦作舟！  高级 解决研发过程中的关键问题和技术难题 调优设备流量、性能、电量 较强的软件设计能力 对iOS内部原理有深刻理解  资深 精通高性能编程以及性能调优 灵活运用数据结构、算法解决复杂程序设计问题 提供性能优化、日志搜索、统计分析等方案 架构、模块设计  专家 你还来看我这干啥，不要检查我的作业~  简">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS的基础梳理">
+<meta property="og:url" content="https://wangkejie.com/iOS/study.html">
+<meta property="og:site_name" content="王科杰">
+<meta property="og:description" content="iOS的一些基础梳理，方便求职者能有一些参考。 还是那句话，书山有路勤为径，学海无涯苦作舟！  高级 解决研发过程中的关键问题和技术难题 调优设备流量、性能、电量 较强的软件设计能力 对iOS内部原理有深刻理解  资深 精通高性能编程以及性能调优 灵活运用数据结构、算法解决复杂程序设计问题 提供性能优化、日志搜索、统计分析等方案 架构、模块设计  专家 你还来看我这干啥，不要检查我的作业~  简">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wangkejie.com/images/iOS/KVC.png">
+<meta property="og:image" content="https://wangkejie.com/images/iOS/kvc-set.png">
+<meta property="og:image" content="https://wangkejie.com/images/iOS/runtime-data-structure.png">
+<meta property="og:image" content="https://wangkejie.com/images/iOS/RunLoop-machining.png">
+<meta property="og:image" content="https://wangkejie.com/images/iOS/AFNetworking-draft.png">
+<meta property="og:image" content="https://wangkejie.com/images/iOS/SDWebImage.png">
+<meta property="article:published_time" content="2017-10-10T03:26:39.000Z">
+<meta property="article:modified_time" content="2023-01-14T03:12:23.791Z">
+<meta property="article:author" content="Jack Wang">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wangkejie.com/images/iOS/KVC.png">
+
+<link rel="canonical" href="https://wangkejie.com/iOS/study.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>iOS的基础梳理 | 王科杰</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?93e26277de0cf2c5851167f2c6dcaa7d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">王科杰</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Jack's Notes</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">71</span></a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/me/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签<span class="badge">78</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类<span class="badge">70</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL29yZ3Mvd2FuZ2tlamllL3JlcG9zaXRvcmllcw==" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/iOS/study.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack Wang">
+      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王科杰">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          iOS的基础梳理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-10-10 11:26:39" itemprop="dateCreated datePublished" datetime="2017-10-10T11:26:39+08:00">2017-10-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/iOS/study.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/iOS/study.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>iOS的一些基础梳理，方便求职者能有一些参考。 还是那句话，书山有路勤为径，学海无涯苦作舟！</p>
+</blockquote>
+<h1 id="高级"><a href="#高级" class="headerlink" title="高级"></a>高级</h1><ul>
+<li>解决研发过程中的<code>关键问题</code>和<code>技术难题</code></li>
+<li><code>调优</code>设备流量、性能、电量</li>
+<li><code>较强</code>的软件设计能力</li>
+<li>对iOS内部原理有<code>深刻理解</code></li>
+</ul>
+<h1 id="资深"><a href="#资深" class="headerlink" title="资深"></a>资深</h1><ul>
+<li><code>精通</code>高性能编程以及性能调优</li>
+<li><code>灵活运用</code>数据结构、算法解决<code>复杂程序设计</code>问题</li>
+<li>提供性能优化、日志搜索、统计分析等<code>方案</code></li>
+<li>架构、模块<code>设计</code></li>
+</ul>
+<h1 id="专家"><a href="#专家" class="headerlink" title="专家"></a>专家</h1><ul>
+<li>你还来看我这干啥，不要检查我的作业~</li>
+</ul>
+<h1 id="简历"><a href="#简历" class="headerlink" title="简历"></a>简历</h1><ul>
+<li>排版清晰</li>
+<li>重要和突出的表达</li>
+<li>线上bug数变化、量化指标 质量上的指标</li>
+<li>开发成本节约了多少 量化指标</li>
+<li>基本信息、工作经历、项目经验、擅长技能</li>
+<li>项目经验(主导、参与)，背景、方案、效果</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="UI视图"><a href="#UI视图" class="headerlink" title="UI视图"></a>UI视图</h1><ul>
+<li>UITableView</li>
+<li>事件传递&amp;视图响应</li>
+<li>图像显示原理</li>
+<li>卡顿&amp;掉帧</li>
+<li>绘制原理&amp;异步绘制</li>
+<li>离屏渲染</li>
+</ul>
+<h1 id="UITableView"><a href="#UITableView" class="headerlink" title="UITableView"></a>UITableView</h1><ul>
+<li>重用机制</li>
+<li>数据源同步<ul>
+<li>并发方案数据copy 串行方案</li>
+</ul>
+</li>
+<li>UI事件传递&amp;响应<ul>
+<li>UIView提供内容，事件响应，响应链</li>
+<li>CALayar的contents负责绘制</li>
+<li>单一指责原则</li>
+</ul>
+</li>
+</ul>
+<h1 id="视图显示原理"><a href="#视图显示原理" class="headerlink" title="视图显示原理"></a>视图显示原理</h1><h2 id="卡顿、掉帧的原因"><a href="#卡顿、掉帧的原因" class="headerlink" title="卡顿、掉帧的原因"></a>卡顿、掉帧的原因</h2><ul>
+<li>CPU<ul>
+<li>对象创建、调整、销毁</li>
+<li>预排版（布局计算、文本计算）</li>
+<li>预渲染（文本等异步绘制，图片解码等）</li>
+</ul>
+</li>
+<li>GPU<ul>
+<li>纹理渲染</li>
+<li>视图混合</li>
+</ul>
+</li>
+</ul>
+<h2 id="UIView的绘制原理"><a href="#UIView的绘制原理" class="headerlink" title="UIView的绘制原理"></a>UIView的绘制原理</h2><ul>
+<li><p>[UIView setNeedsDisplay] -&gt; [view.layer setNeedsDisplay] -&gt; [CALayer display]</p>
+</li>
+<li><p>[CALayer display]是否响应 [layer.delegate displayLayer]方法</p>
+</li>
+<li><p>是，进入异步绘制。否，进入系统绘制流程</p>
+<ul>
+<li>CALayer creats backing store(CGContextRef)</li>
+<li>是否有layer has a delegate</li>
+<li>是，[layer.delegate drawLayer:inContext:]</li>
+<li>否，[CALayer drawInContext:]</li>
+<li>最后 CALayer uploads backing store to GPU</li>
+</ul>
+</li>
+</ul>
+<h2 id="异步绘制-layer-delegate-displayLayer"><a href="#异步绘制-layer-delegate-displayLayer" class="headerlink" title="异步绘制 [layer.delegate displayLayer]"></a>异步绘制 [layer.delegate displayLayer]</h2><pre><code>- 代理负责生成对应的bitmap
+- 设置该bitmap作为layer.contents属性的值
+
+- 流程如下
+</code></pre>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- <span class="selector-attr">[AsyncDrawingView setNeedsDisplay]</span></span><br><span class="line">- <span class="selector-attr">[CALayer display]</span></span><br><span class="line">- <span class="selector-attr">[AsyncDrawingView displayLayer:]</span></span><br><span class="line">    - <span class="built_in">CGBitmapContextCreat</span>()</span><br><span class="line">    - CoreGraphic API</span><br><span class="line">    - <span class="built_in">CGBitmapContextCreatImage</span>()</span><br><span class="line">- <span class="selector-attr">[CALayer setContents]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="离屏渲染-OFF-SCREEN-RENDERING"><a href="#离屏渲染-OFF-SCREEN-RENDERING" class="headerlink" title="离屏渲染(OFF-SCREEN RENDERING)"></a>离屏渲染(OFF-SCREEN RENDERING)</h2><pre><code>在当前缓冲区创建新的缓冲区渲染
+缓冲区渲染，圆角(和maskToBounds一起使用)，孟层遮罩，阴影，光栅化
+</code></pre>
+<ul>
+<li>为何要避免离屏渲染?</li>
+</ul>
+<ul>
+<li>离屏渲染会增加GPU的工作量, CPU+GPU提交一帧的时间超过了16.7ms，造成了不满60帧的卡顿</li>
+<li>创建新的渲染缓冲区</li>
+<li>上下文切换</li>
+</ul>
+<h1 id="OC语言面试问题"><a href="#OC语言面试问题" class="headerlink" title="OC语言面试问题"></a>OC语言面试问题</h1><h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><h3 id="分类都做了什么事情？"><a href="#分类都做了什么事情？" class="headerlink" title="分类都做了什么事情？"></a>分类都做了什么事情？</h3><ul>
+<li>声明私有方法</li>
+<li>分解体积庞大的类文件</li>
+<li>framework的私有方法公开</li>
+</ul>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
+<li>运行时决议（runtime时添加）    - 可以为系统类添加分类</li>
+</ul>
+<h3 id="分类中可以添加哪些内容"><a href="#分类中可以添加哪些内容" class="headerlink" title="分类中可以添加哪些内容"></a>分类中可以添加哪些内容</h3><ul>
+<li>实例方法    - 类方法    - 协议    - 属性（只是声明了set和get方法，而不是私有属性）</li>
+</ul>
+<h3 id="结构体-objc-runtime-680版本源代码"><a href="#结构体-objc-runtime-680版本源代码" class="headerlink" title="结构体(objc-runtime-680版本源代码)"></a>结构体(objc-runtime-680版本源代码)</h3><ul>
+<li>const char * name    - cls    - instanceMethods    - classMethods    - protocols    - instanceProperties</li>
+</ul>
+<h3 id="加载调用栈"><a href="#加载调用栈" class="headerlink" title="加载调用栈"></a>加载调用栈</h3><ul>
+<li>_objc_init -&gt; map_2_imags -&gt; map_images_nolock -&gt; _read_images -&gt; remethodizeClass</li>
+</ul>
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><ul>
+<li>效果上，分类添加的方法可以「覆盖」原类方法</li>
+<li>同名分类方法谁能生效取决于编译顺序</li>
+<li>名字相同的分类会引起编译报错</li>
+</ul>
+<h2 id="4-5-扩展相关面试问题"><a href="#4-5-扩展相关面试问题" class="headerlink" title="4-5 扩展相关面试问题"></a>4-5 扩展相关面试问题</h2><ul>
+<li>声明私有属性</li>
+<li>声明私有方法</li>
+<li>声明私有成员变量<h3 id="扩展特性"><a href="#扩展特性" class="headerlink" title="扩展特性"></a>扩展特性</h3></li>
+<li>编译时决议</li>
+<li>不能为系统类添加扩展</li>
+<li>只有声明</li>
+</ul>
+<h2 id="代理相关"><a href="#代理相关" class="headerlink" title="代理相关"></a>代理相关</h2><ul>
+<li>软件设计模式</li>
+<li>@protocol形式提现</li>
+<li>代理传递<code>一对一</code></li>
+<li>weak规避循环引用</li>
+</ul>
+<h2 id="通知相关-NSNotification"><a href="#通知相关-NSNotification" class="headerlink" title="通知相关(NSNotification)"></a>通知相关(NSNotification)</h2><ul>
+<li>是使用<code>观察者模式</code>来实现的用于跨层传递消息的机制（网络层，ui层传递等等）</li>
+<li>一对多</li>
+</ul>
+<h2 id="KVO"><a href="#KVO" class="headerlink" title="KVO"></a>KVO</h2><ul>
+<li>KVO是Objective-C对<code>观察者设计模式</code>的有一种实现</li>
+<li>Apple使用了isa混写（isa-swizzling）来实现kvo</li>
+<li>NSKVONotifying_A （子类）重写setter方法<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (void)setValue:(id)obj &#123;</span><br><span class="line">    <span class="selector-attr">[self willChangeValueForKey:@<span class="string">&quot;keyPath&quot;</span>]</span>;</span><br><span class="line">    <span class="comment">//调用父类实现，也即原类的实现</span></span><br><span class="line">    <span class="selector-attr">[supe setValue:obj]</span>;</span><br><span class="line">    <span class="selector-attr">[self didChangeValueForKey:@<span class="string">&quot;keyPath&quot;</span>]</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>1、通过kvc设置value能否生效？</li>
+<li>2、通过成员变量直接赋值value能否生效？</li>
+</ul>
+<h2 id="KVC-Key-value-coding-键值编码"><a href="#KVC-Key-value-coding-键值编码" class="headerlink" title="KVC (Key-value coding)键值编码"></a>KVC (Key-value coding)键值编码</h2><ul>
+<li>valueForKey流程图</li>
+</ul>
+<img src="/images/iOS/KVC.png" class="" title="KVC流程图">
+
+<ul>
+<li><p>Accessor Method</p>
+<ul>
+<li><code>&lt;getKey&gt;</code></li>
+<li><code>&lt;Key&gt;</code></li>
+<li><code>&lt;isKey&gt;</code></li>
+</ul>
+</li>
+<li><p>setValueForKey流程图</p>
+<img src="/images/iOS/kvc-set.png" class="" title="KVC-set流程图"></li>
+</ul>
+<h1 id="RunTime"><a href="#RunTime" class="headerlink" title="RunTime"></a>RunTime</h1><ul>
+<li>数据结构</li>
+<li>类对象与元类对象</li>
+<li>消息传递</li>
+<li>方法缓存</li>
+<li>消息转发</li>
+<li>Methond-Swizzling</li>
+<li>动态添加方法</li>
+<li>动态方法解析</li>
+</ul>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>objc_object</p>
+<ul>
+<li>isa_t </li>
+<li>关于isa操作相关</li>
+<li>弱引用相关</li>
+<li>关联对象相关</li>
+<li>内存管理<br>objc_class</li>
+<li>Class = objc_class继承自objc_object<ul>
+<li>Class puserClass</li>
+<li>cache_t cache</li>
+<li>class_data_bits_t bits;<br>isa指针</li>
+</ul>
+</li>
+<li>指针型isa，的内存地址代表Class的地址</li>
+<li>非指针型的呢值，代表Class的地址<br>isa指向</li>
+<li>关于对象，指向类对象，-class</li>
+<li>类对象，元类对象， Class——isa-MetaClass<br>cache_t</li>
+<li>用于<code>快速</code>查找方法执行函数,消息传递的速度</li>
+<li>是<code>可增量扩展</code>的<code>哈希表</code>结构</li>
+<li>是<code>局部性原理</code>的最佳应用(调用频率越高，越容易命中)</li>
+<li>数据结构<ul>
+<li>bucket_t 这样的数组<ul>
+<li>key   </li>
+<li>IMP<br>class_data_bits_t</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>主要是对class_rw_t的封装<ul>
+<li>class_ro_t</li>
+<li>protocols(二维数组)</li>
+<li>properties(二维数组)</li>
+<li>methods(二维数组)</li>
+</ul>
+</li>
+<li>clcass_rw_t 代表了类相关的读写信息、对class_ro_t的封装</li>
+<li>class_ro_t<ul>
+<li>name(类名等…)</li>
+<li>ivars(二维数组)</li>
+<li>properties(二维数组)</li>
+<li>protocols(二维数组)</li>
+<li>methodlist(二维数组)</li>
+</ul>
+</li>
+<li>method_t<ul>
+<li>struct method_t<br>= name。。。SEL name; 名称</li>
+<li>chonst char* types; 函数体<ul>
+<li><ul>
+<li>返回值 参数1.。。参数n</li>
+</ul>
+</li>
+<li>v@: void， id  SEL</li>
+</ul>
+</li>
+<li>IMP imp;  实现</li>
+</ul>
+</li>
+</ul>
+<img src="/images/iOS/runtime-data-structure.png" class="" title="runtime结构体">
+
+<h1 id="类对象，对象-实例，isa指向类对象-，"><a href="#类对象，对象-实例，isa指向类对象-，" class="headerlink" title="类对象，对象(实例，isa指向类对象)，"></a>类对象，对象(实例，isa指向类对象)，</h1><p>实例对象可以通过isa指针找到类对象，类对象的isa指针可以找到元类对象,元类对象isa指向根原类对象，根元类对象isa指向根类对象</p>
+<h2 id="消息传递"><a href="#消息传递" class="headerlink" title="消息传递"></a>消息传递</h2><ul>
+<li>void objc_mesSend(void /* id self, SEL op, …*/)</li>
+<li>void objc_mesSendSuper(void /* struct objc_super * super, SEL op, …*/)</li>
+</ul>
+<h3 id="缓存查找-哈希查找"><a href="#缓存查找-哈希查找" class="headerlink" title="缓存查找 哈希查找"></a>缓存查找 哈希查找</h3><p>通过SEL-&gt;hash-&gt;key找多对应的bucket_t的IMP</p>
+<ul>
+<li>对于<code>已排序好</code>的列表,采用<code>二分法</code>查找对应执行函数</li>
+<li>对于没有<code>排序好</code>的列表，采用<code>一般遍历</code></li>
+<li>缓存查找是否命中，  方法列表是否命中， 逐级父类方法是否命中, 消息转发</li>
+</ul>
+<h3 id="x消息转发"><a href="#x消息转发" class="headerlink" title="x消息转发"></a>x消息转发</h3><h4 id="实例方法的转发"><a href="#实例方法的转发" class="headerlink" title="实例方法的转发"></a>实例方法的转发</h4><ul>
+<li>类方法 resolveInstanceMethode: 返回值bool。yes已处理，消息转发结束</li>
+<li>forwarding TargetForSelector:  返回值是id，因该有那个对象来处理，返回nil进入第三次转发</li>
+<li>methodSignatureForSelector: 返回方法签名,返回nil，消息无法处理</li>
+<li>forwardInvocation：</li>
+</ul>
+<h3 id="Method-Swizzling"><a href="#Method-Swizzling" class="headerlink" title="Method-Swizzling"></a>Method-Swizzling</h3><h3 id="动态添加方法"><a href="#动态添加方法" class="headerlink" title="动态添加方法"></a>动态添加方法</h3><ul>
+<li>通过消息转发机制,动态添加方法。在resolveInstanceMethod</li>
+</ul>
+<h3 id="动态方法解析"><a href="#动态方法解析" class="headerlink" title="动态方法解析"></a>动态方法解析</h3><ul>
+<li>@dynamic  动态运行时语言将函数决议推迟到运行时</li>
+<li>编译时语言在编译器进行函数决议</li>
+</ul>
+<h3 id="obj-foo-和objc-msgSend-函数有什么关系？"><a href="#obj-foo-和objc-msgSend-函数有什么关系？" class="headerlink" title="[obj foo]和objc_msgSend()函数有什么关系？"></a>[obj foo]和objc_msgSend()函数有什么关系？</h3><ul>
+<li>[obj foo]在编译之后，就变成了和objc_msgSend()</li>
+</ul>
+<h3 id="runtime如何通过Selector找到对应的IMP地址？"><a href="#runtime如何通过Selector找到对应的IMP地址？" class="headerlink" title="runtime如何通过Selector找到对应的IMP地址？"></a>runtime如何通过Selector找到对应的IMP地址？</h3><ul>
+<li>先从缓存方法列表—-待补充</li>
+</ul>
+<h3 id="能否向编译后的类中增加实例变量？"><a href="#能否向编译后的类中增加实例变量？" class="headerlink" title="能否向编译后的类中增加实例变量？"></a>能否向编译后的类中增加实例变量？</h3><ul>
+<li>不能！编译后结构体class_ro_t是只读属性</li>
+</ul>
+<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><ul>
+<li>TaggedPointer</li>
+<li>NONPOINTER_ISA</li>
+<li>散列表(引用技术表和弱引用表)</li>
+</ul>
+<h2 id="NONPOINTER-ISA"><a href="#NONPOINTER-ISA" class="headerlink" title="NONPOINTER_ISA"></a>NONPOINTER_ISA</h2><h2 id="散列表-Side-Tables-结构"><a href="#散列表-Side-Tables-结构" class="headerlink" title="散列表 Side Tables()结构"></a>散列表 Side Tables()结构</h2><ul>
+<li>自旋锁</li>
+<li>引用计数表</li>
+<li>弱引用表<blockquote>
+<p>分离锁，提升并发问题</p>
+</blockquote>
+</li>
+<li>Spinlock_t 自旋锁<ul>
+<li>Spinlock_t是『忙等』的锁</li>
+<li>轻量访问</li>
+</ul>
+</li>
+<li>RefcountMap Hash表</li>
+<li>weak_table_t 弱引用表 Hash表</li>
+</ul>
+<h2 id="MRC-amp-ARC"><a href="#MRC-amp-ARC" class="headerlink" title="MRC &amp; ARC"></a>MRC &amp; ARC</h2><ul>
+<li>ARC是LLVM和Runtime协作的结果</li>
+<li>ARC禁止调用 retain/等</li>
+<li>ARC中新增weak，strong等属性关键字</li>
+</ul>
+<h2 id="引用计数管理"><a href="#引用计数管理" class="headerlink" title="引用计数管理"></a>引用计数管理</h2><h3 id="retain实现"><a href="#retain实现" class="headerlink" title="retain实现"></a>retain实现</h3><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SideTable&amp; table = SideTables()[This];（哈西查找）</span><br><span class="line">size_t&amp; <span class="built_in">ref</span>cntStorage = table.<span class="built_in">ref</span>cnts[This];   size_t就是无符号long型</span><br><span class="line"><span class="built_in">ref</span>cnStorage += SIDE_TABLE_RC_ONE;</span><br></pre></td></tr></table></figure>
+
+<h3 id="dealloc实现"><a href="#dealloc实现" class="headerlink" title="dealloc实现"></a>dealloc实现</h3><ol>
+<li>_objc_rootDeallco()</li>
+<li>rootDealloc()</li>
+<li>是否可以释放<ul>
+<li>nonpointer_isa</li>
+<li>weakly_referenced</li>
+<li>has_assoc</li>
+<li>has_cxx_dtor</li>
+<li>has_sidetable_rc</li>
+</ul>
+</li>
+<li>3全部为no，调用object_dospose().否则可直接c函数free()释放</li>
+</ol>
+<h3 id="弱引用管理"><a href="#弱引用管理" class="headerlink" title="弱引用管理"></a>弱引用管理</h3><h2 id="自动释放池"><a href="#自动释放池" class="headerlink" title="自动释放池"></a>自动释放池</h2><ul>
+<li>是以<code>栈</code>为节点通过<code>双向链表</code>的形式结合而成</li>
+<li>是和<code>线程</code>一一对应的</li>
+</ul>
+<h3 id="双向链表"><a href="#双向链表" class="headerlink" title="双向链表"></a>双向链表</h3><p>{<br>    id * next;<br>    AutoReleasePoolPage * const parent;<br>    AutoReleasePoolPage * child;<br>    pthread_t const thread<br>}<br>多层嵌套就是多次插入哨兵对象</p>
+<h2 id="循环引用"><a href="#循环引用" class="headerlink" title="循环引用"></a>循环引用</h2><ul>
+<li>自循环引用</li>
+<li>相互循环引用</li>
+<li>多循环引用</li>
+</ul>
+<h3 id="如何破除循环引用"><a href="#如何破除循环引用" class="headerlink" title="如何破除循环引用"></a>如何破除循环引用</h3><ul>
+<li>避免产生循环引用</li>
+<li>在合适的时机手动断环</li>
+</ul>
+<ul>
+<li>__block<ul>
+<li>MRC下，__block修饰不会增加引用计数，避免了循环引用</li>
+<li>ARC下，__block修饰会被强引用，无法避免循环引用，需手动解环</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>NSTimer的循环引用问题<ul>
+<li>nstimer 会对target强引用，Runloop会强制引用NSTimer；</li>
+<li>添加中间对象，NSTimer和对象之间</li>
+<li>invalidInvocation</li>
+</ul>
+</li>
+</ul>
+<h1 id="Block"><a href="#Block" class="headerlink" title="Block"></a>Block</h1><blockquote>
+<p>Block是将<code>函数</code>以及<code>执行上下文</code>封装起来的<code>对象</code>.<br>使用【clang -rewite-objc file.m】查看编译之后的文件内容</p>
+</blockquote>
+<h2 id="截获变量"><a href="#截获变量" class="headerlink" title="截获变量"></a>截获变量</h2><ul>
+<li>对于<code>基本数据</code>类型的<code>局部变量</code>截获其值</li>
+<li>对于<code>对象</code>类型的局部变量<code>连同所有权修饰符</code>一起截获</li>
+<li>以<code>指针形式</code>截获局部静态变量</li>
+<li>不截获全局变量、静态全局变量<br>使用【clang -rewite-objc -fobjc-arc file.m】查看编译之后的文件内容</li>
+</ul>
+<h2 id="block修饰符"><a href="#block修饰符" class="headerlink" title="__block修饰符"></a>__block修饰符</h2><ul>
+<li><code>一般情况下</code>，对被截获的变量进行<code>赋值</code>操纵时，需要添加<code>__block修饰符</code></li>
+</ul>
+<h2 id="Block的内存管理"><a href="#Block的内存管理" class="headerlink" title="Block的内存管理"></a>Block的内存管理</h2><p>无论任何位置，都可以顺利的用__block修饰变量访问到</p>
+<h2 id="循环引用问题"><a href="#循环引用问题" class="headerlink" title="循环引用问题"></a>循环引用问题</h2><ul>
+<li>__block在MRC下不会引用计数+1，在arc下会引用计数+1</li>
+</ul>
+<h1 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h1><ul>
+<li>GCD</li>
+<li>NSOperation</li>
+<li>NSTread （常驻线程）</li>
+<li>多线程与锁</li>
+</ul>
+<h2 id="GCD"><a href="#GCD" class="headerlink" title="GCD"></a>GCD</h2><ul>
+<li>同步、异步和串行/并发</li>
+<li>dispath_barrier_async 针对多读单写问题,栅栏函数</li>
+<li>dispath_group</li>
+</ul>
+<h3 id="同步串行"><a href="#同步串行" class="headerlink" title="同步串行"></a>同步串行</h3><ul>
+<li>死锁原因，是队列引起的 循环等待</li>
+</ul>
+<h3 id="同步并发"><a href="#同步并发" class="headerlink" title="同步并发"></a>同步并发</h3><h3 id="异步串行"><a href="#异步串行" class="headerlink" title="异步串行"></a>异步串行</h3><h3 id="异步并发-performSelector-delay"><a href="#异步并发-performSelector-delay" class="headerlink" title="异步并发 performSelector: delay"></a>异步并发 performSelector: delay</h3><h2 id="dispath-barrier-async"><a href="#dispath-barrier-async" class="headerlink" title="dispath_barrier_async()"></a>dispath_barrier_async()</h2><h2 id="dispath-group-async"><a href="#dispath-group-async" class="headerlink" title="dispath_group_async()"></a>dispath_group_async()</h2><p>使用GCD实现：ABC执行完，再执行D</p>
+<blockquote>
+<p>dispatch_group_notify(group,….){}</p>
+</blockquote>
+<h2 id="NSOperation"><a href="#NSOperation" class="headerlink" title="NSOperation"></a>NSOperation</h2><ul>
+<li>需要和NSOperationQueue</li>
+</ul>
+<ul>
+<li>添加任务依赖</li>
+<li>任务执行状态控制</li>
+<li>最大并发量</li>
+</ul>
+<h3 id="任务执行状态控制"><a href="#任务执行状态控制" class="headerlink" title="任务执行状态控制"></a>任务执行状态控制</h3><ul>
+<li>isReady</li>
+<li>isExecuting</li>
+<li>isFinished</li>
+<li>isCancelled<br>只重写了<code>main</code>方法，底层控制变更任务执行完成状态，以及任务退出<br>如果重写了<code>star</code>方法，自行控制任务状态</li>
+</ul>
+<ul>
+<li>gnustep=base-1.24.9<blockquote>
+<p>系统通过KVO的形势移出一个isFinished为YES的NSOperation</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="NSThread"><a href="#NSThread" class="headerlink" title="NSThread"></a>NSThread</h2><p>启动流程 star() -&gt; 创建pthread -&gt; main() -&gt; [target performSelector:SEL] -&gt; exit()</p>
+<h2 id="多线程和锁"><a href="#多线程和锁" class="headerlink" title="多线程和锁"></a>多线程和锁</h2><ul>
+<li>@synchronized<ul>
+<li>创建单利对象的使用</li>
+</ul>
+</li>
+<li>atomic<ul>
+<li>属性关键字，赋值操作线程安全，其它不安全</li>
+</ul>
+</li>
+<li>OSSpinLock<ul>
+<li>自旋锁，<code>循环等待</code>询问，不释放当前资源</li>
+<li>轻量级的数据访问，简单的+1、-1</li>
+</ul>
+</li>
+<li>NSRecursivelock 递归锁<ul>
+<li>可以重录</li>
+</ul>
+</li>
+<li>NSLock<ul>
+<li>互斥</li>
+<li>A方法中[lock lock],再次调用[lock lock]会造成死锁，使用NSRecursivelock</li>
+</ul>
+</li>
+<li><h2 id="dispath-semaphore-t"><a href="#dispath-semaphore-t" class="headerlink" title="dispath_semaphore_t"></a>dispath_semaphore_t</h2></li>
+</ul>
+<h1 id="RunLoop"><a href="#RunLoop" class="headerlink" title="RunLoop"></a>RunLoop</h1><blockquote>
+<p>RunLoop是通过内部维护的<code>事件循环</code>来对<code>事件/消息进行管理</code>的一个对象</p>
+</blockquote>
+<ul>
+<li>没有消息需要处理时，休眠以避免资源占用<ul>
+<li>用户态 -&gt; 内核态</li>
+</ul>
+</li>
+<li>有消息需要处理时，立刻被唤醒<ul>
+<li>内核态 -&gt; 用户态</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据结构-1"><a href="#数据结构-1" class="headerlink" title="数据结构"></a>数据结构</h2><p>NSRunLoop 是CFRunLoop的封装，提供了面向对象的API, <span class="exturl" data-url="aHR0cHM6Ly9vcGVuc291cmNlLmFwcGxlLmNvbS90YXJiYWxscy9DRi9DRi04NTUuMTcudGFyLmd6">开源地址<i class="fa fa-external-link-alt"></i></span></p>
+<ul>
+<li>CFRunLoop</li>
+<li>CFRunLoopMode</li>
+<li>Source/Timer/Observer</li>
+</ul>
+<h3 id="CFRunLoop-数据结构"><a href="#CFRunLoop-数据结构" class="headerlink" title="CFRunLoop 数据结构"></a>CFRunLoop 数据结构</h3><ol>
+<li>pthread          一一对应 （Runloop和线程的关系）</li>
+<li>currentMode      CFRunLoopMode</li>
+<li>modes            NSMutableSet&lt;CFRunLoopMode*&gt;</li>
+<li>commonModes      NSMutableSet&lt;NSString*&gt;<ul>
+<li><code>不是一种实际存在</code>的Mode，</li>
+<li>同步 Source/Timer/Observer 到多个Mode中的<code>一种技术方案</code></li>
+</ul>
+</li>
+<li>commonModeItems  observer Timer source,</li>
+</ol>
+<h3 id="CFRunLoopMode"><a href="#CFRunLoopMode" class="headerlink" title="CFRunLoopMode"></a>CFRunLoopMode</h3><ol>
+<li>name                 NSDefaultRunloopMode</li>
+<li>source0              </li>
+<li>source1</li>
+<li>observers</li>
+<li>timers</li>
+</ol>
+<h3 id="CFRunLoopSource"><a href="#CFRunLoopSource" class="headerlink" title="CFRunLoopSource"></a>CFRunLoopSource</h3><ul>
+<li>source0 需要手动唤醒线程</li>
+<li>source1 具备唤醒线程的能力</li>
+</ul>
+<h3 id="CFRunLoopObserver"><a href="#CFRunLoopObserver" class="headerlink" title="CFRunLoopObserver"></a>CFRunLoopObserver</h3><ul>
+<li>kCFRunLoopEntry</li>
+<li>kCFRunloopBeforeTimers</li>
+<li>kCFRunLoopBeforeSources</li>
+<li>kCFRunLoopBeforeWaiting</li>
+<li>…</li>
+</ul>
+<blockquote>
+<p>1个RunLoop有多个Model，一个model有多个 source、Timer、Observer</p>
+</blockquote>
+<h2 id="RunLoop的Mode"><a href="#RunLoop的Mode" class="headerlink" title="RunLoop的Mode"></a>RunLoop的Mode</h2><h2 id="事件循环的实现机制"><a href="#事件循环的实现机制" class="headerlink" title="事件循环的实现机制"></a>事件循环的实现机制</h2><p>void CFRunLoopRun(),用户态到核心态相互切换</p>
+<img src="/images/iOS/RunLoop-machining.png" class="" title="RunLoop循环机制">
+
+<h2 id="常驻线程"><a href="#常驻线程" class="headerlink" title="常驻线程"></a>常驻线程</h2><p>由于自己创建的线程并没有开启runloop(一一对应关系)，需要创建并开启一个Runloop</p>
+<ol>
+<li>为当前线程开启一个RunLoop. </li>
+<li>向该RunLoop中添加一个Port/Source等维持RunLoop的事件循环. 没有就会退出</li>
+<li>启动该RunLoop</li>
+</ol>
+<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><ul>
+<li>责任链</li>
+<li>桥接</li>
+<li>适配器</li>
+<li>单例</li>
+<li>命令</li>
+</ul>
+<h2 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h2><ul>
+<li>单一指责原则<ul>
+<li>一个类负责一件事儿，CALayer和UIView</li>
+</ul>
+</li>
+<li>依赖倒置原则<ul>
+<li>抽象不应该依赖于具体实现，具体实现可以依赖于抽象. 声明的接口等</li>
+</ul>
+</li>
+<li>开闭原则<ul>
+<li>对修改关闭、对扩展开放</li>
+</ul>
+</li>
+<li>里氏替换原则<ul>
+<li>KVO,使用紫雷无缝替换，且原功能不受任何影响</li>
+</ul>
+</li>
+<li>接口隔离原则<ul>
+<li>使用多个专门的协议、delegate，datasouce</li>
+</ul>
+</li>
+<li>迪米特法则<ul>
+<li>一个对象应当对其他对象有尽可能少的了解</li>
+<li>高内聚，低耦合</li>
+</ul>
+</li>
+</ul>
+<h2 id="责任链"><a href="#责任链" class="headerlink" title="责任链"></a>责任链</h2><ul>
+<li>某一对象的成员变量也是该类类型</li>
+</ul>
+<h2 id="桥接"><a href="#桥接" class="headerlink" title="桥接"></a>桥接</h2><ul>
+<li>一个类拥有一个抽象类，抽象类有多种实现</li>
+</ul>
+<h2 id="适配器"><a href="#适配器" class="headerlink" title="适配器"></a>适配器</h2><ul>
+<li>一个现有类需要适应变化的问题<ul>
+<li>对象适配器</li>
+<li>类适配器</li>
+</ul>
+</li>
+</ul>
+<h3 id="对象适配器"><a href="#对象适配器" class="headerlink" title="对象适配器"></a>对象适配器</h3><p>成员变量的方式持有原类</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">void</span>)request &#123;</span><br><span class="line">    <span class="comment">//额外处理</span></span><br><span class="line"><span class="string">    [self.target operation]</span>;</span><br><span class="line">    <span class="comment">//额外处理</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="单例"><a href="#单例" class="headerlink" title="单例"></a>单例</h2><blockquote>
+<p>instance = [[super allocWithZone:NULL] init];避免循环调用</p>
+</blockquote>
+<ul>
+<li>重写 <figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+ (id)<span class="symbol">allocWithZone:</span>(<span class="class"><span class="keyword">struct</span> <span class="title">_NSZone</span> *)<span class="title">zone</span> &#123;</span></span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> shareInstance];</span><br><span class="line">&#125;</span><br><span class="line">- (id)<span class="symbol">copyWithZone:</span>(<span class="class"><span class="keyword">struct</span> <span class="title">_NSZone</span> *)<span class="title">zone</span> &#123;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h2></li>
+</ul>
+<ul>
+<li>行为参数化</li>
+<li>降低代码重合度</li>
+</ul>
+<h1 id="架构-amp-框架"><a href="#架构-amp-框架" class="headerlink" title="架构&amp;框架"></a>架构&amp;框架</h1><ul>
+<li>图片缓存</li>
+<li>阅读时长统计</li>
+<li>复杂页面架构</li>
+<li>客户端整体架构</li>
+</ul>
+<h2 id="图片缓存框架"><a href="#图片缓存框架" class="headerlink" title="图片缓存框架"></a>图片缓存框架</h2><ol>
+<li>内存的设计上需要考虑哪些问题？<ul>
+<li>储存的Size</li>
+<li>淘汰策略</li>
+</ul>
+</li>
+</ol>
+<h3 id="存储的Size"><a href="#存储的Size" class="headerlink" title="存储的Size"></a>存储的Size</h3><ul>
+<li>10k以下的图片</li>
+<li>100k以下20张图片</li>
+<li>100k以上5张左右</li>
+</ul>
+<h4 id="淘汰策略（内存）"><a href="#淘汰策略（内存）" class="headerlink" title="淘汰策略（内存）"></a>淘汰策略（内存）</h4><ul>
+<li>队列先进先出的方式淘汰</li>
+<li>模拟LRU算法 （最近最久，如30分钟之内是否使用过）<ul>
+<li>定时检查</li>
+<li>提高检查出发的频率<ul>
+<li>每次进行读写时</li>
+<li>前后台切换时</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="磁盘设计"><a href="#磁盘设计" class="headerlink" title="磁盘设计"></a>磁盘设计</h4><ul>
+<li>存储方式</li>
+<li>大小限制（如100M）</li>
+<li>淘汰策略(如某一图片储存时间超过7天)</li>
+</ul>
+<h4 id="网络请求图片设计"><a href="#网络请求图片设计" class="headerlink" title="网络请求图片设计"></a>网络请求图片设计</h4><ul>
+<li>图片请求最大量</li>
+<li>请求超时策略</li>
+<li>请求优先级</li>
+</ul>
+<h4 id="图片解码"><a href="#图片解码" class="headerlink" title="图片解码"></a>图片解码</h4><ul>
+<li>对于不同格式的图片，用什么方式？</li>
+</ul>
+<ul>
+<li>应用策略模式对不同图片进行解码</li>
+</ul>
+<ul>
+<li>在哪个阶段图片解码处理</li>
+</ul>
+<ul>
+<li>磁盘读取后</li>
+<li>网络请求返回后</li>
+</ul>
+<h4 id="线程处理"><a href="#线程处理" class="headerlink" title="线程处理"></a>线程处理</h4><h2 id="阅读时长统计"><a href="#阅读时长统计" class="headerlink" title="阅读时长统计"></a>阅读时长统计</h2><ul>
+<li>记录器<ul>
+<li>页面记录</li>
+<li>流式</li>
+<li>自定义</li>
+</ul>
+</li>
+<li>记录管理者<ul>
+<li>记录缓存</li>
+<li>磁盘储存</li>
+<li>上传器（延时上传）<ul>
+<li>前后台切换</li>
+<li>从无网到有网的变化</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>处理数据丢失<ul>
+<li>定时储存</li>
+<li>100条储存</li>
+</ul>
+</li>
+</ul>
+<h2 id="负责页面架构"><a href="#负责页面架构" class="headerlink" title="负责页面架构"></a>负责页面架构</h2><ul>
+<li>整体框架</li>
+<li>数据流</li>
+<li>反向更新</li>
+</ul>
+<h3 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h3><ul>
+<li>view（ViewController）</li>
+<li>ViewModel</li>
+<li>Model(Engeer)</li>
+</ul>
+<h2 id="整体框架"><a href="#整体框架" class="headerlink" title="整体框架"></a>整体框架</h2><ul>
+<li>独立于App的通用层</li>
+<li>通用业务层</li>
+<li>中间层</li>
+<li>业务ABCD</li>
+</ul>
+<h3 id="业务解耦"><a href="#业务解耦" class="headerlink" title="业务解耦"></a>业务解耦</h3><ul>
+<li>OpenUrl</li>
+<li>依赖注入（中间层）</li>
+</ul>
+<h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1><ul>
+<li>字符串反转 ；<ul>
+<li>俩头交换</li>
+</ul>
+</li>
+<li>链表反转<ul>
+<li>插入头部</li>
+</ul>
+</li>
+<li>有序数组合并<ul>
+<li>比较大小，添加到新的数组</li>
+</ul>
+</li>
+<li>Hash算法<ul>
+<li>字符对应的aciic码表</li>
+</ul>
+</li>
+<li>查找两个子视图的共同父视图<ul>
+<li>所有父视图 倒序比较</li>
+</ul>
+</li>
+<li>求无序数组当中的中位数</li>
+</ul>
+<h1 id="第三方库"><a href="#第三方库" class="headerlink" title="第三方库"></a>第三方库</h1><h2 id="AFNetworking"><a href="#AFNetworking" class="headerlink" title="AFNetworking"></a>AFNetworking</h2><p>架构图</p>
+<img src="/images/iOS/AFNetworking-draft.png" class="" title="AFNetworking框架">
+<ul>
+<li>AFURLSessionManager 核心类<ul>
+<li>NSUrLSession</li>
+<li>AFSecurityPolicy</li>
+<li>AFNetworkReachablilityManager</li>
+<li>创建和管理NSUrLSession、NSURLSessionTask</li>
+<li>实现NSURLSessionDelegate等协议的代理方法</li>
+<li>引入AFSecurityPolicy保证请求安全</li>
+<li>引入AFNetworkReachablilityManager监控网络状态</li>
+</ul>
+</li>
+<li>AFHTTPSessionManeger<ul>
+<li>AFURLRequestSerialzation</li>
+<li>AFURLResponseSerial</li>
+</ul>
+</li>
+</ul>
+<h2 id="SDWebImage"><a href="#SDWebImage" class="headerlink" title="SDWebImage"></a>SDWebImage</h2><p>架构图</p>
+<img src="/images/iOS/SDWebImage.png" class="" title="SDWebImage框架">
+
+<h2 id="ReactiveCocoa"><a href="#ReactiveCocoa" class="headerlink" title="ReactiveCocoa"></a>ReactiveCocoa</h2><p>函数响应式编程框架，<code>信号</code>，<code>订阅</code>信号<br>ReactiveCocoa中核心类RACSignal -&gt; RACStream</p>
+<ul>
+<li>RACDynamicSignal</li>
+<li>RACReturnSignal</li>
+<li>RACEmptySignal</li>
+<li>RACErrorSignal</li>
+</ul>
+<h3 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h3><p>代表一连串的状态</p>
+<ul>
+<li>empty，return，bind，concat，zipWith</li>
+</ul>
+<h3 id="订阅-RACSubscriber"><a href="#订阅-RACSubscriber" class="headerlink" title="订阅 RACSubscriber"></a>订阅 RACSubscriber</h3><p>start -&gt; RACSignal -&gt; -subscribeNext: -&gt; RACSubscriber -&gt; -sendNext: -&gt; -sendCompleted</p>
+<h2 id="AsyncDisplayKit"><a href="#AsyncDisplayKit" class="headerlink" title="AsyncDisplayKit"></a>AsyncDisplayKit</h2><p>更多请看<a href="./iOS/thirdpart/asdk.html">AsyncDisplayKit</a><br>提升iOS界面渲染性能的一个框架<br>主要处理问题</p>
+<ul>
+<li>Layout 文本宽高计算、视图布局计算</li>
+<li>Rendering  文本渲染、图片解码、图形绘制</li>
+<li>UIKit Objects 对象创建、对象调整、对象销毁</li>
+</ul>
+<h3 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h3><ul>
+<li>ASNode === UIView === CALayer</li>
+<li>针对ASNode的修改和提交，会对其进行封装提交到一个全局容器当中</li>
+<li>ASDK也在RunLoop中注册了一个Observer</li>
+<li>当RunLoop进入休眠前，ASDK执行该Loop内提交的所有任务</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Finished! 此时需要一个，互动，评论的功能！开搞。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>希望对您有所帮助，您的支持将是我莫大的动力！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Jack Wang 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Jack Wang 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/iOS/" rel="tag"># iOS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/iOS/origincode/category.html" rel="prev" title="Objective-C中的分类">
+      <i class="fa fa-chevron-left"></i> Objective-C中的分类
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/python/index.html" rel="next" title="Python">
+      Python <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7"><span class="nav-number">1.</span> <span class="nav-text">高级</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B5%84%E6%B7%B1"><span class="nav-number">2.</span> <span class="nav-text">资深</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%93%E5%AE%B6"><span class="nav-number">3.</span> <span class="nav-text">专家</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E5%8E%86"><span class="nav-number">4.</span> <span class="nav-text">简历</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UI%E8%A7%86%E5%9B%BE"><span class="nav-number">5.</span> <span class="nav-text">UI视图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UITableView"><span class="nav-number">6.</span> <span class="nav-text">UITableView</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E5%9B%BE%E6%98%BE%E7%A4%BA%E5%8E%9F%E7%90%86"><span class="nav-number">7.</span> <span class="nav-text">视图显示原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%A1%E9%A1%BF%E3%80%81%E6%8E%89%E5%B8%A7%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">7.1.</span> <span class="nav-text">卡顿、掉帧的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UIView%E7%9A%84%E7%BB%98%E5%88%B6%E5%8E%9F%E7%90%86"><span class="nav-number">7.2.</span> <span class="nav-text">UIView的绘制原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E7%BB%98%E5%88%B6-layer-delegate-displayLayer"><span class="nav-number">7.3.</span> <span class="nav-text">异步绘制 [layer.delegate displayLayer]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93-OFF-SCREEN-RENDERING"><span class="nav-number">7.4.</span> <span class="nav-text">离屏渲染(OFF-SCREEN RENDERING)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OC%E8%AF%AD%E8%A8%80%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98"><span class="nav-number">8.</span> <span class="nav-text">OC语言面试问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%B1%BB"><span class="nav-number">8.1.</span> <span class="nav-text">分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E9%83%BD%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88%E4%BA%8B%E6%83%85%EF%BC%9F"><span class="nav-number">8.1.1.</span> <span class="nav-text">分类都做了什么事情？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-number">8.1.2.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E4%B8%AD%E5%8F%AF%E4%BB%A5%E6%B7%BB%E5%8A%A0%E5%93%AA%E4%BA%9B%E5%86%85%E5%AE%B9"><span class="nav-number">8.1.3.</span> <span class="nav-text">分类中可以添加哪些内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93-objc-runtime-680%E7%89%88%E6%9C%AC%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="nav-number">8.1.4.</span> <span class="nav-text">结构体(objc-runtime-680版本源代码)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E8%B0%83%E7%94%A8%E6%A0%88"><span class="nav-number">8.1.5.</span> <span class="nav-text">加载调用栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">8.1.6.</span> <span class="nav-text">源码分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-%E6%89%A9%E5%B1%95%E7%9B%B8%E5%85%B3%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98"><span class="nav-number">8.2.</span> <span class="nav-text">4-5 扩展相关面试问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E7%89%B9%E6%80%A7"><span class="nav-number">8.2.1.</span> <span class="nav-text">扩展特性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%90%86%E7%9B%B8%E5%85%B3"><span class="nav-number">8.3.</span> <span class="nav-text">代理相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E7%9F%A5%E7%9B%B8%E5%85%B3-NSNotification"><span class="nav-number">8.4.</span> <span class="nav-text">通知相关(NSNotification)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KVO"><span class="nav-number">8.5.</span> <span class="nav-text">KVO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KVC-Key-value-coding-%E9%94%AE%E5%80%BC%E7%BC%96%E7%A0%81"><span class="nav-number">8.6.</span> <span class="nav-text">KVC (Key-value coding)键值编码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RunTime"><span class="nav-number">9.</span> <span class="nav-text">RunTime</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">9.1.</span> <span class="nav-text">数据结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B1%BB%E5%AF%B9%E8%B1%A1%EF%BC%8C%E5%AF%B9%E8%B1%A1-%E5%AE%9E%E4%BE%8B%EF%BC%8Cisa%E6%8C%87%E5%90%91%E7%B1%BB%E5%AF%B9%E8%B1%A1-%EF%BC%8C"><span class="nav-number">10.</span> <span class="nav-text">类对象，对象(实例，isa指向类对象)，</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92"><span class="nav-number">10.1.</span> <span class="nav-text">消息传递</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%9F%A5%E6%89%BE-%E5%93%88%E5%B8%8C%E6%9F%A5%E6%89%BE"><span class="nav-number">10.1.1.</span> <span class="nav-text">缓存查找 哈希查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#x%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91"><span class="nav-number">10.1.2.</span> <span class="nav-text">x消息转发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B%E6%96%B9%E6%B3%95%E7%9A%84%E8%BD%AC%E5%8F%91"><span class="nav-number">10.1.2.1.</span> <span class="nav-text">实例方法的转发</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Method-Swizzling"><span class="nav-number">10.1.3.</span> <span class="nav-text">Method-Swizzling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E6%B7%BB%E5%8A%A0%E6%96%B9%E6%B3%95"><span class="nav-number">10.1.4.</span> <span class="nav-text">动态添加方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E6%96%B9%E6%B3%95%E8%A7%A3%E6%9E%90"><span class="nav-number">10.1.5.</span> <span class="nav-text">动态方法解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#obj-foo-%E5%92%8Cobjc-msgSend-%E5%87%BD%E6%95%B0%E6%9C%89%E4%BB%80%E4%B9%88%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="nav-number">10.1.6.</span> <span class="nav-text">[obj foo]和objc_msgSend()函数有什么关系？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#runtime%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87Selector%E6%89%BE%E5%88%B0%E5%AF%B9%E5%BA%94%E7%9A%84IMP%E5%9C%B0%E5%9D%80%EF%BC%9F"><span class="nav-number">10.1.7.</span> <span class="nav-text">runtime如何通过Selector找到对应的IMP地址？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E5%90%A6%E5%90%91%E7%BC%96%E8%AF%91%E5%90%8E%E7%9A%84%E7%B1%BB%E4%B8%AD%E5%A2%9E%E5%8A%A0%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F%EF%BC%9F"><span class="nav-number">10.1.8.</span> <span class="nav-text">能否向编译后的类中增加实例变量？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">11.</span> <span class="nav-text">内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NONPOINTER-ISA"><span class="nav-number">11.1.</span> <span class="nav-text">NONPOINTER_ISA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%A3%E5%88%97%E8%A1%A8-Side-Tables-%E7%BB%93%E6%9E%84"><span class="nav-number">11.2.</span> <span class="nav-text">散列表 Side Tables()结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MRC-amp-ARC"><span class="nav-number">11.3.</span> <span class="nav-text">MRC &amp; ARC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0%E7%AE%A1%E7%90%86"><span class="nav-number">11.4.</span> <span class="nav-text">引用计数管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#retain%E5%AE%9E%E7%8E%B0"><span class="nav-number">11.4.1.</span> <span class="nav-text">retain实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dealloc%E5%AE%9E%E7%8E%B0"><span class="nav-number">11.4.2.</span> <span class="nav-text">dealloc实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%B1%E5%BC%95%E7%94%A8%E7%AE%A1%E7%90%86"><span class="nav-number">11.4.3.</span> <span class="nav-text">弱引用管理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0"><span class="nav-number">11.5.</span> <span class="nav-text">自动释放池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8"><span class="nav-number">11.5.1.</span> <span class="nav-text">双向链表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="nav-number">11.6.</span> <span class="nav-text">循环引用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%A0%B4%E9%99%A4%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="nav-number">11.6.1.</span> <span class="nav-text">如何破除循环引用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Block"><span class="nav-number">12.</span> <span class="nav-text">Block</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%AA%E8%8E%B7%E5%8F%98%E9%87%8F"><span class="nav-number">12.1.</span> <span class="nav-text">截获变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#block%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="nav-number">12.2.</span> <span class="nav-text">__block修饰符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Block%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">12.3.</span> <span class="nav-text">Block的内存管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E9%97%AE%E9%A2%98"><span class="nav-number">12.4.</span> <span class="nav-text">循环引用问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="nav-number">13.</span> <span class="nav-text">多线程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GCD"><span class="nav-number">13.1.</span> <span class="nav-text">GCD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E4%B8%B2%E8%A1%8C"><span class="nav-number">13.1.1.</span> <span class="nav-text">同步串行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91"><span class="nav-number">13.1.2.</span> <span class="nav-text">同步并发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E4%B8%B2%E8%A1%8C"><span class="nav-number">13.1.3.</span> <span class="nav-text">异步串行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E5%B9%B6%E5%8F%91-performSelector-delay"><span class="nav-number">13.1.4.</span> <span class="nav-text">异步并发 performSelector: delay</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dispath-barrier-async"><span class="nav-number">13.2.</span> <span class="nav-text">dispath_barrier_async()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dispath-group-async"><span class="nav-number">13.3.</span> <span class="nav-text">dispath_group_async()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSOperation"><span class="nav-number">13.4.</span> <span class="nav-text">NSOperation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E7%8A%B6%E6%80%81%E6%8E%A7%E5%88%B6"><span class="nav-number">13.4.1.</span> <span class="nav-text">任务执行状态控制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSThread"><span class="nav-number">13.5.</span> <span class="nav-text">NSThread</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%92%8C%E9%94%81"><span class="nav-number">13.6.</span> <span class="nav-text">多线程和锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dispath-semaphore-t"><span class="nav-number">13.7.</span> <span class="nav-text">dispath_semaphore_t</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RunLoop"><span class="nav-number">14.</span> <span class="nav-text">RunLoop</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1"><span class="nav-number">14.1.</span> <span class="nav-text">数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CFRunLoop-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">14.1.1.</span> <span class="nav-text">CFRunLoop 数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CFRunLoopMode"><span class="nav-number">14.1.2.</span> <span class="nav-text">CFRunLoopMode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CFRunLoopSource"><span class="nav-number">14.1.3.</span> <span class="nav-text">CFRunLoopSource</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CFRunLoopObserver"><span class="nav-number">14.1.4.</span> <span class="nav-text">CFRunLoopObserver</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoop%E7%9A%84Mode"><span class="nav-number">14.2.</span> <span class="nav-text">RunLoop的Mode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%9C%BA%E5%88%B6"><span class="nav-number">14.3.</span> <span class="nav-text">事件循环的实现机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E9%A9%BB%E7%BA%BF%E7%A8%8B"><span class="nav-number">14.4.</span> <span class="nav-text">常驻线程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C"><span class="nav-number">15.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">16.</span> <span class="nav-text">设计模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="nav-number">16.1.</span> <span class="nav-text">设计原则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%A3%E4%BB%BB%E9%93%BE"><span class="nav-number">16.2.</span> <span class="nav-text">责任链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%A5%E6%8E%A5"><span class="nav-number">16.3.</span> <span class="nav-text">桥接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E9%85%8D%E5%99%A8"><span class="nav-number">16.4.</span> <span class="nav-text">适配器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E9%80%82%E9%85%8D%E5%99%A8"><span class="nav-number">16.4.1.</span> <span class="nav-text">对象适配器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E4%BE%8B"><span class="nav-number">16.5.</span> <span class="nav-text">单例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F"><span class="nav-number">16.6.</span> <span class="nav-text">命令模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84-amp-%E6%A1%86%E6%9E%B6"><span class="nav-number">17.</span> <span class="nav-text">架构&amp;框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%89%87%E7%BC%93%E5%AD%98%E6%A1%86%E6%9E%B6"><span class="nav-number">17.1.</span> <span class="nav-text">图片缓存框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E7%9A%84Size"><span class="nav-number">17.1.1.</span> <span class="nav-text">存储的Size</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%88%E5%86%85%E5%AD%98%EF%BC%89"><span class="nav-number">17.1.1.1.</span> <span class="nav-text">淘汰策略（内存）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E8%AE%BE%E8%AE%A1"><span class="nav-number">17.1.1.2.</span> <span class="nav-text">磁盘设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E5%9B%BE%E7%89%87%E8%AE%BE%E8%AE%A1"><span class="nav-number">17.1.1.3.</span> <span class="nav-text">网络请求图片设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BE%E7%89%87%E8%A7%A3%E7%A0%81"><span class="nav-number">17.1.1.4.</span> <span class="nav-text">图片解码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%A4%84%E7%90%86"><span class="nav-number">17.1.1.5.</span> <span class="nav-text">线程处理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%85%E8%AF%BB%E6%97%B6%E9%95%BF%E7%BB%9F%E8%AE%A1"><span class="nav-number">17.2.</span> <span class="nav-text">阅读时长统计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9F%E8%B4%A3%E9%A1%B5%E9%9D%A2%E6%9E%B6%E6%9E%84"><span class="nav-number">17.3.</span> <span class="nav-text">负责页面架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MVVM"><span class="nav-number">17.3.1.</span> <span class="nav-text">MVVM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6"><span class="nav-number">17.4.</span> <span class="nav-text">整体框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E8%A7%A3%E8%80%A6"><span class="nav-number">17.4.1.</span> <span class="nav-text">业务解耦</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%B3%95"><span class="nav-number">18.</span> <span class="nav-text">算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93"><span class="nav-number">19.</span> <span class="nav-text">第三方库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AFNetworking"><span class="nav-number">19.1.</span> <span class="nav-text">AFNetworking</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SDWebImage"><span class="nav-number">19.2.</span> <span class="nav-text">SDWebImage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ReactiveCocoa"><span class="nav-number">19.3.</span> <span class="nav-text">ReactiveCocoa</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7"><span class="nav-number">19.3.1.</span> <span class="nav-text">信号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A2%E9%98%85-RACSubscriber"><span class="nav-number">19.3.2.</span> <span class="nav-text">订阅 RACSubscriber</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AsyncDisplayKit"><span class="nav-number">19.4.</span> <span class="nav-text">AsyncDisplayKit</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">19.4.1.</span> <span class="nav-text">基本原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">20.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jack Wang"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Jack Wang</p>
+  <div class="site-description" itemprop="description">书山有路勤为径，学海无涯苦作舟！</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL29yZ3Mvd2FuZ2tlamllL3JlcG9zaXRvcmllcw==" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;orgs&#x2F;wangkejie&#x2F;repositories"><i class="github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOjcyNzg4MTk0NUBxcS5jb20=" title="E-Mail → mailto:727881945@qq.com"><i class="envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">京ICP备16036665号-2 </span>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack Wang</span>
+</div>
+
+        
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1277804316&web_id=1277804316"></script>
+  </div>
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'S7tR3Qqx6JSg8P5ChLXjLWt8-gzGzoHsz',
+      appKey     : 'hHRdJzqrf8zU1xQElb7km39u',
+      placeholder: "上面也可以填入联系方式，感谢您宝贵的建议~",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

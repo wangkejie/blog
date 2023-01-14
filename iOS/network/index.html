@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="msvalidate.01" content="9BDlx6FiNE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wangkejie.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Http 和 Https 的区别？为什么更加安全？区别 1.HTTPS 需要向机构申请 CA 证书，极少免费。 2.HTTP 属于明文传输，HTTPS基于 SSL 进行加密传输。 3.HTTP 端口号为 80，HTTPS 端口号为 443 。 4.HTTPS 是加密传输，有身份验证的环节，更加安全。  安全SSL(安全套接层)TLS(传输层安全) 以上两者在传输层之上，对网络连接进行加密处理，保障">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络">
+<meta property="og:url" content="https://wangkejie.com/iOS/network/index.html">
+<meta property="og:site_name" content="王科杰">
+<meta property="og:description" content="Http 和 Https 的区别？为什么更加安全？区别 1.HTTPS 需要向机构申请 CA 证书，极少免费。 2.HTTP 属于明文传输，HTTPS基于 SSL 进行加密传输。 3.HTTP 端口号为 80，HTTPS 端口号为 443 。 4.HTTPS 是加密传输，有身份验证的环节，更加安全。  安全SSL(安全套接层)TLS(传输层安全) 以上两者在传输层之上，对网络连接进行加密处理，保障">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-01-10T03:26:39.000Z">
+<meta property="article:modified_time" content="2023-01-14T03:12:23.787Z">
+<meta property="article:author" content="Jack Wang">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wangkejie.com/iOS/network/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>网络 | 王科杰</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?93e26277de0cf2c5851167f2c6dcaa7d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">王科杰</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Jack's Notes</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">71</span></a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/me/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签<span class="badge">78</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类<span class="badge">70</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL29yZ3Mvd2FuZ2tlamllL3JlcG9zaXRvcmllcw==" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/iOS/network/index.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack Wang">
+      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王科杰">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          网络
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-01-10 11:26:39" itemprop="dateCreated datePublished" datetime="2017-01-10T11:26:39+08:00">2017-01-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/iOS/network/index.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/iOS/network/index.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Http-和-Https-的区别？为什么更加安全？"><a href="#Http-和-Https-的区别？为什么更加安全？" class="headerlink" title="Http 和 Https 的区别？为什么更加安全？"></a><code>Http</code> 和 <code>Https</code> 的区别？为什么更加安全？</h2><h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><ul>
+<li>1.<code>HTTPS</code> 需要向机构申请 <code>CA</code> 证书，极少免费。</li>
+<li>2.<code>HTTP</code> 属于明文传输，<code>HTTPS</code>基于 <code>SSL</code> 进行加密传输。</li>
+<li>3.<code>HTTP</code> 端口号为 <code>80</code>，<code>HTTPS</code> 端口号为 <code>443</code> 。</li>
+<li>4.<code>HTTPS</code> 是加密传输，有身份验证的环节，更加安全。</li>
+</ul>
+<h3 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h3><p><strong>SSL(安全套接层)</strong><br><strong>TLS(传输层安全)</strong></p>
+<p>以上两者在传输层之上，对网络连接进行加密处理，保障数据的完整性，更加的安全。</p>
+<h2 id="TCP-IP-五层模型的协议"><a href="#TCP-IP-五层模型的协议" class="headerlink" title="TCP/IP 五层模型的协议?"></a><code>TCP/IP</code> 五层模型的协议?</h2><ul>
+<li>应用层</li>
+<li>传输层</li>
+<li>网路层 </li>
+<li>数据链路层</li>
+<li>物理层</li>
+</ul>
+<h2 id="OSI-七层模型的协议"><a href="#OSI-七层模型的协议" class="headerlink" title="OSI 七层模型的协议?"></a><code>OSI</code> 七层模型的协议?</h2><ul>
+<li>应用层 文件传输，电子邮件，文件服务，虚拟终端 TFTP，HTTP，SNMP，FTP，SMTP，DNS，Telnet</li>
+<li>表示层 数据格式化，代码转换，数据加密 没有协议</li>
+<li>会话层 解除或建立与别的接点的联系 没有协议</li>
+<li>传输层 提供端对端的接口 TCP，UDP</li>
+<li>网络层 为数据包选择路由 IP，ICMP，RIP，OSPF，BGP，IGMP</li>
+<li>数据链路层 传输有地址的帧以及错误检测功能 SLIP，CSLIP，PPP，ARP，RARP，MTU</li>
+<li>物理层 以二进制数据形式在物理媒体上传输数据 ISO2110，IEEE802，IEEE802.2</li>
+</ul>
+<h2 id="断点续传-功能该怎么实现？"><a href="#断点续传-功能该怎么实现？" class="headerlink" title="断点续传 功能该怎么实现？"></a><code>断点续传</code> 功能该怎么实现？</h2><ul>
+<li>1.利用 <code>http</code> 的头部字段 ，设置 <code>http</code> 的 <code>Range</code> 属性</li>
+<li>2.检测下载进度，并且判断是否需要重新创建下载文件</li>
+</ul>
+<h2 id="DNS-的解析过程？网络的-DNS-优化。"><a href="#DNS-的解析过程？网络的-DNS-优化。" class="headerlink" title="DNS 的解析过程？网络的 DNS 优化。"></a><code>DNS</code> 的解析过程？网络的 <code>DNS</code> 优化。</h2><blockquote>
+<p><code>DNS</code> 是域名到 <code>IP</code> 地址的映射，<code>DNS</code> 解析使用 <code>UDP</code> 数据报，端口号53，并且采用明文传输的方式</p>
+</blockquote>
+<p>客户端在向服务端发送请求时，会先将 <code>域名</code> 到 <code>DNS</code> 服务器映射出 <code>IP</code> 地址，然后再访问。</p>
+<h3 id="DNS-解析的两种方式"><a href="#DNS-解析的两种方式" class="headerlink" title="DNS 解析的两种方式"></a><code>DNS</code> 解析的两种方式</h3><h4 id="递归查询"><a href="#递归查询" class="headerlink" title="递归查询"></a>递归查询</h4><p>不断地自下而上遍历解析，“我去给你问一下”的方式</p>
+<h4 id="迭代查询"><a href="#迭代查询" class="headerlink" title="迭代查询"></a>迭代查询</h4><p>迭代查询 是 “我告诉你谁可能知道”的方式</p>
+<h3 id="DNS-解析存在的问题"><a href="#DNS-解析存在的问题" class="headerlink" title="DNS 解析存在的问题"></a><code>DNS</code> 解析存在的问题</h3><h4 id="DNS-劫持"><a href="#DNS-劫持" class="headerlink" title="DNS 劫持"></a><code>DNS</code> 劫持</h4><p>被钓鱼网站劫持，有可能返回错误的 <code>IP</code>，浏览的不是目标浏览器</p>
+<h4 id="DNS-解析转发"><a href="#DNS-解析转发" class="headerlink" title="DNS 解析转发"></a><code>DNS</code> 解析转发</h4><p>晓得运营商可能将 <code>DNS</code> 解析请求转发，解析的比较慢，效率低</p>
+<h3 id="DNS-劫持解决办法"><a href="#DNS-劫持解决办法" class="headerlink" title="DNS 劫持解决办法"></a><code>DNS</code> 劫持解决办法</h3><h4 id="httpDNS"><a href="#httpDNS" class="headerlink" title="httpDNS"></a>httpDNS</h4><p>使用 <code>http</code> 协议向 <code>DNS</code> 服务器 80 端口进行请求</p>
+<h4 id="长连接"><a href="#长连接" class="headerlink" title="长连接"></a>长连接</h4><p>找一个中间的长连 <code>server</code> ,在内网专线进行 <code>Http</code> 请求。客户端和这个长连 <code>server</code>通信即可。</p>
+<h2 id="Post请求体有哪些格式？"><a href="#Post请求体有哪些格式？" class="headerlink" title="Post请求体有哪些格式？"></a><code>Post</code>请求体有哪些格式？</h2><h3 id="application-x-www-form-urlencoded"><a href="#application-x-www-form-urlencoded" class="headerlink" title="application/x-www-form-urlencoded"></a>application/x-www-form-urlencoded</h3><p>这应该是最常见的 <code>POST</code> 提交数据的方式了。浏览器的原生 <code>form</code> 表单，如果不设置 <code>enctype</code> 属性，那么最终就会以 <code>application/x-www-form-urlencoded</code> 方式提交数据</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">POST  HTTP/1.1</span><br><span class="line">Host: www.demo.com</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Postman-Token: 81d7b315-d4be-8ee8-1237-04f3976de032</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">key=value&amp;testKey=testValue</span><br></pre></td></tr></table></figure>
+
+<h3 id="multipart-form-data"><a href="#multipart-form-data" class="headerlink" title="multipart/form-data"></a>multipart/form-data</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">POST  HTTP/1.1</span><br><span class="line">Host: www.demo.com</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Postman-Token: 679d816d-8757-14fd-57f2-fbc2518dddd9</span><br><span class="line">Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundary7MA4YWxkTrZu0gW</span><br><span class="line">Content-Disposition: form-data; name=&quot;key&quot;</span><br><span class="line"></span><br><span class="line">value</span><br><span class="line">------WebKitFormBoundary7MA4YWxkTrZu0gW</span><br><span class="line">Content-Disposition: form-data; name=&quot;testKey&quot;</span><br><span class="line"></span><br><span class="line">testValue</span><br><span class="line">------WebKitFormBoundary7MA4YWxkTrZu0gW</span><br><span class="line">Content-Disposition: form-data; name=&quot;imgFile&quot;; filename=&quot;no-file&quot;</span><br><span class="line">Content-Type: application/octet-stream</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">data</span> <span class="attr">in</span> <span class="attr">here</span>&gt;</span></span><br><span class="line">------WebKitFormBoundary7MA4YWxkTrZu0gW--</span><br></pre></td></tr></table></figure>
+<h3 id="application-json"><a href="#application-json" class="headerlink" title="application/json"></a>application/json</h3><h3 id="text-xml"><a href="#text-xml" class="headerlink" title="text/xml"></a>text/xml</h3><h2 id="什么是-Mimetype"><a href="#什么是-Mimetype" class="headerlink" title="什么是 Mimetype ?"></a>什么是 <code>Mimetype</code> ?</h2><p>在浏览器中显示的内容有 <code>HTML</code>、有 <code>XML</code>、有 <code>GIF</code>、还有 <code>Flash</code> ……那么，浏览器是如何区分它们，决定什么内容用什么形式来显示呢？答案是 <code>MIME Type</code>，也就是该资源的媒体类型。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//向该文件发送请求,根据请求头拿到该文件的MIMEType</span></span><br><span class="line">-(<span class="built_in">NSString</span> *)getMIMETypeURLRequestAtPath:(<span class="built_in">NSString</span>*)path</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//1.确定请求路径</span></span><br><span class="line">    <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> fileURLWithPath:path];</span><br><span class="line">     </span><br><span class="line">    <span class="comment">//2.创建可变的请求对象</span></span><br><span class="line">    <span class="built_in">NSMutableURLRequest</span> *request = [<span class="built_in">NSMutableURLRequest</span> requestWithURL:url];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//3.发送请求</span></span><br><span class="line">    <span class="built_in">NSHTTPURLResponse</span> *response = <span class="literal">nil</span>;</span><br><span class="line">    [<span class="built_in">NSURLConnection</span> sendSynchronousRequest:request returningResponse:&amp;response error:<span class="literal">nil</span>];</span><br><span class="line">   </span><br><span class="line">    <span class="built_in">NSString</span> *mimeType = response.MIMEType;</span><br><span class="line">    <span class="keyword">return</span> mimeType;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="网络请求的状态码都大致代表什么意思？"><a href="#网络请求的状态码都大致代表什么意思？" class="headerlink" title="网络请求的状态码都大致代表什么意思？"></a>网络请求的状态码都大致代表什么意思？</h2><h3 id="1-1xx"><a href="#1-1xx" class="headerlink" title="1.1xx"></a>1.1xx</h3><blockquote>
+<p>1xx 代表临时响应，需要请求者继续执行操作的状态代码。</p>
+</blockquote>
+<h3 id="2-2xx"><a href="#2-2xx" class="headerlink" title="2.2xx"></a>2.2xx</h3><blockquote>
+<p>2xx 代表的多是操作成功。</p>
+</blockquote>
+<h3 id="3-3xx"><a href="#3-3xx" class="headerlink" title="3.3xx"></a>3.3xx</h3><blockquote>
+<p>3xx 代表重定向，表示要完成请求，需要进一步操作</p>
+</blockquote>
+<h3 id="4-4xx"><a href="#4-4xx" class="headerlink" title="4.4xx"></a>4.4xx</h3><blockquote>
+<p>4xx 代表请求错误，表示请求可能出错，妨碍了服务器的处理。</p>
+</blockquote>
+<h3 id="5-5xx"><a href="#5-5xx" class="headerlink" title="5.5xx"></a>5.5xx</h3><blockquote>
+<p>5xx 代表服务器错误，表示服务器在尝试处理请求时发生内部错误。 这些错误可能是服务器本身的错误，而不是请求出错</p>
+</blockquote>
+<h2 id="如何判断一个请求是否结束？"><a href="#如何判断一个请求是否结束？" class="headerlink" title="如何判断一个请求是否结束？"></a>如何判断一个请求是否结束？</h2><ul>
+<li>1.查看 <code>Content-Length</code> 是否达到 1024 字节。</li>
+<li>2.通过 <code>Post</code> 发送请求时，消息一般都是一段一段返回的，看最后的一个 <code>chunked</code> 是否为空?</li>
+</ul>
+<h2 id="SSL-传输协议？说一下-SSL-验证过程？"><a href="#SSL-传输协议？说一下-SSL-验证过程？" class="headerlink" title="SSL 传输协议？说一下 SSL 验证过程？"></a>SSL 传输协议？说一下 SSL 验证过程？</h2><ul>
+<li>1.配备了 <code>身份证书</code>，防止被冒充。</li>
+<li>2.有 <code>校验机制</code>，一旦被篡改，双方都会知道。</li>
+<li>3.通过 <code>加密</code> 进行传播。</li>
+</ul>
+<h3 id="连接过程如下："><a href="#连接过程如下：" class="headerlink" title="连接过程如下："></a>连接过程如下：</h3><ul>
+<li>①：客户端向服务端发消息，包括客户端支持的 <code>加密算法</code> 以及 <code>随机数1</code> 、<code>TLS</code> 版本号。</li>
+<li>②：服务端向客户端返回信息，包括双方已经匹配好的 <code>加密算法</code> 以及 <code>随机数2</code>、<code>Server证书</code> 。</li>
+<li>③：服务端向客户端返回 <code>验证证书</code>。</li>
+<li>④：客户端进行证书验证，首先要评估信任证书<ul>
+<li>1.服务端向客户端返回证书的 <code>数字摘要</code> 与服务端证书返回客户端，解密后的是否一致，防止被篡改。</li>
+<li>2.验证证书链：逐级验证服务端证书是否在可信任证书列表。</li>
+<li>3.验证通过后：<ul>
+<li>①：将 <code>随机数1</code>、<code>随机数2</code>、服务器端返回 <code>证书公钥</code> 加密过后的 <code>预主秘钥</code> 三者组合成 <code>会话密钥</code>。</li>
+<li>②：服务端拿到 <code>会话秘钥</code>  后，会用服务端证书 <code>私钥</code>进行解密，得到 <code>预主秘钥</code>。</li>
+<li>③：服务端将 <code>随机数1</code>、<code>随机数2</code>、服务器端证书私钥解密得到的 <code>预主秘钥</code> 三者组合成 <code>会话密钥</code>。此时客户端的 <code>会话秘钥</code> 和 服务端的 <code>会话秘钥</code> 应该是一致的。</li>
+<li>④：接下来会经行验证：<pre><code>- 1.客户端通过 `会话秘钥`，加密信息发给服务端，看服务端能否成功接收。
+- 2.服务端通过 `会话秘钥`，加密信息返给客户端，看客户端能否成功解析。
+</code></pre>
+</li>
+</ul>
+</li>
+<li>4.以上步骤都通过了，此时 <code>SSL</code> 验证连接。</li>
+</ul>
+</li>
+</ul>
+<h2 id="解释一下-三次握手-和-四次挥手？"><a href="#解释一下-三次握手-和-四次挥手？" class="headerlink" title="解释一下 三次握手 和 四次挥手？"></a>解释一下 <code>三次握手</code> 和 <code>四次挥手</code>？</h2><h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><ul>
+<li>1.由客户端向服务端发送 <code>SYN</code> 同步报文。</li>
+<li>2.当服务端收到 <code>SYN</code> 同步报文之后，会返回给客户端 <code>SYN</code> 同步报文和 <code>ACK</code> 确认报文。</li>
+<li>3.客户端会向服务端发送 <code>ACK</code> 确认报文，此时客户端和服务端的连接正式建立。</li>
+</ul>
+<h3 id="建立连接"><a href="#建立连接" class="headerlink" title="建立连接"></a>建立连接</h3><ul>
+<li>1.这个时候客户端就可以通过 <code>Http</code> 请求报文，向服务端发送请求</li>
+<li>2.服务端接收到客户端的请求之后，向客户端回复 <code>Http</code> 响应报文。</li>
+</ul>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><strong>当客户端和服务端的连接想要断开的时候，要经历四次挥手的过程，步骤如下：</strong></p>
+<ul>
+<li>1.先由客户端向服务端发送 <code>FIN</code> 结束报文。</li>
+<li>2.服务端会返回给客户端 <code>ACK</code> 确认报文 。此时，由客户端发起的断开连接已经完成。</li>
+<li>3.服务端会发送给客户端 <code>FIN</code> 结束报文 和 <code>ACK</code> 确认报文。</li>
+<li>4.客户端会返回 <code>ACK</code> 确认报文到服务端，至此，由服务端方向的断开连接已经完成。</li>
+</ul>
+<h3 id="解释一下为什么是”三次握手”"><a href="#解释一下为什么是”三次握手”" class="headerlink" title="解释一下为什么是”三次握手”"></a>解释一下为什么是”三次握手”</h3><blockquote>
+<p>客户端在与服务端建立连接的过程中，客户端向服务端发送连接请求，如果因为网络的原因，导致它超时触发了重传机制，那么客户端会重新向服务端发送一次连接请求，那有可能第二次发送的连接请求，服务端收到之后，直接返回给客户端确认连接的报文。</p>
+</blockquote>
+<blockquote>
+<p>如果只需要两次就可以建立连接，假如说第一次建立连接的请求终于被服务端接收到了，那服务端收到之后，会以为客户端想新建另外一个链接，这样的话就会建立两个连接。</p>
+</blockquote>
+<blockquote>
+<p>而采取三次握手，在客户端收到服务端的确认报文之后，客户端再向服务端发送一个确认报文，这时才正式建立连接。那么第一次因为超时而迟迟没有收到的建立连接的请求，这时在收到之后，服务端依然会向客户端返回一个确认报文，但是服务端现在已经与客户端建立的连接，所以客户端就不会再向服务端发送确认报文，服务端迟迟没有收到确认报文，那么也就不会真正的建立再一次连接。</p>
+</blockquote>
+<h3 id="又为什么是”四次挥手”？"><a href="#又为什么是”四次挥手”？" class="headerlink" title="又为什么是”四次挥手”？"></a>又为什么是”四次挥手”？</h3><blockquote>
+</blockquote>
+<p>建立的时候是双方面的建立，而释放的时候，也必然是客户端和服务端双方面的断开连接。</p>
+<blockquote>
+<p>客户端与服务端建立的连接是双通的，这也就意味着客户端可以向服务端发送请求，服务端向客户端返回响应，同样的也可以从服务端向客户端发送，然后由客户端向服务端返回，如果你只关闭了客户端，向服务端通道，这只叫半关闭状态，并没有完全的切断客户端与服务端的关联。</p>
+</blockquote>
+<h2 id="谈一谈网络中的-session-和-cookie"><a href="#谈一谈网络中的-session-和-cookie" class="headerlink" title="谈一谈网络中的 session 和 cookie?"></a>谈一谈网络中的 <code>session</code> 和 <code>cookie</code>?</h2><p>因为 <code>Http</code> 无状态的特性，如果需要判断是哪个用户，这时就需要 <code>Cookie</code> 和 <code>Session</code>。</p>
+<p><code>Cookie</code> 存储在客户端，用来记录用户状态，区分用户。一般都是服务端把生成的 <code>Cookie</code> 通过响应返回给客户端，客户端保存。</p>
+<p><code>Session</code> 存储在网络端，需要依赖 <code>Cookie</code> 机制。服务端生成了 <code>Session</code> 后，返回给客户端，客户端 <code>setCookie:sessionID</code>，所以下次请求的时候，客户端把 <code>Cookie</code> 发送给服务端，服务端解析出 <code>SessionID</code>，在服务端根据 <code>SessionID</code> 判断当前的用户。</p>
+<h3 id="如何修改-Cookie"><a href="#如何修改-Cookie" class="headerlink" title="如何修改 Cookie?"></a>如何修改 <code>Cookie</code>?</h3><ul>
+<li><p>相同 <code>Key</code> 值得新的 <code>Cookie</code> 会覆盖旧的 <code>Cookie</code>.</p>
+</li>
+<li><p>覆盖规则是 name path 和 domain 等需要与原有的一致</p>
+</li>
+</ul>
+<h3 id="如何删除-Cookie"><a href="#如何删除-Cookie" class="headerlink" title="如何删除 Cookie?"></a>如何删除 <code>Cookie</code>?</h3><ul>
+<li><p>相同 <code>Key</code> 值得新的 <code>Cookie</code> 会覆盖旧的 <code>Cookie</code>.</p>
+</li>
+<li><p>覆盖规则是 name path 和 domain 等需要与原有的一致</p>
+</li>
+<li><p>设置 <code>Cookie</code> 的 <code>expires</code> 为过去的一个时间点，或者 <code>maxAge = 0</code></p>
+</li>
+</ul>
+<h3 id="如何保证-Cookie-的安全？"><a href="#如何保证-Cookie-的安全？" class="headerlink" title="如何保证 Cookie 的安全？"></a>如何保证 <code>Cookie</code> 的安全？</h3><ul>
+<li>对 <code>Cookie</code> 进行加密处理</li>
+<li>只在 <code>Https</code> 上携带 <code>Cookie</code>。 </li>
+<li>设置 <code>Cookie</code> 为 <code>httpOnly</code>，防止跨站脚本攻击。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>希望对您有所帮助，您的支持将是我莫大的动力！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Jack Wang 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Jack Wang 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/iOS/hybrid/hybrid.html" rel="prev" title="Hybrid">
+      <i class="fa fa-chevron-left"></i> Hybrid
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/iOS/questions/resolved.html" rel="next" title="iOS解决过的问题汇总">
+      iOS解决过的问题汇总 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Http-%E5%92%8C-Https-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9B%B4%E5%8A%A0%E5%AE%89%E5%85%A8%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">Http 和 Https 的区别？为什么更加安全？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.</span> <span class="nav-text">区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8"><span class="nav-number">1.2.</span> <span class="nav-text">安全</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-IP-%E4%BA%94%E5%B1%82%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%8D%8F%E8%AE%AE"><span class="nav-number">2.</span> <span class="nav-text">TCP&#x2F;IP 五层模型的协议?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OSI-%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%8D%8F%E8%AE%AE"><span class="nav-number">3.</span> <span class="nav-text">OSI 七层模型的协议?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0-%E5%8A%9F%E8%83%BD%E8%AF%A5%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">断点续传 功能该怎么实现？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DNS-%E7%9A%84%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B%EF%BC%9F%E7%BD%91%E7%BB%9C%E7%9A%84-DNS-%E4%BC%98%E5%8C%96%E3%80%82"><span class="nav-number">5.</span> <span class="nav-text">DNS 的解析过程？网络的 DNS 优化。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS-%E8%A7%A3%E6%9E%90%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">5.1.</span> <span class="nav-text">DNS 解析的两种方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2"><span class="nav-number">5.1.1.</span> <span class="nav-text">递归查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E6%9F%A5%E8%AF%A2"><span class="nav-number">5.1.2.</span> <span class="nav-text">迭代查询</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS-%E8%A7%A3%E6%9E%90%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">5.2.</span> <span class="nav-text">DNS 解析存在的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS-%E5%8A%AB%E6%8C%81"><span class="nav-number">5.2.1.</span> <span class="nav-text">DNS 劫持</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS-%E8%A7%A3%E6%9E%90%E8%BD%AC%E5%8F%91"><span class="nav-number">5.2.2.</span> <span class="nav-text">DNS 解析转发</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS-%E5%8A%AB%E6%8C%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="nav-number">5.3.</span> <span class="nav-text">DNS 劫持解决办法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#httpDNS"><span class="nav-number">5.3.1.</span> <span class="nav-text">httpDNS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%95%BF%E8%BF%9E%E6%8E%A5"><span class="nav-number">5.3.2.</span> <span class="nav-text">长连接</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Post%E8%AF%B7%E6%B1%82%E4%BD%93%E6%9C%89%E5%93%AA%E4%BA%9B%E6%A0%BC%E5%BC%8F%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">Post请求体有哪些格式？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#application-x-www-form-urlencoded"><span class="nav-number">6.1.</span> <span class="nav-text">application&#x2F;x-www-form-urlencoded</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multipart-form-data"><span class="nav-number">6.2.</span> <span class="nav-text">multipart&#x2F;form-data</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#application-json"><span class="nav-number">6.3.</span> <span class="nav-text">application&#x2F;json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#text-xml"><span class="nav-number">6.4.</span> <span class="nav-text">text&#x2F;xml</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Mimetype"><span class="nav-number">7.</span> <span class="nav-text">什么是 Mimetype ?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%9A%84%E7%8A%B6%E6%80%81%E7%A0%81%E9%83%BD%E5%A4%A7%E8%87%B4%E4%BB%A3%E8%A1%A8%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D%EF%BC%9F"><span class="nav-number">8.</span> <span class="nav-text">网络请求的状态码都大致代表什么意思？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1xx"><span class="nav-number">8.1.</span> <span class="nav-text">1.1xx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2xx"><span class="nav-number">8.2.</span> <span class="nav-text">2.2xx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3xx"><span class="nav-number">8.3.</span> <span class="nav-text">3.3xx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4xx"><span class="nav-number">8.4.</span> <span class="nav-text">4.4xx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5xx"><span class="nav-number">8.5.</span> <span class="nav-text">5.5xx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E4%B8%80%E4%B8%AA%E8%AF%B7%E6%B1%82%E6%98%AF%E5%90%A6%E7%BB%93%E6%9D%9F%EF%BC%9F"><span class="nav-number">9.</span> <span class="nav-text">如何判断一个请求是否结束？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSL-%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%EF%BC%9F%E8%AF%B4%E4%B8%80%E4%B8%8B-SSL-%E9%AA%8C%E8%AF%81%E8%BF%87%E7%A8%8B%EF%BC%9F"><span class="nav-number">10.</span> <span class="nav-text">SSL 传输协议？说一下 SSL 验证过程？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E8%BF%87%E7%A8%8B%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="nav-number">10.1.</span> <span class="nav-text">连接过程如下：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A%E4%B8%80%E4%B8%8B-%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B-%E5%92%8C-%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%9F"><span class="nav-number">11.</span> <span class="nav-text">解释一下 三次握手 和 四次挥手？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="nav-number">11.1.</span> <span class="nav-text">三次握手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5"><span class="nav-number">11.2.</span> <span class="nav-text">建立连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">11.3.</span> <span class="nav-text">四次挥手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A%E4%B8%80%E4%B8%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E2%80%9D%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E2%80%9D"><span class="nav-number">11.4.</span> <span class="nav-text">解释一下为什么是”三次握手”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%88%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E2%80%9D%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E2%80%9D%EF%BC%9F"><span class="nav-number">11.5.</span> <span class="nav-text">又为什么是”四次挥手”？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%88%E4%B8%80%E8%B0%88%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84-session-%E5%92%8C-cookie"><span class="nav-number">12.</span> <span class="nav-text">谈一谈网络中的 session 和 cookie?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9-Cookie"><span class="nav-number">12.1.</span> <span class="nav-text">如何修改 Cookie?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%A0%E9%99%A4-Cookie"><span class="nav-number">12.2.</span> <span class="nav-text">如何删除 Cookie?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81-Cookie-%E7%9A%84%E5%AE%89%E5%85%A8%EF%BC%9F"><span class="nav-number">12.3.</span> <span class="nav-text">如何保证 Cookie 的安全？</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jack Wang"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Jack Wang</p>
+  <div class="site-description" itemprop="description">书山有路勤为径，学海无涯苦作舟！</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL29yZ3Mvd2FuZ2tlamllL3JlcG9zaXRvcmllcw==" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;orgs&#x2F;wangkejie&#x2F;repositories"><i class="github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOjcyNzg4MTk0NUBxcS5jb20=" title="E-Mail → mailto:727881945@qq.com"><i class="envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">京ICP备16036665号-2 </span>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack Wang</span>
+</div>
+
+        
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1277804316&web_id=1277804316"></script>
+  </div>
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'S7tR3Qqx6JSg8P5ChLXjLWt8-gzGzoHsz',
+      appKey     : 'hHRdJzqrf8zU1xQElb7km39u',
+      placeholder: "上面也可以填入联系方式，感谢您宝贵的建议~",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

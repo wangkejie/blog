@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="msvalidate.01" content="9BDlx6FiNE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wangkejie.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="MachOS X内核的基本服务和基本类型都基于Mach 3.0。苹果对Mach进行了修改和扩展，以更好地满足OS X的功能和性能目标。 Mach 3.0最初被认为是一个简单、可扩展的通信微内核。它能够作为一个独立的内核运行，而其他传统的操作系统服务(如I&#x2F;O、文件系统和网络堆栈)作为用户模式服务器运行。 然而，在OS X中，Mach与其他内核组件链接到一个内核地址空间中。这主要是为了性能;在链接组">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mach微内核简介">
+<meta property="og:url" content="https://wangkejie.com/iOS/kernelarchitecture/mach.html">
+<meta property="og:site_name" content="王科杰">
+<meta property="og:description" content="MachOS X内核的基本服务和基本类型都基于Mach 3.0。苹果对Mach进行了修改和扩展，以更好地满足OS X的功能和性能目标。 Mach 3.0最初被认为是一个简单、可扩展的通信微内核。它能够作为一个独立的内核运行，而其他传统的操作系统服务(如I&#x2F;O、文件系统和网络堆栈)作为用户模式服务器运行。 然而，在OS X中，Mach与其他内核组件链接到一个内核地址空间中。这主要是为了性能;在链接组">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wangkejie.com/images/iOS/mig_opt.png">
+<meta property="article:published_time" content="2019-07-14T04:26:39.000Z">
+<meta property="article:modified_time" content="2023-01-14T03:12:23.784Z">
+<meta property="article:author" content="Jack Wang">
+<meta property="article:tag" content="操作系统">
+<meta property="article:tag" content="系统架构">
+<meta property="article:tag" content="Mach内核">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wangkejie.com/images/iOS/mig_opt.png">
+
+<link rel="canonical" href="https://wangkejie.com/iOS/kernelarchitecture/mach.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Mach微内核简介 | 王科杰</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?93e26277de0cf2c5851167f2c6dcaa7d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">王科杰</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Jack's Notes</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">71</span></a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/me/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签<span class="badge">78</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类<span class="badge">70</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL29yZ3Mvd2FuZ2tlamllL3JlcG9zaXRvcmllcw==" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/iOS/kernelarchitecture/mach.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack Wang">
+      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王科杰">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mach微内核简介
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-07-14 12:26:39" itemprop="dateCreated datePublished" datetime="2019-07-14T12:26:39+08:00">2019-07-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/Mach%E5%86%85%E6%A0%B8/" itemprop="url" rel="index"><span itemprop="name">Mach内核</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/iOS/kernelarchitecture/mach.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/iOS/kernelarchitecture/mach.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Mach"><a href="#Mach" class="headerlink" title="Mach"></a>Mach</h1><p>OS X内核的基本服务和基本类型都基于Mach 3.0。苹果对Mach进行了修改和扩展，以更好地满足OS X的功能和性能目标。</p>
+<p>Mach 3.0最初被认为是一个简单、可扩展的通信微内核。它能够作为一个独立的内核运行，而其他传统的操作系统服务(如I/O、文件系统和网络堆栈)作为用户模式服务器运行。</p>
+<p>然而，在OS X中，Mach与其他内核组件<code>链接到一个内核地址空间</code>中。这主要是<code>为了性能</code>;在链接组件之间进行直接调用要比在单独<code>任务之间发送消息</code>或<code>执行远程过程调用(RPC)</code>快得多。这种模块化的结构导致了一个比单一内核所允许的更健壮和可扩展的系统，而没有纯微内核的性能损失。</p>
+<p>因此，在OS X中，Mach主要不是客户机和服务器之间的通信中心。相反，它的价值由抽象、可扩展性和灵活性组成。特别地，Mach提供了</p>
+<ul>
+<li>基于对象的api，使用通信通道(例如端口)作为对象引用</li>
+<li>高度并行执行，包括预先调度的线程和对SMP的支持</li>
+<li>一个灵活的调度框架，支持实时使用</li>
+<li>一组完整的IPC原语，包括消息传递、RPC、同步和通知</li>
+<li>支持大型虚拟地址空间、共享内存区域和由持久性存储支持的内存对象</li>
+<li>经过验证的可扩展性和可移植性，例如跨指令集体系结构和分布式环境</li>
+<li>安全与资源管理作为设计的基本原则;所有资源都是虚拟化的</li>
+</ul>
+<h1 id="Mach内核抽象化"><a href="#Mach内核抽象化" class="headerlink" title="Mach内核抽象化"></a>Mach内核抽象化</h1><p>Mach提供了一组被设计成既简单又强大的抽象。这些是主要的内核抽象:</p>
+<ul>
+<li>任务(Tasks)。资源所有权单位;每个任务由一个虚拟地址空间、一个端口名称空间和一个或多个线程组成。(类似于流程。)</li>
+<li>线程(Threads)。任务中CPU执行的单位。</li>
+<li>地址空间(Address space)。与内存管理器一起，Mach实现了稀疏虚拟地址空间和共享内存的概念。</li>
+<li>内存对象(Memory objects)。内存管理的内部单元。内存对象包括命名项和区域;它们表示可能映射到地址空间的持久数据。</li>
+<li>端口(Ports)。安全、简单的通信通道，只能通过发送和接收功能(称为端口权限)访问。</li>
+<li>IPC。消息队列、远程过程调用、通知、信号量和锁集。</li>
+<li>时间(Time)。时钟、定时器和等待。</li>
+</ul>
+<p>在陷阱级别，大多数Mach抽象的接口由<code>表示这些对象的内核端口之间</code>的<code>消息</code>组成。陷阱(trap)级别的<code>接口</code>(例如mach_msg_overwrite_trap)和<code>消息格式</code>在正常使用中由Mach接口生成器(MIG)抽象出来。MIG用于编译基于消息的api的<code>过程接口</code>，基于这些api的<code>描述</code>。（MIG参看下面总结部分）</p>
+<h1 id="任务和线程"><a href="#任务和线程" class="headerlink" title="任务和线程"></a>任务和线程</h1><p>OS X进程和POSIX线程(pthreads)分别在Mach任务和线程之上实现。线程是任务中的控制流点。存在一个任务来为其包含的线程提供资源。这种分割是为了提供并行性和资源共享。</p>
+<p>一个线程</p>
+<ul>
+<li>是任务中的控制流点。</li>
+<li>可以访问包含任务的所有元素。</li>
+<li>与其他线程(可能)并行执行，甚至是同一任务中的线程。</li>
+<li>具有最小的状态信息，以降低开销。</li>
+</ul>
+<p>一个任务</p>
+<ul>
+<li>是系统资源的集合。这些资源(地址空间除外)由端口引用。如果对端口被分配了权限，那么这些资源可以与其他任务共享。</li>
+<li>提供一个大的、可能稀疏的地址空间，由虚拟地址引用。这个空间的一部分可以通过继承或外部内存管理共享。</li>
+<li>包含一些线程。</li>
+</ul>
+<p>请注意，任务没有自己的线程执行指令的生命周期。当说“task Y做X”时，真正的意思是“task Y中包含的线程做X”。</p>
+<ol>
+<li><p>任务是一个相当昂贵的实体。它的存在是资源的集合。任务中的所有线程都共享所有内容。如果没有显式的操作(尽管操作通常很简单)，两个任务就不能共享任何内容，而且一些资源(例如端口接收权限)根本不能在两个任务之间共享。</p>
+</li>
+<li><p>线程是一个相当轻量级的实体。它的创建成本相当低，操作开销也很低。这是真的，因为一个线程只有很少的状态信息(主要是它的寄存器状态)。它所拥有的任务承担着资源管理的重担。在多处理器计算机上，任务中的多个线程可以并行执行。即使并行性不是目标，多线程也有一个优势，即每个线程都可以使用同步编程风格，而不是试图使用单个线程进行异步编程来提供多个服务。</p>
+</li>
+<li><p>线程是基本的计算实体。一个线程只属于一个任务，这个任务定义了它的虚拟地址空间。影响地址空间的结构或引用任何资源以外的地址空间,线程必须执行一个<code>特殊的陷阱指令</code> 引起<code>内核代表线程</code>执行操作或<code>发送消息代理</code>代表线程。通常，这些陷阱操作与包含线程的任务相关的资源。内核可以发出请求来操作这些实体:创建它们、删除它们并影响它们的状态。</p>
+</li>
+<li><p>Mach为线程调度策略提供了一个灵活的框架。OS X的早期版本同时支持分时和固定优先级策略。提高和降低分时线程的优先级，以平衡它与其他分时线程之间的资源消耗。</p>
+</li>
+<li><p>固定优先级的线程执行一定的时间量，然后放在具有相同优先级的线程队列的末尾。将固定优先级线程的量子级别设置为无穷大，可以让线程一直运行，直到阻塞，或者直到被优先级更高的线程抢占为止。<code>高优先级实时线程</code>通常是<code>固定优先级</code>的。</p>
+</li>
+<li><p>OS X还为实时性能提供了时间约束调度。这个调度允许您指定线程必须在一定时间内获得一定的时间量。</p>
+</li>
+</ol>
+<p>Mach调度在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL3NjaGVkdWxlci9zY2hlZHVsZXIuaHRtbCMvL2FwcGxlX3JlZi9kb2MvdWlkL1RQMzAwMDA5MDUtQ0gyMTEtQkVISkRGQ0E=">Mach调度和线程接口<i class="fa fa-external-link-alt"></i></span>中有进一步的描述。</p>
+<h1 id="端口、端口权限、端口集和端口名称空间"><a href="#端口、端口权限、端口集和端口名称空间" class="headerlink" title="端口、端口权限、端口集和端口名称空间"></a>端口、端口权限、端口集和端口名称空间</h1><p>除了任务的虚拟地址空间之外，所有其他Mach资源都是通过称为端口的间接级别访问的。端口是请求服务的客户机和提供服务的服务器之间单向通信通道的端点。如果要向此类服务请求提供应答，则必须使用第二个端口。这类似于UNIX中的(单向)管道。</p>
+<p>在大多数情况下，<code>由端口访问的资源(即由端口命名的资源)被称为对象</code>。大多数由端口命名的对象都有<code>一个接收方</code>和(可能的)<code>多个发送方</code>。也就是说，对于典型对象(如消息队列)，只有一个接收端口，至少有一个发送端口。</p>
+<p>对象提供的服务由接收发送到对象的请求的管理器决定。因此，内核是与内核提供的对象关联的端口的接收方，而与任务提供的对象关联的端口的接收方是提供这些对象的任务。</p>
+<p>对于命名任务提供的对象的端口，可以将该端口的请求接收方更改为不同的任务，例如通过在消息中将该端口传递给该任务。一个任务可能有多个引用其支持的资源的端口。就此而言，任何给定的实体都可以有多个表示它的端口，每个端口表示不同的允许操作集。例如，许多对象都有一个名称端口和一个控制端口(有时称为特权端口)。对控制端口的访问允许操作对象;对name端口的访问简单地为对象命名，这样您就可以获得关于它的信息，或者对它执行其他非特权操作。</p>
+<p>任务具有以特定方式访问端口的权限(发送、接收、发送一次);这些被称为port rights。端口只能通过右值访问。端口通常用于授予客户机对Mach内对象的访问权。有权发送到对象的IPC端口表示有权以规定的方式操作对象。因此，<code>端口所有权是Mach内部的基本安全机制</code>。<code>拥有访问对象的权利</code>就是<code>拥有访问或操作该对象的能力</code>。</p>
+<p>端口权限可以通过IPC在<code>任务之间复制和移动</code>。这样做实际上是将功能传递给某个对象或服务器。</p>
+<p>一种类型的对象引用一个端口是一个端口组。顾名思义,端口设置一组端口的权利时,可以当作一个单独的单元接收消息或事件的任何成员集。港口集允许一个线程等待的消息和事件源,例如在工作循环。</p>
+<p>传统上，在Mach中，由端口表示的通信通道总是消息队列。然而，OS X支持其他类型的通信通道，这些新的IPC对象类型也由端口和端口权限表示。有关消息和其他IPC类型的详细信息，请参阅下面进程间通信(Interprocess Communication, IPC)一节。</p>
+<p>端口和端口权限没有允许直接操作任意端口或权限的系统范围名称。只有当任务在其端口名称空间中具有端口权时，才可以由任务操作端口。端口权由端口名称指定，一个整数索引进入一个32位端口名称空间。每个任务都与它关联一个端口名称空间。</p>
+<p>当另一个任务显式地将它们插入它的名称空间时，当它们在消息中接收到权限时，任务通过创建返回对象权限的对象获得端口权限，并通过Mach调用特定的特殊端口(mach_thread_self、mach_task_self和mach_reply_port)获得端口权限。</p>
+<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>与大多数现代操作系统一样，Mach提供对大型、稀疏的虚拟地址空间的寻址。运行时访问是通过虚拟地址进行的，这些虚拟地址可能与初始访问时物理内存中的位置不对应。Mach负责获取一个请求的虚拟地址，并在物理内存中为它分配一个相应的位置。它通过请求分页来实现这一点。</p>
+<p>当内存对象映射到虚拟地址空间的范围时，将用数据填充虚拟地址空间的范围。地址空间中的所有数据最终都是通过内存对象提供的。Mach在物理内存中建立页面时，向内存对象(分页器)的所有者询问页面的内容，并在回收页面之前将可能修改过的数据返回给分页器。OS X包含两个内置分页器——默认分页器和vnode分页器(default pager and the vnode pager)。</p>
+<p>默认的分页器处理非持久性内存，称为匿名内存。匿名内存是零初始化的，并且只在任务执行期间存在。vnode分页器将文件映射到内存对象。Mach向内存对象导出一个接口，允许用户模式任务提供内存对象的内容。这个接口称为外部内存管理接口(EMMI)。</p>
+<p>内存管理子系统导出称为命名项或命名内存项的虚拟内存句柄。与大多数内核资源一样，这些资源由端口表示。拥有一个命名的内存条目句柄，允许所有者映射底层虚拟内存对象，或者将映射底层对象的权利传递给其他人。在两个不同的任务中映射命名项会在两个任务之间生成共享内存窗口，从而为建立共享内存提供了一种灵活的方法。</p>
+<p>从OS X v10.1开始，EMMI系统得到了增强，以支持“无端口”EMMI。在传统的EMMI中，为每个内存区域创建两个Mach端口，同样也为每个缓存的vnode创建两个端口。在最初的实现中，无端口的EMMI用直接内存引用(基本上是指针)替换了这一点。在将来的版本中，端口将用于与内核外部的分页器通信，同时使用直接引用与驻留在内核空间中的分页器通信。这些更改的最终结果是，早期版本的无端口EMMI不支持运行在内核空间之外的分页器。这种支持有望在未来的版本中恢复。</p>
+<p>虚拟内存空间的地址范围也可以通过直接分配(使用vm_allocation)来填充。底层虚拟内存对象是匿名的，并由默认分页程序支持。地址空间的共享范围也可以通过继承设置。创建新任务时，将从父任务中克隆它们。这种克隆也属于底层内存地址空间。根据与映射相关的属性，对象的映射部分可以作为副本继承，也可以作为共享，或者根本不可以。Mach采用一种称为“写中复制”的延迟复制形式，以优化任务创建时继承副本的性能。</p>
+<p>不是直接复制范围，而是通过受保护的共享来实现写时复制优化。这两个任务共享要复制的内存，但具有只读访问。当任何一个任务试图修改范围的一部分时，该部分将被复制。这种对内存副本的延迟计算是一种重要的优化，它允许在几个方面进行简化，尤其是消息传递api。</p>
+<p>Mach还提供了另一种形式的共享，通过导出指定的区域。命名区域是命名条目的一种形式，但是它不是由虚拟内存对象支持的，而是由虚拟映射片段支持的。这个片段可能包含到许多虚拟内存对象的映射。它可以映射到其他虚拟映射，提供了一种方法，不仅可以继承一组虚拟内存对象，还可以继承它们现有的映射关系。该特性在任务设置中提供了重要的优化，例如在共享用于共享库的地址空间的复杂区域时。</p>
+<h1 id="进程间通信-IPC"><a href="#进程间通信-IPC" class="headerlink" title="进程间通信(IPC)"></a>进程间通信(IPC)</h1><p>任务之间的通信是Mach哲学的一个重要元素。Mach支持客户机/服务器系统结构，其中任务(客户机)通过通过通信通道发送的消息请求其他任务(服务器)来访问服务。</p>
+<p>Mach中这些通信通道的端点称为端口，而端口权限表示使用该通道的权限。Mach提供的IPC形式包括</p>
+<ul>
+<li>消息队列</li>
+<li>信号量</li>
+<li>通知</li>
+<li>锁集</li>
+<li>远程过程调用(rpc)</li>
+</ul>
+<p>由端口表示的IPC对象的类型决定了该端口上允许的操作，以及数据传输的方式(和是否)。</p>
+<blockquote>
+<p>重要提示:OS X中的IPC设施处于过渡状态。在系统的早期版本中，并不是所有这些IPC类型都可以实现。</p>
+</blockquote>
+<p>对于端口的原始操作，有两种基本不同的Mach api, mach_ipc家族和mach_msg家族。在合理的范围内，这两个系列都可以用于任何IPC对象;然而，在新代码中，mach_ipc调用是首选的。mach_ipc调用在适当的地方维护状态信息，以便支持事务的概念。mach_msg调用支持遗留代码，但不推荐使用;他们是无状态的。</p>
+<h2 id="IPC事务和事件调度"><a href="#IPC事务和事件调度" class="headerlink" title="IPC事务和事件调度"></a>IPC事务和事件调度</h2><p>当线程调用mach_ipc_dispatch,它反复处理事件设置的注册端口。这些事件可以从RPC参数块对象(如客户调用的结果),一个锁对象被(由于其他线程释放锁),通知或信号量被发布或消息来自一个传统的消息队列。</p>
+<p>这些事件通过mach_msg_dispatch的调用来处理。有些事件暗示调用生命周期内存在事务。在锁的情况下，状态是锁的所有权。当callout返回时，锁被释放。在远程过程调用的情况下，状态是客户机的标识、参数块和应答端口。当callout返回时，将发送应答。</p>
+<p>当callout返回时，事务(如果有的话)就完成了，线程等待下一个事件。mach_ipc_dispatch工具旨在支持工作循环。</p>
+<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><p>最初，Mach中进程间通信的唯一样式是消息队列。只有一个任务可以持有表示消息队列的端口的接收权。这个任务允许从端口队列接收(读取)消息。多个任务可以拥有向队列发送(写)消息的端口的权限。</p>
+<p>任务通过构建包含一组数据元素的数据结构与另一个任务通信，然后在其拥有发送权限的端口上执行消息发送操作。稍后，具有该端口接收权限的任务将执行消息接收操作。</p>
+<p>一条消息可包括以下部分或全部:</p>
+<ul>
+<li>纯数据</li>
+<li>存储范围的副本</li>
+<li>端口的权利</li>
+<li>内核隐式属性，如发送方的安全令牌</li>
+</ul>
+<p>消息传输是一个异步操作。消息逻辑上被复制到接收任务中，可能使用写时复制优化。接收任务中的多个线程可以尝试从给定端口接收消息，但是只有一个线程可以接收任何给定的消息。</p>
+<h2 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h2><p>信号量IPC对象支持等待、post和post所有操作。这些是计数信号量，如果在该信号量的等待队列中当前没有线程在等待，则保存(计数)post。post all操作将唤醒所有当前等待的线程。</p>
+<h2 id="通知"><a href="#通知" class="headerlink" title="通知"></a>通知</h2><p>与信号量一样，通知对象也支持post和wait操作，但添加了一个state字段。状态是一个固定大小、固定格式的字段，在创建通知对象时定义。每个post更新状态字段;每个post都覆盖一个状态。</p>
+<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><p>锁是提供对临界区互斥访问的对象。锁的主要接口是面向事务的(参见IPC事务和事件调度)。在事务期间，线程持有锁。当它从事务返回时，锁被释放。</p>
+<h2 id="远程过程调用-RPC-对象"><a href="#远程过程调用-RPC-对象" class="headerlink" title="远程过程调用(RPC)对象"></a>远程过程调用(RPC)对象</h2><p>顾名思义，RPC对象旨在促进和优化远程过程调用。RPC对象的主要接口是面向事务的(参见IPC事务和事件调度)</p>
+<p>当创建RPC对象时，定义一组参数块格式。当客户机发出RPC(对象上的发送)时，它会导致以预定义格式之一的消息创建并在对象上排队，然后最终传递给服务器(接收方)。当服务器从事务返回时，将回复返回给发送方。Mach试图通过使用客户机的资源执行服务器来优化事务;这称为<code>线程迁移</code>。</p>
+<h1 id="时间管理"><a href="#时间管理" class="headerlink" title="时间管理"></a>时间管理</h1><p>Mach中时间的传统抽象是时钟，它提供了一组基于mach_timspec_t的异步报警服务。有一个或多个时钟对象，每个对象定义一个以纳秒为单位的单调递增的时间值。实时时钟是内置的，是最重要的，但是系统中可能还有其他时钟用于其他时间概念。时钟支持获取当前时间、给定时间段的睡眠、设置闹钟(在给定时间发送的通知)等操作。</p>
+<p>mach_timespec_t API在OS x中是不推荐的。更新的、首选的API基于计时器对象，而计时器对象又使用AbsoluteTime作为基本数据类型。AbsoluteTime是一种依赖于机器的类型，通常基于平台本机时基。提供了一些例程来将绝对时间值转换为其他数据类型，或者从其他数据类型转换为绝对时间值，比如纳秒。计时器对象支持异步、无漂移通知、取消和提前警报。它们比时钟效率更高，分辨率更高。</p>
+<h1 id="我们总结一下"><a href="#我们总结一下" class="headerlink" title="我们总结一下"></a>我们总结一下</h1><h2 id="Mach-、端口、Mach消息部分"><a href="#Mach-、端口、Mach消息部分" class="headerlink" title="Mach 、端口、Mach消息部分"></a>Mach 、端口、Mach消息部分</h2><ul>
+<li>在Mach中所有东西（Task、线程、虚拟内存等）都是对象</li>
+<li>对象与对象之间通信只能(任务虚拟地址空间)通过<code>端口</code>收发(<code>一个接收方，可以多个发送方</code>)消息。</li>
+</ul>
+<p>Mach做以下几件事儿：</p>
+<ul>
+<li>“控制点”或执行单元的管理。</li>
+<li>线程或线程组（Task）的资源分配。</li>
+<li>虚拟内存的分配和管理。</li>
+<li>底层物理资源–即CPU、内存和任何物理设备的分配。</li>
+</ul>
+<h3 id="Mach消息结构体"><a href="#Mach消息结构体" class="headerlink" title="Mach消息结构体"></a>Mach消息结构体</h3><ul>
+<li>最基本的包含两部分：消息头、消息体。可选的消息尾<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span>	<span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="type">mach_msg_bits_t</span>	msgh_bits;<span class="comment">//标志位</span></span><br><span class="line">  <span class="type">mach_msg_size_t</span>	msgh_size;<span class="comment">//大小</span></span><br><span class="line">  <span class="type">mach_port_t</span>		msgh_remote_port;<span class="comment">//目标端口（发送：接受方，接收：发送方）</span></span><br><span class="line">  <span class="type">mach_port_t</span>		msgh_local_port; <span class="comment">//源端口（发送：发送方，接收：接收方）</span></span><br><span class="line">  <span class="type">mach_port_name_t</span>	msgh_voucher_port;</span><br><span class="line">  <span class="type">mach_msg_id_t</span>		msgh_id;</span><br><span class="line">&#125; <span class="type">mach_msg_header_t</span>; <span class="comment">//消息头</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">        <span class="type">mach_msg_size_t</span> msgh_descriptor_count;</span><br><span class="line">&#125; <span class="type">mach_msg_body_t</span>;<span class="comment">//消息体</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">        <span class="type">mach_msg_header_t</span>       header;</span><br><span class="line">        <span class="type">mach_msg_body_t</span>         body;</span><br><span class="line">&#125; <span class="type">mach_msg_base_t</span>; <span class="comment">//基本消息</span></span><br><span class="line"><span class="keyword">typedef</span>	<span class="type">unsigned</span> <span class="type">int</span> <span class="type">mach_msg_trailer_type_t</span>;<span class="comment">//消息尾的类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="type">mach_msg_trailer_type_t</span>	msgh_trailer_type;</span><br><span class="line">  <span class="type">mach_msg_trailer_size_t</span>	msgh_trailer_size;</span><br><span class="line">&#125; <span class="type">mach_msg_trailer_t</span>; <span class="comment">//消息尾</span></span><br></pre></td></tr></table></figure></li>
+<li>复杂一点的，将消息头的标志位mach_msg_bits_t设置为MACH_MSGH_BITS_COMPLEX，就表示复杂消息。此时消息体里面指定了描述符的个数，接下来就是一个接着一个的描述符：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="type">uint64_t</span>			address;<span class="comment">//数据的大小</span></span><br><span class="line">  <span class="type">boolean_t</span>     		deallocate: <span class="number">8</span>;<span class="comment">//发送之后是否接触分配</span></span><br><span class="line">  <span class="type">mach_msg_copy_options_t</span>       copy: <span class="number">8</span>;<span class="comment">//复制指令</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span>     		pad1: <span class="number">8</span>;</span><br><span class="line">  <span class="type">mach_msg_descriptor_type_t</span>    type: <span class="number">8</span>;</span><br><span class="line">  <span class="type">mach_msg_size_t</span>       	size;<span class="comment">//数据的大小</span></span><br><span class="line">&#125; <span class="type">mach_msg_ool_descriptor64_t</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="消息收发"><a href="#消息收发" class="headerlink" title="消息收发"></a>消息收发</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">mach_msg_return_t</span>	<span class="title function_">mach_msg</span><span class="params">(</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_header_t</span> *msg,</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_option_t</span> option,</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_size_t</span> send_size,</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_size_t</span> rcv_size,</span></span><br><span class="line"><span class="params">					<span class="type">mach_port_name_t</span> rcv_name,</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_timeout_t</span> timeout,</span></span><br><span class="line"><span class="params">					<span class="type">mach_port_name_t</span> notify)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>步骤如下：<br>发送消息：</p>
+<ul>
+<li>调用current_space()获取当前的IPC空间。</li>
+<li>调用current_map()获取虚拟空间</li>
+<li>消息大小正确性检查</li>
+<li>计算要分配的消息大小</li>
+<li>通过ipc_kmsg_alloc分配消息</li>
+<li>复制消息</li>
+<li>复制消息关联的端口权限，然后通过ipc_kmsg_copyin将所有的out-of-line数据的内存复制到当前虚拟空间。(如果不复制权限可能导致无法访问数据)</li>
+<li>调用ipc_kmsg_send()发送消息<ul>
+<li>获得msgh_remote_port引用并锁定端口</li>
+<li>调用ipc_mqueue_send()，将消息直接复制到端口的ipc_messages队列中并唤醒等待的线程。</li>
+</ul>
+</li>
+</ul>
+<p>接收消息</p>
+<ul>
+<li>调用current_space()获取当前的IPC空间。</li>
+<li>调用current_map()获取虚拟空间</li>
+<li>调用ipc_mqueue_copyin()获取IPC队列。</li>
+<li>调用ipc_mqueue_receive()从队列中取出消息</li>
+<li>执行</li>
+</ul>
+<h3 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h3><p>端口实际上就是一个整型的标识符，是如下结构（在osfmk/ipc/ipc_port.h中定义）的一个句柄：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> &#123;</span></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Initial sub-structure in common with ipc_pset</span></span><br><span class="line"><span class="comment">	 * First element is an ipc_object second is a</span></span><br><span class="line"><span class="comment">	 * message queue</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_object</span> <span class="title">ip_object</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_mqueue</span> <span class="title">ip_messages</span>;</span></span><br><span class="line">	<span class="type">natural_t</span> ip_sprequests:<span class="number">1</span>,	<span class="comment">/* send-possible requests outstanding */</span></span><br><span class="line">		  ip_spimportant:<span class="number">1</span>,	<span class="comment">/* ... at least one is importance donating */</span></span><br><span class="line">		  ip_impdonation:<span class="number">1</span>,	<span class="comment">/* port supports importance donation */</span></span><br><span class="line">		  ip_tempowner:<span class="number">1</span>,	<span class="comment">/* dont give donations to current receiver */</span></span><br><span class="line">		  ip_guarded:<span class="number">1</span>,         <span class="comment">/* port guarded (use context value as guard) */</span></span><br><span class="line">		  ip_strict_guard:<span class="number">1</span>,	<span class="comment">/* Strict guarding; Prevents user manipulation of context values directly */</span></span><br><span class="line">		  ip_reserved:<span class="number">2</span>,</span><br><span class="line">		  ip_impcount:<span class="number">24</span>;	<span class="comment">/* number of importance donations in nested queue */</span></span><br><span class="line">	<span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">ipc_space</span> *<span class="title">receiver</span>;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">destination</span>;</span></span><br><span class="line">		<span class="type">ipc_port_timestamp_t</span> timestamp;</span><br><span class="line">	&#125; data;</span><br><span class="line">	<span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">		<span class="type">ipc_kobject_t</span> kobject;</span><br><span class="line">		<span class="type">ipc_importance_task_t</span> imp_task;</span><br><span class="line">		<span class="type">uintptr_t</span> alias;</span><br><span class="line">	&#125; kdata;</span><br><span class="line">		</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">ip_nsrequest</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">ip_pdrequest</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port_request</span> *<span class="title">ip_requests</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_kmsg</span> *<span class="title">ip_premsg</span>;</span></span><br><span class="line">	<span class="type">mach_vm_address_t</span> ip_context;</span><br><span class="line">	<span class="type">mach_port_mscount_t</span> ip_mscount;</span><br><span class="line">	<span class="type">mach_port_rights_t</span> ip_srights;</span><br><span class="line">	<span class="type">mach_port_rights_t</span> ip_sorights;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span>	MACH_ASSERT</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span>	IP_NSPARES		4</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span>	IP_CALLSTACK_MAX	16</span></span><br><span class="line"><span class="comment">/*	queue_chain_t	ip_port_links;*/</span><span class="comment">/* all allocated ports */</span></span><br><span class="line">	<span class="type">thread_t</span>	ip_thread;	<span class="comment">/* who made me?  thread context */</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span>	ip_timetrack;	<span class="comment">/* give an idea of &quot;when&quot; created */</span></span><br><span class="line">	<span class="type">uintptr_t</span>	ip_callstack[IP_CALLSTACK_MAX]; <span class="comment">/* stack trace */</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span>	ip_spares[IP_NSPARES]; <span class="comment">/* for debugging */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span>	<span class="comment">/* MACH_ASSERT */</span></span></span><br><span class="line">&#125; __attribute__((__packed__));</span><br></pre></td></tr></table></figure>
+
+<h3 id="Mach接口生成器-MIG"><a href="#Mach接口生成器-MIG" class="headerlink" title="Mach接口生成器 MIG"></a>Mach接口生成器 MIG</h3><p>Mach消息传递模型是远程调用（Remote Procedure Call，RPC）的一种现实(类似Thrift)。在/usr/include/mach目录下可以看到一些.defs文件，这些文件包含了Mach子系统（一组操作）的定义。操作类型如下：</p>
+<img src="/images/iOS/mig_opt.png" class="">
+
+<h2 id="IPC"><a href="#IPC" class="headerlink" title="IPC"></a>IPC</h2><ul>
+<li>Mach的每个Task都包含一个指针，这个指针指向一个IPC命名空间，这个IPC命名空间了包含了Task的端口，当然Task还可以获取系统范围的端口，例如：主机端口、特权端口（可以重启机器等）等。</li>
+<li>在用户态下，消息传递都是通过mach_msg()函数实现的，这个函数会触发一个mach陷阱mach_msg_trap()，接下来mach_msg_trap()又会调用mach_msg_overwrite_trap()，它会通过MACH_SEND_MSG和MACH_RCV_MSG来判断是发送操作，还是接收操作。</li>
+<li>期中内核态中还可以通过mach_msg_receive()和mach_msg_send()来收发数据。</li>
+</ul>
+<h2 id="主机、时钟、处理器、处理器集"><a href="#主机、时钟、处理器、处理器集" class="headerlink" title="主机、时钟、处理器、处理器集"></a>主机、时钟、处理器、处理器集</h2><h3 id="主机对象-Host"><a href="#主机对象-Host" class="headerlink" title="主机对象 Host"></a>主机对象 Host</h3><p>主机就是一组“特殊”端口的集合，以及一组异常处理程序的集合，同时定义了一个锁用于保护异常处理的并发访问。结构如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span>	<span class="title">host</span> &#123;</span></span><br><span class="line">	decl_lck_mtx_data(,lock)		<span class="comment">/* lock to protect exceptions */</span></span><br><span class="line">	<span class="type">ipc_port_t</span> special[HOST_MAX_SPECIAL_PORT + <span class="number">1</span>];</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">exception_action</span> <span class="title">exc_actions</span>[<span class="title">EXC_TYPES_COUNT</span>];</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="时钟对象（Clock）"><a href="#时钟对象（Clock）" class="headerlink" title="时钟对象（Clock）"></a>时钟对象（Clock）</h3><p>Mach内核提供了一个简单的“时钟”对象（在osfmk/kern/clock.h中定义）的抽象，这个对象用于计时和闹铃，期中最重要的内部API是clock_deadline_for_periodic_event（），调度器通过它设置了一个重复发生的通知–从而保证了多任务引擎的运转。</p>
+<h3 id="处理器对象（Processer）"><a href="#处理器对象（Processer）" class="headerlink" title="处理器对象（Processer）"></a>处理器对象（Processer）</h3><p>在多核架构中每一个核心都可以看做是一个CPU，处理器被分配给处理器集，处理器是CPU的简单抽象，被Mach用于一些基本的操作，比如：启动和关闭一个CPU，向CPU分发要执行的线程。结构的定义（在osfmk/kern/processor.h）如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">processor</span> &#123;</span></span><br><span class="line">	<span class="type">queue_chain_t</span>		processor_queue;<span class="comment">/* idle/active queue link,</span></span><br><span class="line"><span class="comment">										 * MUST remain the first element */</span></span><br><span class="line">	<span class="type">int</span>					state;			<span class="comment">/* See below */</span></span><br><span class="line">	<span class="type">boolean_t</span>		is_SMT;</span><br><span class="line">	<span class="type">boolean_t</span>		is_recommended;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">thread</span></span></span><br><span class="line"><span class="class">						*<span class="title">active_thread</span>,	/* <span class="title">thread</span> <span class="title">running</span> <span class="title">on</span> <span class="title">processor</span> */</span></span><br><span class="line"><span class="class">						*<span class="title">next_thread</span>,	/* <span class="title">next</span> <span class="title">thread</span> <span class="title">when</span> <span class="title">dispatched</span> */</span></span><br><span class="line"><span class="class">						*<span class="title">idle_thread</span>;</span>	<span class="comment">/* this processor&#x27;s idle thread. */</span></span><br><span class="line">	<span class="type">processor_set_t</span>		processor_set;	<span class="comment">/* assigned set */</span></span><br><span class="line">	<span class="type">int</span>					current_pri;	<span class="comment">/* priority of current thread */</span></span><br><span class="line">	<span class="type">sched_mode_t</span>		current_thmode;	<span class="comment">/* sched mode of current thread */</span></span><br><span class="line">	<span class="type">sfi_class_id_t</span>		current_sfi_class;	<span class="comment">/* SFI class of current thread */</span></span><br><span class="line">	<span class="type">int</span>					cpu_id;			<span class="comment">/* platform numeric id */</span></span><br><span class="line">	<span class="type">timer_call_data_t</span>	quantum_timer;	<span class="comment">/* timer for quantum expiration */</span></span><br><span class="line">	<span class="type">uint64_t</span>			quantum_end;	<span class="comment">/* time when current quantum ends */</span></span><br><span class="line">	<span class="type">uint64_t</span>			last_dispatch;	<span class="comment">/* time of last dispatch */</span></span><br><span class="line">	<span class="type">uint64_t</span>			deadline;		<span class="comment">/* current deadline */</span></span><br><span class="line">	<span class="type">boolean_t</span>               first_timeslice;                <span class="comment">/* has the quantum expired since context switch */</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_TRADITIONAL) || defined(CONFIG_SCHED_MULTIQ)</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">run_queue</span>	<span class="title">runq</span>;</span>			<span class="comment">/* runq for this processor */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_TRADITIONAL)</span></span><br><span class="line">	<span class="type">int</span>					runq_bound_count; <span class="comment">/* # of threads bound to this processor */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_GRRR)</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">grrr_run_queue</span>	<span class="title">grrr_runq</span>;</span>      <span class="comment">/* Group Ratio Round-Robin runq */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="type">processor_t</span>			processor_primary;	<span class="comment">/* pointer to primary processor for</span></span><br><span class="line"><span class="comment">											 * secondary SMT processors, or a pointer</span></span><br><span class="line"><span class="comment">											 * to ourselves for primaries or non-SMT */</span></span><br><span class="line">	<span class="type">processor_t</span>		processor_secondary;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *	<span class="title">processor_self</span>;</span>	<span class="comment">/* port for operations */</span></span><br><span class="line">	<span class="type">processor_t</span>			processor_list;	<span class="comment">/* all existing processors */</span></span><br><span class="line">	<span class="type">processor_data_t</span>	processor_data;	<span class="comment">/* per-processor data */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中最重要的是runq，这是分发到这个处理器的线程队列。</p>
+<h3 id="处理器集"><a href="#处理器集" class="headerlink" title="处理器集"></a>处理器集</h3><p>处理器集就是一个或多个processor_t的分组，也被称为pset。pset通常维护三个队列：</p>
+<p>active_queue：用于保存当前正在执行线程的CPU。<br>idle_queue：用于保存当前空闲的CPU（例如：正在执行idle_thread）。<br>pset_runq：保存了在这个集合中的所有CPU上执行的线程。<br>processor_set的定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">processor_set</span> &#123;</span></span><br><span class="line">	<span class="type">queue_head_t</span>		active_queue;	<span class="comment">/* active processors */</span></span><br><span class="line">	<span class="type">queue_head_t</span>		idle_queue;		<span class="comment">/* idle processors */</span></span><br><span class="line">	<span class="type">queue_head_t</span>		idle_secondary_queue;		<span class="comment">/* idle secondary processors */</span></span><br><span class="line">	<span class="type">int</span>					online_processor_count;</span><br><span class="line">	<span class="type">int</span>					cpu_set_low, cpu_set_hi;</span><br><span class="line">	<span class="type">int</span>					cpu_set_count;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> __SMP__</span></span><br><span class="line">	decl_simple_lock_data(,sched_lock)	<span class="comment">/* lock for above */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_TRADITIONAL) || defined(CONFIG_SCHED_MULTIQ)</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">run_queue</span>	<span class="title">pset_runq</span>;</span>      <span class="comment">/* runq for this processor set */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_TRADITIONAL)</span></span><br><span class="line">	<span class="type">int</span>					pset_runq_bound_count;</span><br><span class="line">		<span class="comment">/* # of threads in runq bound to any processor in pset */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="comment">/* CPUs that have been sent an unacknowledged remote AST for scheduling purposes */</span></span><br><span class="line">	<span class="type">uint64_t</span>			pending_AST_cpu_mask;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_DEFERRED_AST)</span></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * A seperate mask, for ASTs that we may be able to cancel.  This is dependent on</span></span><br><span class="line"><span class="comment">	 * some level of support for requesting an AST on a processor, and then quashing</span></span><br><span class="line"><span class="comment">	 * that request later.</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * The purpose of this field (and the associated codepaths) is to infer when we</span></span><br><span class="line"><span class="comment">	 * no longer need a processor that is DISPATCHING to come up, and to prevent it</span></span><br><span class="line"><span class="comment">	 * from coming out of IDLE if possible.  This should serve to decrease the number</span></span><br><span class="line"><span class="comment">	 * of spurious ASTs in the system, and let processors spend longer periods in</span></span><br><span class="line"><span class="comment">	 * IDLE.</span></span><br><span class="line"><span class="comment">	 *\/</span></span><br><span class="line"><span class="comment">	uint64_t			pending_deferred_AST_cpu_mask;</span></span><br><span class="line"><span class="comment">#endif</span></span><br><span class="line"><span class="comment">	struct ipc_port	*	pset_self;		/* port for operations */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *	<span class="title">pset_name_self</span>;</span>	<span class="comment">/* port for information */</span></span><br><span class="line">	<span class="type">processor_set_t</span>		pset_list;		<span class="comment">/* chain of associated psets */</span></span><br><span class="line">	<span class="type">pset_node_t</span>			node;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>希望对您有所帮助，您的支持将是我莫大的动力！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Jack Wang 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Jack Wang 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"># 操作系统</a>
+              <a href="/tags/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" rel="tag"># 系统架构</a>
+              <a href="/tags/Mach%E5%86%85%E6%A0%B8/" rel="tag"># Mach内核</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/iOS/kernelarchitecture/xnu.html" rel="prev" title="Mach微内核简介">
+      <i class="fa fa-chevron-left"></i> Mach微内核简介
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/iOS/crashreport/crashanalysis.html" rel="next" title="iOS程序崩溃抓获与分析">
+      iOS程序崩溃抓获与分析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Mach"><span class="nav-number">1.</span> <span class="nav-text">Mach</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mach%E5%86%85%E6%A0%B8%E6%8A%BD%E8%B1%A1%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">Mach内核抽象化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E5%92%8C%E7%BA%BF%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">任务和线程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3%E3%80%81%E7%AB%AF%E5%8F%A3%E6%9D%83%E9%99%90%E3%80%81%E7%AB%AF%E5%8F%A3%E9%9B%86%E5%92%8C%E7%AB%AF%E5%8F%A3%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4"><span class="nav-number">4.</span> <span class="nav-text">端口、端口权限、端口集和端口名称空间</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text">内存管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1-IPC"><span class="nav-number">6.</span> <span class="nav-text">进程间通信(IPC)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IPC%E4%BA%8B%E5%8A%A1%E5%92%8C%E4%BA%8B%E4%BB%B6%E8%B0%83%E5%BA%A6"><span class="nav-number">6.1.</span> <span class="nav-text">IPC事务和事件调度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="nav-number">6.2.</span> <span class="nav-text">消息队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="nav-number">6.3.</span> <span class="nav-text">信号量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E7%9F%A5"><span class="nav-number">6.4.</span> <span class="nav-text">通知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%81"><span class="nav-number">6.5.</span> <span class="nav-text">锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8-RPC-%E5%AF%B9%E8%B1%A1"><span class="nav-number">6.6.</span> <span class="nav-text">远程过程调用(RPC)对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%AE%A1%E7%90%86"><span class="nav-number">7.</span> <span class="nav-text">时间管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B"><span class="nav-number">8.</span> <span class="nav-text">我们总结一下</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mach-%E3%80%81%E7%AB%AF%E5%8F%A3%E3%80%81Mach%E6%B6%88%E6%81%AF%E9%83%A8%E5%88%86"><span class="nav-number">8.1.</span> <span class="nav-text">Mach 、端口、Mach消息部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mach%E6%B6%88%E6%81%AF%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-number">8.1.1.</span> <span class="nav-text">Mach消息结构体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E6%94%B6%E5%8F%91"><span class="nav-number">8.1.2.</span> <span class="nav-text">消息收发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3"><span class="nav-number">8.1.3.</span> <span class="nav-text">端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mach%E6%8E%A5%E5%8F%A3%E7%94%9F%E6%88%90%E5%99%A8-MIG"><span class="nav-number">8.1.4.</span> <span class="nav-text">Mach接口生成器 MIG</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IPC"><span class="nav-number">8.2.</span> <span class="nav-text">IPC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E6%9C%BA%E3%80%81%E6%97%B6%E9%92%9F%E3%80%81%E5%A4%84%E7%90%86%E5%99%A8%E3%80%81%E5%A4%84%E7%90%86%E5%99%A8%E9%9B%86"><span class="nav-number">8.3.</span> <span class="nav-text">主机、时钟、处理器、处理器集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E6%9C%BA%E5%AF%B9%E8%B1%A1-Host"><span class="nav-number">8.3.1.</span> <span class="nav-text">主机对象 Host</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%92%9F%E5%AF%B9%E8%B1%A1%EF%BC%88Clock%EF%BC%89"><span class="nav-number">8.3.2.</span> <span class="nav-text">时钟对象（Clock）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E5%99%A8%E5%AF%B9%E8%B1%A1%EF%BC%88Processer%EF%BC%89"><span class="nav-number">8.3.3.</span> <span class="nav-text">处理器对象（Processer）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E5%99%A8%E9%9B%86"><span class="nav-number">8.3.4.</span> <span class="nav-text">处理器集</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jack Wang"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Jack Wang</p>
+  <div class="site-description" itemprop="description">书山有路勤为径，学海无涯苦作舟！</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL29yZ3Mvd2FuZ2tlamllL3JlcG9zaXRvcmllcw==" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;orgs&#x2F;wangkejie&#x2F;repositories"><i class="github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOjcyNzg4MTk0NUBxcS5jb20=" title="E-Mail → mailto:727881945@qq.com"><i class="envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">京ICP备16036665号-2 </span>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack Wang</span>
+</div>
+
+        
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1277804316&web_id=1277804316"></script>
+  </div>
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'S7tR3Qqx6JSg8P5ChLXjLWt8-gzGzoHsz',
+      appKey     : 'hHRdJzqrf8zU1xQElb7km39u',
+      placeholder: "上面也可以填入联系方式，感谢您宝贵的建议~",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
