@@ -129,7 +129,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">71</span></a>
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">70</span></a>
 
   </li>
         <li class="menu-item menu-item-about">
@@ -199,162 +199,6 @@
 
           <div class="content index posts-expand">
             
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/iOS/questions/index.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack Wang">
-      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="王科杰">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/iOS/questions/index.html" class="post-title-link" itemprop="url">iOS 面试题(持续更新)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-07-10 12:24:27" itemprop="dateCreated datePublished" datetime="2017-07-10T12:24:27+08:00">2017-07-10</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iOS/iOS%E9%9D%A2%E8%AF%95%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">iOS面试题</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/iOS/questions/index.html#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/iOS/questions/index.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>我不是推广，我也是个学习者，推荐一个慕课网学习，我还专门写了一个<a href="./iOS/study.html">笔记博客</a></p>
-</blockquote>
-<h1 id="iOS面试题大全—全方面剖析面试"><a href="#iOS面试题大全—全方面剖析面试" class="headerlink" title="iOS面试题大全—全方面剖析面试"></a>iOS面试题大全—全方面剖析面试</h1><ul>
-<li>UIView与CALayer</li>
-<li>事件传递与视图响应链</li>
-<li>图像显示原理</li>
-<li>UI卡顿掉帧原因</li>
-<li>滑动优化方案</li>
-<li>UI绘制原理</li>
-<li>离屏渲染</li>
-</ul>
-<h2 id="UIView与CALayer"><a href="#UIView与CALayer" class="headerlink" title="UIView与CALayer"></a>UIView与CALayer</h2><img src="/images/iOS/uiviewuilayer.png" class="" title="uiviewuilayer">
-<p>&lt;单一职责原则&gt;<br>UIView为CALayer提供内容，以及负责处理触摸等事件，参与响应链<br>CALayer负责显示内容contents</p>
-<h2 id="事件传递与视图响应链"><a href="#事件传递与视图响应链" class="headerlink" title="事件传递与视图响应链"></a>事件传递与视图响应链</h2><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- <span class="params">(UIView *)</span>hitTest:<span class="params">(CGPoint)</span>point withEvent:<span class="params">(UIEvent *)</span>event;</span><br><span class="line"></span><br><span class="line">- <span class="params">(BOOL)</span>pointInside:<span class="params">(CGPoint)</span>point withEvent:<span class="params">(UIEvent *)</span>event;</span><br></pre></td></tr></table></figure>
-<img src="/images/iOS/question_event_process.png" class="" title="question_event_process">
-<p>如果事件一直传递到UIAppliction还是没处理，那就会忽略掉</p>
-<h2 id="图像显示原理"><a href="#图像显示原理" class="headerlink" title="图像显示原理"></a>图像显示原理</h2><ol>
-<li>CPU:输出位图</li>
-<li>GPU :图层渲染，纹理合成</li>
-<li>把结果放到帧缓冲区(frame buffer)中</li>
-<li>再由视频控制器根据vsync信号在指定时间之前去提取帧缓冲区的屏幕显示内容</li>
-<li>显示到屏幕上<img src="/images/iOS/imagedisplay.png" class="" title="imagedisplay"></li>
-</ol>
-<p>CPU工作</p>
-<ol>
-<li>Layout: UI布局，文本计算</li>
-<li>Display: 绘制</li>
-<li>Prepare: 图片解码</li>
-<li>Commit：提交位图</li>
-</ol>
-<p>GPU渲染管线(OpenGL)</p>
-<ul>
-<li>顶点着色，图元装配，光栅化，片段着色，片段处理</li>
-</ul>
-<h2 id="UI卡顿掉帧原因"><a href="#UI卡顿掉帧原因" class="headerlink" title="UI卡顿掉帧原因"></a>UI卡顿掉帧原因</h2><img src="/images/iOS/kadun.png" class="" title="kadun">
-<p>iOS设备的硬件时钟会发出Vsync（垂直同步信号），然后App的CPU会去计算屏幕要显示的内容，之后将计算好的内容提交到GPU去渲染。随后，GPU将渲染结果提交到帧缓冲区，等到下一个VSync到来时将缓冲区的帧显示到屏幕上。也就是说，一帧的显示是由CPU和GPU共同决定的。<br>一般来说，页面滑动流畅是60fps，也就是1s有60帧更新，即每隔16.7ms就要产生一帧画面，而如果CPU和GPU加起来的处理时间超过了16.7ms，就会造成掉帧甚至卡顿。</p>
-<h2 id="滑动优化方案"><a href="#滑动优化方案" class="headerlink" title="滑动优化方案"></a>滑动优化方案</h2><p>CPU：把以下操作放在子线程中</p>
-<ol>
-<li>对象创建、调整、销毁</li>
-<li>预排版（布局计算、文本计算、缓存高度等等）</li>
-<li>预渲染（文本等异步绘制，图片解码等）<br>GPU:</li>
-</ol>
-<ul>
-<li>纹理渲染，视图混合</li>
-<li>一般遇到性能问题时，考虑以下问题：<ul>
-<li>是否受到CPU或者GPU的限制？</li>
-<li>是否有不必要的CPU渲染？</li>
-<li>是否有太多的离屏渲染操作？</li>
-<li>是否有太多的图层混合操作？</li>
-<li>是否有奇怪的图片格式或者尺寸？</li>
-<li>是否涉及到昂贵的view或者效果？</li>
-<li>view的层次结构是否合理？</li>
-</ul>
-</li>
-</ul>
-<h2 id="UI绘制原理"><a href="#UI绘制原理" class="headerlink" title="UI绘制原理"></a>UI绘制原理</h2><img src="/images/iOS/uidraw.png" class="" title="uidraw">
-<img src="/images/iOS/uidrawdisplay.png" class="" title="uidrawdisplay">
-<p>异步绘制：</p>
-<ul>
-<li>[self.layer.delegate displayLayer: ]</li>
-<li>代理负责生成对应的bitmap</li>
-<li>设置该bitmap作为该layer.contents属性的值<img src="/images/iOS/asyndraw.png" class="" title="asyndraw"></li>
-</ul>
-<h2 id="离屏渲染"><a href="#离屏渲染" class="headerlink" title="离屏渲染"></a>离屏渲染</h2><p>On-Screen Rendering:当前屏幕渲染，指的是GPU的渲染操作是在当前用于显示的屏幕缓冲区中进行<br>Off-Screen Rendering:离屏渲染，分为CPU离屏渲染和GPU离屏渲染两种形式。GPU离屏渲染指的是GPU在当前屏幕缓冲区外新开辟一个缓冲区进行渲染操作<br>应当尽量避免的则是GPU离屏渲染<br>GPU离屏渲染何时会触发呢？<br>圆角（当和maskToBounds一起使用时）、图层蒙版、阴影，设置</p>
-<blockquote>
-<p>layer.shouldRasterize ＝ YES</p>
-</blockquote>
-<p>为什么要避免GPU离屏渲染？</p>
-<ul>
-<li>GPU需要做额外的渲染操作。通常GPU在做渲染的时候是很快的，但是涉及到offscreen-render的时候情况就可能有些不同，因为需要额外开辟一个新的缓冲区进行渲染，然后绘制到当前屏幕的过程需要做onscreen跟offscreen上下文之间的切换，这个过程的消耗会比较昂贵，涉及到OpenGL的pipeline跟barrier，而且offscreen-render在每一帧都会涉及到，因此处理不当肯定会对性能产生一定的影响。另外由于离屏渲染会增加GPU的工作量，可能会导致CPU+GPU的处理时间超出16.7ms，导致掉帧卡顿。所以可以的话应尽量减少offscreen-render的图层</li>
-</ul>
-<h1 id="Runtime-RunLoop-面试请看我相关具体博客内容，不再累赘"><a href="#Runtime-RunLoop-面试请看我相关具体博客内容，不再累赘" class="headerlink" title="Runtime/RunLoop 面试请看我相关具体博客内容，不再累赘"></a>Runtime/RunLoop 面试请看我相关具体博客内容，不再累赘</h1><h1 id="暂停，不定期更新，看心情。。。。。"><a href="#暂停，不定期更新，看心情。。。。。" class="headerlink" title="暂停，不定期更新，看心情。。。。。"></a>暂停，不定期更新，看心情。。。。。</h1>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
       
   
   
@@ -2120,10 +1964,182 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/iOS/performance/index.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack Wang">
+      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王科杰">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/iOS/performance/index.html" class="post-title-link" itemprop="url">iOS性能优化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2015-07-10 12:24:27" itemprop="dateCreated datePublished" datetime="2015-07-10T12:24:27+08:00">2015-07-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/iOS%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">iOS性能优化</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/iOS/performance/index.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/iOS/performance/index.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="如何提升-tableview-的流畅度？"><a href="#如何提升-tableview-的流畅度？" class="headerlink" title="如何提升 tableview 的流畅度？"></a>如何提升 <code>tableview</code> 的流畅度？</h2><p>本质上是降低 CPU、GPU 的工作，从这两个大的方面去提升性能。</p>
+<ul>
+<li>CPU：对象的创建和销毁、对象属性的调整、布局计算、文本的计算和排版、图片的格式转换和解码、图像的绘制</li>
+<li>GPU：纹理的渲染</li>
+</ul>
+<h3 id="卡顿优化在-CPU-层面"><a href="#卡顿优化在-CPU-层面" class="headerlink" title="卡顿优化在 CPU 层面"></a>卡顿优化在 CPU 层面</h3><ul>
+<li>尽量用轻量级的对象，比如用不到事件处理的地方，可以考虑使用 CALayer 取代 UIView</li>
+<li>不要频繁地调用 UIView 的相关属性，比如 frame、bounds、transform 等属性，尽量减少不必要的修改</li>
+<li>尽量提前计算好布局，在有需要时一次性调整对应的属性，不要多次修改属性</li>
+<li>Autolayout 会比直接设置 frame 消耗更多的 CPU 资源</li>
+<li>图片的 size 最好刚好跟 UIImageView 的 size 保持一致</li>
+<li>控制一下线程的最大并发数量</li>
+<li>尽量把耗时的操作放到子线程<ul>
+<li>文本处理（尺寸计算、绘制）</li>
+<li>图片处理（解码、绘制）</li>
+</ul>
+</li>
+</ul>
+<h3 id="卡顿优化在-GPU层面"><a href="#卡顿优化在-GPU层面" class="headerlink" title="卡顿优化在 GPU层面"></a>卡顿优化在 GPU层面</h3><ul>
+<li>尽量避免短时间内大量图片的显示，尽可能将多张图片合成一张进行显示</li>
+<li>GPU能处理的最大纹理尺寸是 4096x4096，一旦超过这个尺寸，就会占用 CPU 资源进行处理，所以纹理尽量不要超过这个尺寸</li>
+<li>尽量减少视图数量和层次</li>
+<li>减少透明的视图（alpha&lt;1），不透明的就设置 opaque 为 YES</li>
+<li>尽量避免出现离屏渲染</li>
+</ul>
+<p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmliaXJlbWUuY29tLzIwMTUvMTEvMTIvc21vb3RoX3VzZXJfaW50ZXJmYWNlc19mb3JfaW9zLw==">iOS 保持界面流畅的技巧<i class="fa fa-external-link-alt"></i></span></p>
+<h4 id="1-预排版，提前计算"><a href="#1-预排版，提前计算" class="headerlink" title="1.预排版，提前计算"></a>1.预排版，提前计算</h4><p>在接收到服务端返回的数据后，尽量将 <code>CoreText</code> 排版的结果、单个控件的高度、<code>cell</code> 整体的高度提前计算好，将其存储在模型的属性中。需要使用时，直接从模型中往外取，避免了计算的过程。</p>
+<p>尽量少用 <code>UILabel</code>，可以使用 <code>CALayer</code> 。避免使用 <code>AutoLayout</code> 的自动布局技术，采取纯代码的方式 </p>
+<blockquote>
+<p>Autolayout 是苹果本身提倡的技术，在大部分情况下也能很好的提升开发效率，但是 Autolayout 对于复杂视图来说常常会产生严重的性能问题。随着视图数量的增长，Autolayout 带来的 CPU 消耗会呈指数级上升。具体数据可以看这个文章：<span class="exturl" data-url="aHR0cDovL3BpbGt5Lm1lLzM2LyVFMyU4MCU4Mg==">http://pilky.me/36/。<i class="fa fa-external-link-alt"></i></span> 如果你不想手动调整 frame 等属性，你可以用一些工具方法替代（比如常见的 left/right/top/bottom/width/height 快捷属性），或者使用 ComponentKit、<a href="./iOS/thirdpart/asdk.html">AsyncDisplayKit</a> 等框架。</p>
+</blockquote>
+<h4 id="2-预渲染，提前绘制"><a href="#2-预渲染，提前绘制" class="headerlink" title="2.预渲染，提前绘制"></a>2.预渲染，提前绘制</h4><p>例如圆形的图标可以提前在，在接收到网络返回数据时，在后台线程进行处理，直接存储在模型数据里，回到主线程后直接调用就可以了</p>
+<p>避免使用 CALayer 的 Border、corner、shadow、mask 等技术，这些都会触发离屏渲染。</p>
+<h4 id="3-异步绘制"><a href="#3-异步绘制" class="headerlink" title="3.异步绘制"></a>3.异步绘制</h4><h4 id="4-全局并发线程"><a href="#4-全局并发线程" class="headerlink" title="4.全局并发线程"></a>4.全局并发线程</h4><h4 id="5-高效的图片异步加载"><a href="#5-高效的图片异步加载" class="headerlink" title="5.高效的图片异步加载"></a>5.高效的图片异步加载</h4><h2 id="如何有效降低-APP-包的大小？"><a href="#如何有效降低-APP-包的大小？" class="headerlink" title="如何有效降低 APP 包的大小？"></a>如何有效降低 <code>APP</code> 包的大小？</h2><p>降低包大小需要从两方面着手</p>
+<h3 id="可执行文件"><a href="#可执行文件" class="headerlink" title="可执行文件"></a>可执行文件</h3><ul>
+<li><p>编译器优化</p>
+<ul>
+<li>Strip Linked Product、Make Strings Read-Only、Symbols Hidden by Default 设置为 YES</li>
+<li>去掉异常支持，Enable C++ Exceptions、Enable Objective-C Exceptions 设置为 NO， Other C Flags 添加 -fno-exceptions   </li>
+</ul>
+</li>
+<li><p>利用 AppCode 检测未使用的代码：菜单栏 -&gt; Code -&gt; Inspect Code</p>
+</li>
+<li><p>编写LLVM插件检测出重复代码、未被调用的代码</p>
+</li>
+</ul>
+<h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><blockquote>
+<p>资源包括 图片、音频、视频 等</p>
+</blockquote>
+<ul>
+<li>优化的方式可以对资源进行无损的压缩</li>
+<li>去除没有用到的资源： <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3RpbnltaW5kL0xTVW51c2VkUmVzb3VyY2Vz">https://github.com/tinymind/LSUnusedResources<i class="fa fa-external-link-alt"></i></span></li>
+</ul>
+<h2 id="继续优化"><a href="#继续优化" class="headerlink" title="继续优化"></a>继续优化</h2><h3 id="1、重用和延迟加载-lazy-load-Views"><a href="#1、重用和延迟加载-lazy-load-Views" class="headerlink" title="1、重用和延迟加载(lazy load) Views"></a>1、重用和延迟加载(lazy load) Views</h3><ul>
+<li>更多的view意味着更多的渲染，也就是更多的CPU和内存消耗，对于那种嵌套了很多view在UIScrollView里边的app更是如此。</li>
+<li>这里我们用到的技巧就是模仿UITableView和UICollectionView的操作: 不要一次创建所有的subview，而是当需要时才创建，当它们完成了使命，把他们放进一个可重用的队列中。这样的话你就只需要在滚动发生时创建你的views，避免了不划算的内存分配。</li>
+</ul>
+<h3 id="2、Cache-Cache-还是Cache"><a href="#2、Cache-Cache-还是Cache" class="headerlink" title="2、Cache, Cache, 还是Cache!"></a>2、Cache, Cache, 还是Cache!</h3><ul>
+<li>一个极好的原则就是，缓存所需要的，也就是那些不大可能改变但是需要经常读取的东西。</li>
+<li>我们能缓存些什么呢？一些选项是，远端服务器的响应，图片，甚至计算结果，比如UITableView的行高。</li>
+<li>NSCache和NSDictionary类似，不同的是系统回收内存的时候它会自动删掉它的内容。</li>
+</ul>
+<h3 id="3、权衡渲染方法-性能能还是要bundle保持合适的大小。"><a href="#3、权衡渲染方法-性能能还是要bundle保持合适的大小。" class="headerlink" title="3、权衡渲染方法.性能能还是要bundle保持合适的大小。"></a>3、权衡渲染方法.性能能还是要bundle保持合适的大小。</h3><h3 id="4、处理内存警告-移除对缓存，图片object和其他一些可以重创建的objects的strong-references"><a href="#4、处理内存警告-移除对缓存，图片object和其他一些可以重创建的objects的strong-references" class="headerlink" title="4、处理内存警告.移除对缓存，图片object和其他一些可以重创建的objects的strong references."></a>4、处理内存警告.移除对缓存，图片object和其他一些可以重创建的objects的strong references.</h3><h3 id="5、重用大开销对象"><a href="#5、重用大开销对象" class="headerlink" title="5、重用大开销对象"></a>5、重用大开销对象</h3><h3 id="6、一些objects的初始化很慢，比如NSDateFormatter和NSCalendar。然而，你又不可避免地需要使用它们，比如从JSON或者XML中解析数据。想要避免使用这个对象的瓶颈你就需要重用他们，可以通过添加属性到你的class里或者创建静态变量来实现。"><a href="#6、一些objects的初始化很慢，比如NSDateFormatter和NSCalendar。然而，你又不可避免地需要使用它们，比如从JSON或者XML中解析数据。想要避免使用这个对象的瓶颈你就需要重用他们，可以通过添加属性到你的class里或者创建静态变量来实现。" class="headerlink" title="6、一些objects的初始化很慢，比如NSDateFormatter和NSCalendar。然而，你又不可避免地需要使用它们，比如从JSON或者XML中解析数据。想要避免使用这个对象的瓶颈你就需要重用他们，可以通过添加属性到你的class里或者创建静态变量来实现。"></a>6、一些objects的初始化很慢，比如NSDateFormatter和NSCalendar。然而，你又不可避免地需要使用它们，比如从JSON或者XML中解析数据。想要避免使用这个对象的瓶颈你就需要重用他们，可以通过添加属性到你的class里或者创建静态变量来实现。</h3><h3 id="7、避免反复处理数据-在服务器端和客户端使用相同的数据结构很重要。"><a href="#7、避免反复处理数据-在服务器端和客户端使用相同的数据结构很重要。" class="headerlink" title="7、避免反复处理数据.在服务器端和客户端使用相同的数据结构很重要。"></a>7、避免反复处理数据.在服务器端和客户端使用相同的数据结构很重要。</h3><h3 id="8、选择正确的数据格式-解析JSON会比XML更快一些，JSON也通常更小更便于传输。从iOS5起有了官方内建的JSON-deserialization-就更加方便使用了。但是XML也有XML的好处，比如使用SAX-来解析XML就像解析本地文件一样，你不需像解析json一样等到整个文档下载完成才开始解析。当你处理很大的数据的时候就会极大地减低内存消耗和增加性能。"><a href="#8、选择正确的数据格式-解析JSON会比XML更快一些，JSON也通常更小更便于传输。从iOS5起有了官方内建的JSON-deserialization-就更加方便使用了。但是XML也有XML的好处，比如使用SAX-来解析XML就像解析本地文件一样，你不需像解析json一样等到整个文档下载完成才开始解析。当你处理很大的数据的时候就会极大地减低内存消耗和增加性能。" class="headerlink" title="8、选择正确的数据格式.解析JSON会比XML更快一些，JSON也通常更小更便于传输。从iOS5起有了官方内建的JSON deserialization 就更加方便使用了。但是XML也有XML的好处，比如使用SAX 来解析XML就像解析本地文件一样，你不需像解析json一样等到整个文档下载完成才开始解析。当你处理很大的数据的时候就会极大地减低内存消耗和增加性能。"></a>8、选择正确的数据格式.解析JSON会比XML更快一些，JSON也通常更小更便于传输。从iOS5起有了官方内建的JSON deserialization 就更加方便使用了。但是XML也有XML的好处，比如使用SAX 来解析XML就像解析本地文件一样，你不需像解析json一样等到整个文档下载完成才开始解析。当你处理很大的数据的时候就会极大地减低内存消耗和增加性能。</h3><h3 id="9、正确设定背景图片"><a href="#9、正确设定背景图片" class="headerlink" title="9、正确设定背景图片"></a>9、正确设定背景图片</h3><ul>
+<li>全屏背景图，在view中添加一个UIImageView作为一个子View</li>
+<li>只是某个小的view的背景图，你就需要用UIColor的colorWithPatternImage来做了，它会更快地渲染也不会花费很多内存：</li>
+</ul>
+<h3 id="10、减少使用Web特性。想要更高的性能你就要调整下你的HTML了。第一件要做的事就是尽可能移除不必要的javascript，避免使用过大的框架。能只用原生js就更好了。尽可能异步加载例如用户行为统计script这种不影响页面表达的javascript。注意你使用的图片，保证图片的符合你使用的大小。"><a href="#10、减少使用Web特性。想要更高的性能你就要调整下你的HTML了。第一件要做的事就是尽可能移除不必要的javascript，避免使用过大的框架。能只用原生js就更好了。尽可能异步加载例如用户行为统计script这种不影响页面表达的javascript。注意你使用的图片，保证图片的符合你使用的大小。" class="headerlink" title="10、减少使用Web特性。想要更高的性能你就要调整下你的HTML了。第一件要做的事就是尽可能移除不必要的javascript，避免使用过大的框架。能只用原生js就更好了。尽可能异步加载例如用户行为统计script这种不影响页面表达的javascript。注意你使用的图片，保证图片的符合你使用的大小。"></a>10、减少使用Web特性。想要更高的性能你就要调整下你的HTML了。第一件要做的事就是尽可能移除不必要的javascript，避免使用过大的框架。能只用原生js就更好了。尽可能异步加载例如用户行为统计script这种不影响页面表达的javascript。注意你使用的图片，保证图片的符合你使用的大小。</h3><h3 id="11、Shadow-Path-。CoreAnimation不得不先在后台得出你的图形并加好阴影然后才渲染，这开销是很大的。使用shadowPath的话就避免了这个问题。使用shadow-path的话iOS就不必每次都计算如何渲染，它使用一个预先计算好的路径。但问题是自己计算path的话可能在某些View中比较困难，且每当view的frame变化的时候你都需要去update-shadow-path"><a href="#11、Shadow-Path-。CoreAnimation不得不先在后台得出你的图形并加好阴影然后才渲染，这开销是很大的。使用shadowPath的话就避免了这个问题。使用shadow-path的话iOS就不必每次都计算如何渲染，它使用一个预先计算好的路径。但问题是自己计算path的话可能在某些View中比较困难，且每当view的frame变化的时候你都需要去update-shadow-path" class="headerlink" title="11、Shadow Path 。CoreAnimation不得不先在后台得出你的图形并加好阴影然后才渲染，这开销是很大的。使用shadowPath的话就避免了这个问题。使用shadow path的话iOS就不必每次都计算如何渲染，它使用一个预先计算好的路径。但问题是自己计算path的话可能在某些View中比较困难，且每当view的frame变化的时候你都需要去update shadow path."></a>11、Shadow Path 。CoreAnimation不得不先在后台得出你的图形并加好阴影然后才渲染，这开销是很大的。使用shadowPath的话就避免了这个问题。使用shadow path的话iOS就不必每次都计算如何渲染，它使用一个预先计算好的路径。但问题是自己计算path的话可能在某些View中比较困难，且每当view的frame变化的时候你都需要去update shadow path.</h3><h3 id="12、优化Table-View"><a href="#12、优化Table-View" class="headerlink" title="12、优化Table View"></a>12、优化Table View</h3><ul>
+<li>正确使用reuseIdentifier来重用cells</li>
+<li>尽量使所有的view opaque，包括cell自身</li>
+<li>避免渐变，图片缩放，后台选人</li>
+<li>缓存行高</li>
+<li>如果cell内现实的内容来自web，使用异步加载，缓存请求结果</li>
+<li>使用shadowPath来画阴影</li>
+<li>减少subviews的数量</li>
+<li>尽量不适用cellForRowAtIndexPath:，如果你需要用到它，只用-一次然后缓存结果</li>
+<li>使用正确的数据结构来存储数据</li>
+<li>使用rowHeight, sectionFooterHeight 和 sectionHeaderHeight来设定固定的高，不要请求delegate</li>
+</ul>
+<h3 id="13、选择正确的数据存储选项"><a href="#13、选择正确的数据存储选项" class="headerlink" title="13、选择正确的数据存储选项"></a>13、选择正确的数据存储选项</h3><ul>
+<li>NSUserDefaults的问题是什么？虽然它很nice也很便捷，但是它只适用于小数据，比如一些简单的布尔型的设置选项，再大点你就要考虑其它方式了</li>
+<li>XML这种结构化档案呢？总体来说，你需要读取整个文件到内存里去解析，这样是很不经济的。使用SAX又是一个很麻烦的事情。</li>
+<li>NSCoding？不幸的是，它也需要读写文件，所以也有以上问题。</li>
+<li>在这种应用场景下，使用SQLite 或者 Core Data比较好。使用这些技术你用特定的查询语句就能只加载你需要的对象。</li>
+<li>在性能层面来讲，SQLite和Core Data是很相似的。他们的不同在于具体使用方法。</li>
+<li>Core Data代表一个对象的graph model，但SQLite就是一个DBMS。</li>
+<li>Apple在一般情况下建议使用Core Data，但是如果你有理由不使用它，那么就去使用更加底层的SQLite吧。</li>
+<li>如果你使用SQLite，你可以用FMDB这个库来简化SQLite的操作，这样你就不用花很多经历了解SQLite的C API了。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span>
   </nav>
 
 
@@ -2191,7 +2207,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-count">70</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

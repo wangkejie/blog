@@ -129,7 +129,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">71</span></a>
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">70</span></a>
 
   </li>
         <li class="menu-item menu-item-about">
@@ -199,136 +199,6 @@
 
           <div class="content index posts-expand">
             
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/iOS/thirdpart/asdk.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack Wang">
-      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="王科杰">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/iOS/thirdpart/asdk.html" class="post-title-link" itemprop="url">AsyncDisplayKit</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-09-10 11:26:39" itemprop="dateCreated datePublished" datetime="2017-09-10T11:26:39+08:00">2017-09-10</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iOS/Third-Party-Lib/" itemprop="url" rel="index"><span itemprop="name">Third-Party Lib</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iOS/Third-Party-Lib/AsyncDisplayKit/" itemprop="url" rel="index"><span itemprop="name">AsyncDisplayKit</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/iOS/thirdpart/asdk.html#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/iOS/thirdpart/asdk.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="AsyncDisplayKit"><a href="#AsyncDisplayKit" class="headerlink" title="AsyncDisplayKit"></a>AsyncDisplayKit</h1><p>AsyncDisplayKit 是 Facebook 开源的一个用于保持 iOS 界面流畅的库。在我博客其它章节也提到过。<br>ASDK 的作者是 Scott Goodson (<span class="exturl" data-url="aHR0cHM6Ly93d3cubGlua2VkaW4uY29tL2luL2lvc2VuZ2luZWVy">Linkedin<i class="fa fa-external-link-alt"></i></span>)，<br>他曾经在苹果工作，负责 iOS 的一些内置应用的开发，比如股票、计算器、地图、钟表、设置、Safari 等，当然他也参与了 UIKit framework 的开发。后来他加入 Facebook 后，负责 Paper 的开发，创建并开源了 AsyncDisplayKit。目前他在 Pinterest 和 Instagram 负责 iOS 开发和用户体验的提升等工作。</p>
-<p>ASDK 自 2014 年 6 月开源，10 月发布 1.0 版。目前 ASDK 即将要发布 2.0 版。<br>V2.0 增加了更多布局相关的代码，ComponentKit 团队为此贡献很多。<br>现在 Github 的 master 分支上的版本是 V1.9.1，已经包含了 V2.0 的全部内容。</p>
-<p><span class="exturl" data-url="aHR0cDovL3RleHR1cmVncm91cC5vcmcvZG9jcy9nZXR0aW5nLXN0YXJ0ZWQuaHRtbA==">官方教程<i class="fa fa-external-link-alt"></i></span></p>
-<h2 id="ASDK的基本原理"><a href="#ASDK的基本原理" class="headerlink" title="ASDK的基本原理"></a>ASDK的基本原理</h2><img src="/images/iOS/asdk_design.png" class="" title="asdk_design">
-
-
-<p>ASDK 认为，阻塞主线程的任务，主要分为上面这三大类。文本和布局的计算、渲染、解码、绘制都可以通过各种方式异步执行，但 UIKit 和 Core Animation 相关操作必需在主线程进行。ASDK 的目标，就是尽量把这些任务从主线程挪走，而挪不走的，就尽量优化性能。</p>
-<p>为了达成这一目标，ASDK 尝试对 UIKit 组件进行封装：</p>
-<img src="/images/iOS/asdk_layer_backed_view.png" class="" title="asdk_design">
-
-<p>这是常见的 UIView 和 CALayer 的关系：View 持有 Layer 用于显示，View 中大部分显示属性实际是从 Layer 映射而来；Layer 的 delegate 在这里是 View，当其属性改变、动画产生时，View 能够得到通知。UIView 和 CALayer 不是线程安全的，并且只能在主线程创建、访问和销毁。</p>
-<img src="/images/iOS/asdk_view_backed_node.png" class="" title="asdk_design">
-
-<p>ASDK 为此创建了 ASDisplayNode 类，包装了常见的视图属性（比如 frame/bounds/alpha/transform/backgroundColor/superNode/subNodes 等），然后它用 UIView-&gt;CALayer 相同的方式，实现了 ASNode-&gt;UIView 这样一个关系。  </p>
-<img src="/images/iOS/asdk_layer_backed_node.png" class="" title="asdk_design">
-
-
-<p>当不需要响应触摸事件时，ASDisplayNode 可以被设置为 layer backed，即 ASDisplayNode 充当了原来 UIView 的功能，节省了更多资源。</p>
-<p>与 UIView 和 CALayer 不同，ASDisplayNode 是线程安全的，它可以在后台线程创建和修改。Node 刚创建时，并不会在内部新建 UIView 和 CALayer，直到第一次在主线程访问 view 或 layer 属性时，它才会在内部生成对应的对象。当它的属性（比如frame/transform）改变后，它并不会立刻同步到其持有的 view 或 layer 去，而是把被改变的属性保存到内部的一个中间变量，稍后在需要时，再通过某个机制一次性设置到内部的 view 或 layer。</p>
-<p>通过模拟和封装 UIView/CALayer，开发者可以把代码中的 UIView 替换为 ASNode，很大的降低了开发和学习成本，同时能获得 ASDK 底层大量的性能优化。为了方便使用， ASDK 把大量常用控件都封装成了 ASNode 的子类，比如 Button、Control、Cell、Image、ImageView、Text、TableView、CollectionView 等。利用这些控件，开发者可以尽量避免直接使用 UIKit 相关控件，以获得更完整的性能提升。</p>
-<h1 id="ASDK-的图层预合成"><a href="#ASDK-的图层预合成" class="headerlink" title="ASDK 的图层预合成"></a>ASDK 的图层预合成</h1><table>
-    <tr>
-        <td> <img src="/images/iOS/asdk_comoose_1.png" class="" title="asdk_design"> </td>
-        <td> <img src="/images/iOS/asdk_compose_2.png" class="" title="asdk_design"> </td>
-    </tr>
-</table>
-
-<p>有时一个 layer 会包含很多 sub-layer，而这些 sub-layer 并不需要响应触摸事件，也不需要进行动画和位置调整。ASDK 为此实现了一个被称为 pre-composing 的技术，可以把这些 sub-layer 合成渲染为一张图片。开发时，ASNode 已经替代了 UIView 和 CALayer；直接使用各种 Node 控件并设置为 layer backed 后，ASNode 甚至可以通过预合成来避免创建内部的 UIView 和 CALayer。</p>
-<p>通过这种方式，把一个大的层级，通过一个大的绘制方法绘制到一张图上，性能会获得很大提升。CPU 避免了创建 UIKit 对象的资源消耗，GPU 避免了多张 texture 合成和渲染的消耗，更少的 bitmap 也意味着更少的内存占用。</p>
-<h1 id="ASDK-异步并发操作"><a href="#ASDK-异步并发操作" class="headerlink" title="ASDK 异步并发操作"></a>ASDK 异步并发操作</h1><img src="/images/iOS/asdk_a9_chip.jpg" class="" title="asdk_a9_chip">
-
-<p>自 iPhone 4S 起，iDevice 已经都是双核 CPU 了，现在的 iPad 甚至已经更新到 3 核了。充分利用多核的优势、并发执行任务对保持界面流畅有很大作用。ASDK 把布局计算、文本排版、图片/文本/图形渲染等操作都封装成较小的任务，并利用 GCD 异步并发执行。如果开发者使用了 ASNode 相关的控件，那么这些并发操作会自动在后台进行，无需进行过多配置。</p>
-<h1 id="Runloop-任务分发"><a href="#Runloop-任务分发" class="headerlink" title="Runloop 任务分发"></a>Runloop 任务分发</h1><p>Runloop work distribution 是 ASDK 比较核心的一个技术，ASDK 的介绍视频和文档中都没有详细展开介绍，所以这里我会多做一些分析。如果你对 Runloop 还不太了解，可以看一下我之前的文章 <a href="./iOS/RunLoop/index.html">RunLoop</a>，里面对 ASDK 也有所提及。</p>
-<img src="/images/iOS/ios_vsync_runloop.png" class="" title="ios_vsync_runloop">
-
-
-<p>iOS 的显示系统是由 VSync 信号驱动的，VSync 信号由硬件时钟生成，每秒钟发出 60 次（这个值取决设备硬件，比如 iPhone 真机上通常是 59.97）。iOS 图形服务接收到 VSync 信号后，会通过 IPC 通知到 App 内。App 的 Runloop 在启动后会注册对应的 CFRunLoopSource 通过 mach_port 接收传过来的时钟信号通知，随后 Source 的回调会驱动整个 App 的动画与显示。</p>
-<p>Core Animation 在 RunLoop 中注册了一个 Observer，监听了 BeforeWaiting 和 Exit 事件。这个 Observer 的优先级是 2000000，低于常见的其他 Observer。当一个触摸事件到来时，RunLoop 被唤醒，App 中的代码会执行一些操作，比如创建和调整视图层级、设置 UIView 的 frame、修改 CALayer 的透明度、为视图添加一个动画；这些操作最终都会被 CALayer 捕获，并通过 CATransaction 提交到一个中间状态去（CATransaction 的文档略有提到这些内容，但并不完整）。当上面所有操作结束后，RunLoop 即将进入休眠（或者退出）时，关注该事件的 Observer 都会得到通知。这时 CA 注册的那个 Observer 就会在回调中，把所有的中间状态合并提交到 GPU 去显示；如果此处有动画，CA 会通过 DisplayLink 等机制多次触发相关流程。</p>
-<p>ASDK 在此处模拟了 Core Animation 的这个机制：所有针对 ASNode 的修改和提交，总有些任务是必需放入主线程执行的。当出现这种任务时，ASNode 会把任务用 ASAsyncTransaction(Group) 封装并提交到一个全局的容器去。ASDK 也在 RunLoop 中注册了一个 Observer，监视的事件和 CA 一样，但优先级比 CA 要低。当 RunLoop 进入休眠前、CA 处理完事件后，ASDK 就会执行该 loop 内提交的所有任务。具体代码见这个文件：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2ZhY2Vib29rL0FzeW5jRGlzcGxheUtpdC9ibG9iL21hc3Rlci9Bc3luY0Rpc3BsYXlLaXQlMkZEZXRhaWxzJTJGVHJhbnNhY3Rpb25zJTJGX0FTQXN5bmNUcmFuc2FjdGlvbkdyb3VwLm0=">ASAsyncTransactionGroup<i class="fa fa-external-link-alt"></i></span>。</p>
-<p>通过这种机制，ASDK 可以在合适的机会把异步、并发的操作同步到主线程去，并且能获得不错的性能。</p>
-<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>ASDK 中还有封装很多高级的功能，比如滑动列表的预加载、V2.0添加的新的布局模式等。ASDK 是一个很庞大的库，它本身并不推荐你把整个 App 全部都改为 ASDK 驱动，把最需要提升交互性能的地方用 ASDK 进行优化就足够了。</p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmliaXJlbWUuY29tLzIwMTUvMTEvMTIvc21vb3RoX3VzZXJfaW50ZXJmYWNlc19mb3JfaW9zLw==">不够尽兴的朋友请移步博客<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
       
   
   
@@ -1872,10 +1742,166 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/iOS/questions/index.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack Wang">
+      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王科杰">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/iOS/questions/index.html" class="post-title-link" itemprop="url">iOS 面试题(持续更新)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-07-10 12:24:27" itemprop="dateCreated datePublished" datetime="2017-07-10T12:24:27+08:00">2017-07-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/iOS%E9%9D%A2%E8%AF%95%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">iOS面试题</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/iOS/questions/index.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/iOS/questions/index.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>我不是推广，我也是个学习者，推荐一个慕课网学习，我还专门写了一个<a href="./iOS/study.html">笔记博客</a></p>
+</blockquote>
+<h1 id="iOS面试题大全—全方面剖析面试"><a href="#iOS面试题大全—全方面剖析面试" class="headerlink" title="iOS面试题大全—全方面剖析面试"></a>iOS面试题大全—全方面剖析面试</h1><ul>
+<li>UIView与CALayer</li>
+<li>事件传递与视图响应链</li>
+<li>图像显示原理</li>
+<li>UI卡顿掉帧原因</li>
+<li>滑动优化方案</li>
+<li>UI绘制原理</li>
+<li>离屏渲染</li>
+</ul>
+<h2 id="UIView与CALayer"><a href="#UIView与CALayer" class="headerlink" title="UIView与CALayer"></a>UIView与CALayer</h2><img src="/images/iOS/uiviewuilayer.png" class="" title="uiviewuilayer">
+<p>&lt;单一职责原则&gt;<br>UIView为CALayer提供内容，以及负责处理触摸等事件，参与响应链<br>CALayer负责显示内容contents</p>
+<h2 id="事件传递与视图响应链"><a href="#事件传递与视图响应链" class="headerlink" title="事件传递与视图响应链"></a>事件传递与视图响应链</h2><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- <span class="params">(UIView *)</span>hitTest:<span class="params">(CGPoint)</span>point withEvent:<span class="params">(UIEvent *)</span>event;</span><br><span class="line"></span><br><span class="line">- <span class="params">(BOOL)</span>pointInside:<span class="params">(CGPoint)</span>point withEvent:<span class="params">(UIEvent *)</span>event;</span><br></pre></td></tr></table></figure>
+<img src="/images/iOS/question_event_process.png" class="" title="question_event_process">
+<p>如果事件一直传递到UIAppliction还是没处理，那就会忽略掉</p>
+<h2 id="图像显示原理"><a href="#图像显示原理" class="headerlink" title="图像显示原理"></a>图像显示原理</h2><ol>
+<li>CPU:输出位图</li>
+<li>GPU :图层渲染，纹理合成</li>
+<li>把结果放到帧缓冲区(frame buffer)中</li>
+<li>再由视频控制器根据vsync信号在指定时间之前去提取帧缓冲区的屏幕显示内容</li>
+<li>显示到屏幕上<img src="/images/iOS/imagedisplay.png" class="" title="imagedisplay"></li>
+</ol>
+<p>CPU工作</p>
+<ol>
+<li>Layout: UI布局，文本计算</li>
+<li>Display: 绘制</li>
+<li>Prepare: 图片解码</li>
+<li>Commit：提交位图</li>
+</ol>
+<p>GPU渲染管线(OpenGL)</p>
+<ul>
+<li>顶点着色，图元装配，光栅化，片段着色，片段处理</li>
+</ul>
+<h2 id="UI卡顿掉帧原因"><a href="#UI卡顿掉帧原因" class="headerlink" title="UI卡顿掉帧原因"></a>UI卡顿掉帧原因</h2><img src="/images/iOS/kadun.png" class="" title="kadun">
+<p>iOS设备的硬件时钟会发出Vsync（垂直同步信号），然后App的CPU会去计算屏幕要显示的内容，之后将计算好的内容提交到GPU去渲染。随后，GPU将渲染结果提交到帧缓冲区，等到下一个VSync到来时将缓冲区的帧显示到屏幕上。也就是说，一帧的显示是由CPU和GPU共同决定的。<br>一般来说，页面滑动流畅是60fps，也就是1s有60帧更新，即每隔16.7ms就要产生一帧画面，而如果CPU和GPU加起来的处理时间超过了16.7ms，就会造成掉帧甚至卡顿。</p>
+<h2 id="滑动优化方案"><a href="#滑动优化方案" class="headerlink" title="滑动优化方案"></a>滑动优化方案</h2><p>CPU：把以下操作放在子线程中</p>
+<ol>
+<li>对象创建、调整、销毁</li>
+<li>预排版（布局计算、文本计算、缓存高度等等）</li>
+<li>预渲染（文本等异步绘制，图片解码等）<br>GPU:</li>
+</ol>
+<ul>
+<li>纹理渲染，视图混合</li>
+<li>一般遇到性能问题时，考虑以下问题：<ul>
+<li>是否受到CPU或者GPU的限制？</li>
+<li>是否有不必要的CPU渲染？</li>
+<li>是否有太多的离屏渲染操作？</li>
+<li>是否有太多的图层混合操作？</li>
+<li>是否有奇怪的图片格式或者尺寸？</li>
+<li>是否涉及到昂贵的view或者效果？</li>
+<li>view的层次结构是否合理？</li>
+</ul>
+</li>
+</ul>
+<h2 id="UI绘制原理"><a href="#UI绘制原理" class="headerlink" title="UI绘制原理"></a>UI绘制原理</h2><img src="/images/iOS/uidraw.png" class="" title="uidraw">
+<img src="/images/iOS/uidrawdisplay.png" class="" title="uidrawdisplay">
+<p>异步绘制：</p>
+<ul>
+<li>[self.layer.delegate displayLayer: ]</li>
+<li>代理负责生成对应的bitmap</li>
+<li>设置该bitmap作为该layer.contents属性的值<img src="/images/iOS/asyndraw.png" class="" title="asyndraw"></li>
+</ul>
+<h2 id="离屏渲染"><a href="#离屏渲染" class="headerlink" title="离屏渲染"></a>离屏渲染</h2><p>On-Screen Rendering:当前屏幕渲染，指的是GPU的渲染操作是在当前用于显示的屏幕缓冲区中进行<br>Off-Screen Rendering:离屏渲染，分为CPU离屏渲染和GPU离屏渲染两种形式。GPU离屏渲染指的是GPU在当前屏幕缓冲区外新开辟一个缓冲区进行渲染操作<br>应当尽量避免的则是GPU离屏渲染<br>GPU离屏渲染何时会触发呢？<br>圆角（当和maskToBounds一起使用时）、图层蒙版、阴影，设置</p>
+<blockquote>
+<p>layer.shouldRasterize ＝ YES</p>
+</blockquote>
+<p>为什么要避免GPU离屏渲染？</p>
+<ul>
+<li>GPU需要做额外的渲染操作。通常GPU在做渲染的时候是很快的，但是涉及到offscreen-render的时候情况就可能有些不同，因为需要额外开辟一个新的缓冲区进行渲染，然后绘制到当前屏幕的过程需要做onscreen跟offscreen上下文之间的切换，这个过程的消耗会比较昂贵，涉及到OpenGL的pipeline跟barrier，而且offscreen-render在每一帧都会涉及到，因此处理不当肯定会对性能产生一定的影响。另外由于离屏渲染会增加GPU的工作量，可能会导致CPU+GPU的处理时间超出16.7ms，导致掉帧卡顿。所以可以的话应尽量减少offscreen-render的图层</li>
+</ul>
+<h1 id="Runtime-RunLoop-面试请看我相关具体博客内容，不再累赘"><a href="#Runtime-RunLoop-面试请看我相关具体博客内容，不再累赘" class="headerlink" title="Runtime/RunLoop 面试请看我相关具体博客内容，不再累赘"></a>Runtime/RunLoop 面试请看我相关具体博客内容，不再累赘</h1><h1 id="暂停，不定期更新，看心情。。。。。"><a href="#暂停，不定期更新，看心情。。。。。" class="headerlink" title="暂停，不定期更新，看心情。。。。。"></a>暂停，不定期更新，看心情。。。。。</h1>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1943,7 +1969,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-count">70</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

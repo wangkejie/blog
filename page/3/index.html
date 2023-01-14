@@ -129,7 +129,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">71</span></a>
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">70</span></a>
 
   </li>
         <li class="menu-item menu-item-about">
@@ -199,155 +199,6 @@
 
           <div class="content index posts-expand">
             
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/iOS/thirdpart/glide.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack Wang">
-      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="王科杰">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/iOS/thirdpart/glide.html" class="post-title-link" itemprop="url">Glide</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-12-09 10:26:12" itemprop="dateCreated datePublished" datetime="2019-12-09T10:26:12+08:00">2019-12-09</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/iOS/thirdpart/glide.html#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/iOS/thirdpart/glide.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="逐步分析"><a href="#逐步分析" class="headerlink" title="逐步分析"></a>逐步分析</h1><h2 id="Glide-with-……"><a href="#Glide-with-……" class="headerlink" title="Glide.with(……)"></a>Glide.with(……)</h2><p>Glide.with() 有下面几种实现方式。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> Glide.with(Context context)</span><br><span class="line"><span class="number">2.</span> Glide.with(Activity activity)</span><br><span class="line"><span class="number">3.</span> Glide.with(FragmentActivity activity)</span><br><span class="line"><span class="number">4.</span> Glide.with(android.app.Fragment fragment)</span><br><span class="line"><span class="number">5.</span> Glide.with(View view)</span><br></pre></td></tr></table></figure>
-
-<p>所以的方法实现也是很类似，都是调用同一个方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> RequestManager <span class="title function_">with</span><span class="params">(Fragment fragment)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> getRetriever(fragment.getActivity()).get(fragment);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>再看一下 getRetriever() 方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> RequestManagerRetriever <span class="title function_">getRetriever</span><span class="params">(<span class="meta">@Nullable</span> Context context)</span> &#123;</span><br><span class="line">  ……</span><br><span class="line">  省略一些判空检查</span><br><span class="line">  ——</span><br><span class="line">  <span class="keyword">return</span> Glide.get(context).getRequestManagerRetriever();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其中 Glide.get(context) 主要用来初始化 Glide 的全局单利对象，以及一些配置。</p>
-<p>getRequestManagerRetriever() 则是返回 Glide 对象的 requestManagerRetriever 对象。</p>
-<p>然后看一下 requestManagerRetriever.get() 方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> RequestManager <span class="title function_">get</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (context == <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;You cannot start a load on a null Context&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Util.isOnMainThread() &amp;&amp; !(context <span class="keyword">instanceof</span> Application)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (context <span class="keyword">instanceof</span> FragmentActivity) &#123;</span><br><span class="line">      <span class="keyword">return</span> get((FragmentActivity) context);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (context <span class="keyword">instanceof</span> Activity) &#123;</span><br><span class="line">      <span class="keyword">return</span> get((Activity) context);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (context <span class="keyword">instanceof</span> ContextWrapper) &#123;</span><br><span class="line">      <span class="keyword">return</span> get(((ContextWrapper) context).getBaseContext());</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> getApplicationManager(context);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>get() 方法会根据传入的 context 对象和当前线程，创建不同的 RequestManager 实例</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 非 UI 线程，返回 applicationManager 对象，能感知 Application 生命周期。</span><br><span class="line"><span class="number">2.</span> UI 线程，如果 context 是 Activity 、FragmentActivity </span><br><span class="line">   则会创建一个能感知对应 Activity 的 RequestManager。</span><br><span class="line"><span class="number">3.</span> UI 线程，如果 Context 是 Fragment、android.support.v4.app.Fragment </span><br><span class="line">   则会创建一个能感知对应 Fragment 生命周期 的 RequestManager。</span><br></pre></td></tr></table></figure>
-<p>这里反复提到了一个 <code>感知生命 xx 周期</code>，也是 Glide 的一个特性。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Glide 在加载资源的时候，如果是在 Activity、Fragment 这一类有生命周期的组件上进行。</span><br><span class="line">当 Activity、Fragment 等组件进入不可见，或者已经销毁的时候，Glide 会停止加载资源。</span><br><span class="line">Application 的生命周期贯穿整个应用，所以 applicationManager 只有在应用程序关闭的时候终止加载。</span><br></pre></td></tr></table></figure>
-<p>所以尽量不要在非 UI 线程使用 Glide 加载图片，尽量使用 Activity、Fragment 等带有生命周期的组件配合 Glide 使用。</p>
-<h2 id="Glide-如何获得-Activity、Fragment-生命周期回调"><a href="#Glide-如何获得-Activity、Fragment-生命周期回调" class="headerlink" title="Glide 如何获得 Activity、Fragment 生命周期回调"></a>Glide 如何获得 Activity、Fragment 生命周期回调</h2><p>在 各种 requestManagerRetriever.get() 方法中如果传入的是带有生命周期的组件，并且在 UI 线程，会执行以下几个方法端</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// FragmentActivity</span></span><br><span class="line">assertNotDestroyed(activity);</span><br><span class="line"><span class="type">FragmentManager</span> <span class="variable">fm</span> <span class="operator">=</span> activity.getSupportFragmentManager();</span><br><span class="line"><span class="keyword">return</span> supportFragmentGet(activity, fm, <span class="literal">null</span> <span class="comment">/*parentHint*/</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//android.support.v4.app.Fragment</span></span><br><span class="line"><span class="type">FragmentManager</span> <span class="variable">fm</span> <span class="operator">=</span> fragment.getChildFragmentManager();</span><br><span class="line"><span class="keyword">return</span> supportFragmentGet(fragment.getActivity(), fm, fragment);</span><br><span class="line"></span><br><span class="line"><span class="comment">//Activity</span></span><br><span class="line">assertNotDestroyed(activity);</span><br><span class="line">android.app.<span class="type">FragmentManager</span> <span class="variable">fm</span> <span class="operator">=</span> activity.getFragmentManager();</span><br><span class="line"><span class="keyword">return</span> fragmentGet(activity, fm, <span class="literal">null</span> <span class="comment">/*parentHint*/</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//android.app.Fragment</span></span><br><span class="line">android.app.<span class="type">FragmentManager</span> <span class="variable">fm</span> <span class="operator">=</span> fragment.getChildFragmentManager();</span><br><span class="line"><span class="keyword">return</span> fragmentGet(fragment.getActivity(), fm, fragment);</span><br></pre></td></tr></table></figure>
-<ol>
-<li>如果是 Activity ，先获取 FragmentManager ，如果是 Fragment 则先获取 ChildFragmentManager。</li>
-<li>如果是 support 包下面的 Activity 、Fragment 调用 supportFragmentGet，否则调用 fragmentGet。</li>
-</ol>
-<p>fragmentGet() 和 supportFragmentGet() 方法大致类似，选取一个分析一下。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> RequestManager <span class="title function_">fragmentGet</span><span class="params">(Context context, android.app.FragmentManager fm,</span></span><br><span class="line"><span class="params">    android.app.Fragment parentHint)</span> &#123;</span><br><span class="line">  <span class="type">RequestManagerFragment</span> <span class="variable">current</span> <span class="operator">=</span> getRequestManagerFragment(fm, parentHint);</span><br><span class="line">  <span class="type">RequestManager</span> <span class="variable">requestManager</span> <span class="operator">=</span> current.getRequestManager();</span><br><span class="line">  <span class="keyword">if</span> (requestManager == <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">// TODO(b/27524013): Factor out this Glide.get() call.</span></span><br><span class="line">    <span class="type">Glide</span> <span class="variable">glide</span> <span class="operator">=</span> Glide.get(context);</span><br><span class="line">    requestManager =</span><br><span class="line">        factory.build(</span><br><span class="line">            glide, current.getGlideLifecycle(), current.getRequestManagerTreeNode(), context);</span><br><span class="line">    current.setRequestManager(requestManager);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> requestManager;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面这段代码做了两个功能</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 创建一个 RequestManagerFragment。</span><br><span class="line"><span class="bullet">2.</span> 创建一个 RequestManager。</span><br></pre></td></tr></table></figure>
-<p>先看一下 getRequestManagerFragment</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)</span></span><br><span class="line">RequestManagerFragment <span class="title function_">getRequestManagerFragment</span><span class="params">(</span></span><br><span class="line"><span class="params">    <span class="keyword">final</span> android.app.FragmentManager fm, android.app.Fragment parentHint)</span> &#123;</span><br><span class="line">  <span class="type">RequestManagerFragment</span> <span class="variable">current</span> <span class="operator">=</span> (RequestManagerFragment) fm.findFragmentByTag(FRAGMENT_TAG);</span><br><span class="line">  <span class="keyword">if</span> (current == <span class="literal">null</span>) &#123;</span><br><span class="line">    current = pendingRequestManagerFragments.get(fm);</span><br><span class="line">    <span class="keyword">if</span> (current == <span class="literal">null</span>) &#123;</span><br><span class="line">      current = <span class="keyword">new</span> <span class="title class_">RequestManagerFragment</span>();</span><br><span class="line">      current.setParentFragmentHint(parentHint);</span><br><span class="line">      pendingRequestManagerFragments.put(fm, current);</span><br><span class="line">      fm.beginTransaction().add(current, FRAGMENT_TAG).commitAllowingStateLoss();</span><br><span class="line">      handler.obtainMessage(ID_REMOVE_FRAGMENT_MANAGER, fm).sendToTarget();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> current;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这是是 Glide 设计中比较一个巧妙的地方</p>
-<figure class="highlight graphql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">创建一个透明的 RequestManagerFragment 加入到FragmentManager 之中</span><br><span class="line">通过添加的这个 <span class="keyword">Fragment</span> 感知 Activity 、<span class="keyword">Fragment</span> 的生命周期。</span><br></pre></td></tr></table></figure>
-<p>在 RequestManagerFragment 中可以看到以下代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStart</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="built_in">super</span>.onStart();</span><br><span class="line">  lifecycle.onStart();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStop</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="built_in">super</span>.onStop();</span><br><span class="line">  lifecycle.onStop();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onDestroy</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="built_in">super</span>.onDestroy();</span><br><span class="line">  lifecycle.onDestroy();</span><br><span class="line">  unregisterFragmentWithRoot();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以通过 RequestManagerFragment 把 Activity 的生命周期通过 lifecycle 传递给在 lifecycle 注册的 LifecycleListener。</p>
-<h2 id="RequestManager-load-url"><a href="#RequestManager-load-url" class="headerlink" title="RequestManager.load(url)"></a>RequestManager.load(url)</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> RequestBuilder&lt;Drawable&gt; <span class="title function_">load</span><span class="params">(<span class="meta">@Nullable</span> Object model)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> asDrawable().load(model);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> RequestBuilder&lt;Drawable&gt; <span class="title function_">asDrawable</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> as(Drawable.class);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;ResourceType&gt; RequestBuilder&lt;ResourceType&gt; <span class="title function_">as</span><span class="params">(Class&lt;ResourceType&gt; resourceClass)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RequestBuilder</span>&lt;&gt;(glide, <span class="built_in">this</span>, resourceClass, context);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> RequestBuilder&lt;TranscodeType&gt; <span class="title function_">load</span><span class="params">(<span class="meta">@Nullable</span> Object model)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> loadGeneric(model);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> RequestBuilder&lt;TranscodeType&gt; <span class="title function_">loadGeneric</span><span class="params">(<span class="meta">@Nullable</span> Object model)</span> &#123;</span><br><span class="line">  <span class="built_in">this</span>.model = model;</span><br><span class="line">  isModelSet = <span class="literal">true</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>以上就是 RequestBuilder.load(url) 的相关代码，发现并没有什么特殊之处。 只是创建了一个 RequestBuilder 。</p>
-<h2 id="RequestBuilder-into-view"><a href="#RequestBuilder-into-view" class="headerlink" title="RequestBuilder.into(view)"></a>RequestBuilder.into(view)</h2><p>into() 方法调用起来十分方便，只要传递一个 ImageView ，Glide 就会自动下载图片，并且显示到 ImageView 上。这看似十分简单的一步，也是 Glide 最负责的调用。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Target&lt;TranscodeType&gt; <span class="title function_">into</span><span class="params">(ImageView view)</span> &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="type">RequestOptions</span> <span class="variable">requestOptions</span> <span class="operator">=</span> <span class="built_in">this</span>.requestOptions;</span><br><span class="line">  ……</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> into(</span><br><span class="line">      glideContext.buildImageViewTarget(view, transcodeClass),</span><br><span class="line">      <span class="comment">/*targetListener=*/</span> <span class="literal">null</span>,</span><br><span class="line">      requestOptions);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>跟踪一下 glideContext.buildImageViewTarget(view, transcodeClass) 会发现这里返回的是一个<code>DrawableImageViewTarget</code><br>into(ImageView view) 把 requestOptions 和 DrawableImageViewTarget 传入</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> &lt;Y <span class="keyword">extends</span> <span class="title class_">Target</span>&lt;TranscodeType&gt;&gt; Y <span class="title function_">into</span><span class="params">(</span></span><br><span class="line"><span class="params">    <span class="meta">@NonNull</span> Y target,</span></span><br><span class="line"><span class="params">    <span class="meta">@Nullable</span> RequestListener&lt;TranscodeType&gt; targetListener,</span></span><br><span class="line"><span class="params">    RequestOptions options)</span> &#123;</span><br><span class="line">  ……</span><br><span class="line">  <span class="type">Request</span> <span class="variable">request</span> <span class="operator">=</span> buildRequest(target, targetListener, options);</span><br><span class="line"></span><br><span class="line">  <span class="type">Request</span> <span class="variable">previous</span> <span class="operator">=</span> target.getRequest();</span><br><span class="line">  ……</span><br><span class="line">  requestManager.clear(target);</span><br><span class="line">  target.setRequest(request);</span><br><span class="line">  requestManager.track(target, request);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> target;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下一步跟踪到 requestManager.track(target, request)</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">void</span> <span class="title function_">track</span><span class="params">(Target&lt;?&gt; target, Request request)</span> &#123;</span><br><span class="line">  targetTracker.track(target);</span><br><span class="line">  requestTracker.runRequest(request);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">runRequest</span><span class="params">(Request request)</span> &#123;</span><br><span class="line">  requests.add(request);</span><br><span class="line">  <span class="keyword">if</span> (!isPaused) &#123;</span><br><span class="line">    request.begin();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    pendingRequests.add(request);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
-<p>isPaused 变量</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 如果此时 GlideRequests 的 Lifecycle 为 ApplicationLifecycle，只要应用存活</span><br><span class="line">   isPaused 为 <span class="literal">false</span> ，直接执行 request.begin()</span><br><span class="line"><span class="number">2.</span> 如果 GlideRequests 的 Lifecycle 是观测 Fragment 或者 Activity</span><br><span class="line">   isPaused 为<span class="literal">true</span> ,不会立即执行 request.begin()</span><br><span class="line">   当 Fragment 或者 Activity 显示到前台时通过遍历 requests 数组执行 request.begin()</span><br></pre></td></tr></table></figure>
-<p>所以执行网络请求下载图片的操作在 request.begin() 之中。<br>回到 into(ImageView view) 方法的</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Request</span> <span class="variable">request</span> <span class="operator">=</span> buildRequest(target, targetListener, options)</span><br></pre></td></tr></table></figure>
-<p>经过层层包裹我们可以找到一下路线，发现最后返回的是 SingleRequest</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">buildRequest &gt;&gt; buildRequestRecursive &gt;&gt; buildThumbnailRequestRecursive</span><br><span class="line"></span><br><span class="line">&gt;&gt; obtainRequest &gt;&gt; SingleRequest</span><br></pre></td></tr></table></figure>
-<p>创建 SingleRequest 的过程比较复杂，牵扯到缩略图、错误处理之类的逻辑，大致都是上面那条路径。</p>
-<p>然后就看一下 SingleRequest.begin()</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">begin</span><span class="params">()</span> &#123;</span><br><span class="line">  ……</span><br><span class="line">  省略一些其他分支</span><br><span class="line">  ……</span><br><span class="line">  status = Status.WAITING_FOR_SIZE;</span><br><span class="line">  <span class="keyword">if</span> (Util.isValidDimensions(overrideWidth, overrideHeight)) &#123;</span><br><span class="line">    onSizeReady(overrideWidth, overrideHeight);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    target.getSize(<span class="built_in">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  ……</span><br><span class="line">  ……</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>begin() 方法很长，我们剔除了一些异常处理，直接看最核心的方法。</p>
-<p>如果我给 Glide 设置了 override() 则直接调用 onSizeReady(overrideWidth, overrideHeight)</p>
-<p>否则会调用 target.getSize(this) 让 ImageView 计算自己的尺寸。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glideContext.buildImageViewTarget(view, transcodeClass) 创建一个 DrawableImageViewTarget</span><br></pre></td></tr></table></figure>
-<h2 id="Glide流程"><a href="#Glide流程" class="headerlink" title="Glide流程"></a>Glide流程</h2><img src="/images/Android/glide-liucheng.png" class="" title="glide-process">
-
-<h2 id="Glide网络下载流程"><a href="#Glide网络下载流程" class="headerlink" title="Glide网络下载流程"></a>Glide网络下载流程</h2><img src="/images/Android/glide-netload.png" class="" title="glide-process">
-
-
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li>缓存<ul>
-<li>活动资源 (Active Resources)</li>
-<li>内存缓存 (Memory Cache)</li>
-<li>资源类型（Resource Disk Cache）</li>
-<li>原始数据 (Data Disk Cache)</li>
-<li>网络缓存</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
       
   
   
@@ -1679,10 +1530,165 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/python/index.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack Wang">
+      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王科杰">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/python/index.html" class="post-title-link" itemprop="url">Python</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-10-10 11:26:39" itemprop="dateCreated datePublished" datetime="2018-10-10T11:26:39+08:00">2018-10-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/python/index.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/python/index.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h1><p>Linux和Mac环境自带了Python 2.x版本，但是如果要更新到3.x的版本，可以在<span class="exturl" data-url="aHR0cHM6Ly93d3cucHl0aG9uLm9yZy8=">Python的官方网站<i class="fa fa-external-link-alt"></i></span>下载安装</p>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><ol>
+<li>单行注释 - 以#和空格开头的部分 </li>
+<li>多行注释 - 三个引号开头，三个引号结尾</li>
+</ol>
+<h2 id="语言元素"><a href="#语言元素" class="headerlink" title="语言元素"></a>语言元素</h2><h3 id="变量和类型"><a href="#变量和类型" class="headerlink" title="变量和类型"></a>变量和类型</h3><ul>
+<li>整型：Python中可以处理任意大小的整数<ul>
+<li>（Python 2.x中有int和long两种类型的整数，但这种区分对Python来说意义不大，因此在Python 3.x中整数只有int这一种了），而且支持二进制（如<code>0b100</code>，换算成十进制是4）、八进制（如<code>0o100</code>，换算成十进制是64）、十进制（<code>100</code>）和十六进制（<code>0x100</code>，换算成十进制是256）的表示法。</li>
+</ul>
+</li>
+<li>浮点型：浮点数也就是小数，之所以称为浮点数，是因为按照科学记数法表示时，一个浮点数的小数点位置是可变的，浮点数除了数学写法（如<code>123.456</code>）之外还支持科学计数法（如<code>1.23456e2</code>）。</li>
+<li>字符串型：字符串是以单引号或双引号括起来的任意文本，比如<code>&#39;hello&#39;</code>和<code>&quot;hello&quot;</code>,字符串还有原始字符串表示法、字节字符串表示法、Unicode字符串表示法，而且可以书写成多行的形式（用三个单引号或三个双引号开头，三个单引号或三个双引号结尾）。</li>
+<li>布尔型：布尔值只有<code>True</code>、<code>False</code>两种值，要么是<code>True</code>，要么是<code>False</code>，在Python中，可以直接用<code>True</code>、<code>False</code>表示布尔值（请注意大小写），也可以通过布尔运算计算出来（例如<code>3 &lt; 5</code>会产生布尔值<code>True</code>，而<code>2 == 1</code>会产生布尔值<code>False</code>）。</li>
+<li>复数型：形如<code>3+5j</code>，跟数学上的复数表示一样，唯一不同的是虚部的<code>i</code>换成了<code>j</code>。</li>
+</ul>
+<p>在对变量类型进行转换时可以使用Python的内置函数（准确的说下面列出的并不是真正意义上的函数，而是后面我们要讲到的创建对象的构造方法）。</p>
+<ul>
+<li><code>int()</code>：将一个数值或字符串转换成整数，可以指定进制。</li>
+<li><code>float()</code>：将一个字符串转换成浮点数。</li>
+<li><code>str()</code>：将指定的对象转换成字符串形式，可以指定编码。</li>
+<li><code>chr()</code>：将整数转换成该编码对应的字符串（一个字符）。</li>
+<li><code>ord()</code>：将字符串（一个字符）转换成对应的编码（整数）。</li>
+</ul>
+<h3 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h3><blockquote>
+<p><strong>说明：</strong> 在实际开发中，如果搞不清楚运算符的优先级，可以使用括号来确保运算的执行顺序。</p>
+</blockquote>
+<h2 id="分支结构"><a href="#分支结构" class="headerlink" title="分支结构"></a>分支结构</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">x = <span class="built_in">float</span>(<span class="built_in">input</span>(<span class="string">&#x27;x = &#x27;</span>))</span><br><span class="line"><span class="keyword">if</span> x &gt; <span class="number">1</span>:</span><br><span class="line">    y = <span class="number">3</span> * x - <span class="number">5</span></span><br><span class="line"><span class="keyword">elif</span> x &gt;= -<span class="number">1</span>:</span><br><span class="line">    y = x + <span class="number">2</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    y = <span class="number">5</span> * x + <span class="number">3</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;f(%.2f) = %.2f&#x27;</span> % (x, y))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">x = <span class="built_in">float</span>(<span class="built_in">input</span>(<span class="string">&#x27;x = &#x27;</span>))</span><br><span class="line"><span class="keyword">if</span> x &gt; <span class="number">1</span>:</span><br><span class="line">    y = <span class="number">3</span> * x - <span class="number">5</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">if</span> x &gt;= -<span class="number">1</span>:</span><br><span class="line">        y = x + <span class="number">2</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        y = <span class="number">5</span> * x + <span class="number">3</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;f(%.2f) = %.2f&#x27;</span> % (x, y))</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>说明：</strong> 大家可以自己感受一下这两种写法到底是哪一种更好。在之前我们提到的Python之禅中有这么一句话“Flat is better than nested.”，之所以提倡代码“扁平化”是因为嵌套结构的嵌套层次多了之后会严重的影响代码的可读性，所以能使用扁平化的结构时就不要使用嵌套。</p>
+</blockquote>
+<h2 id="循环结构"><a href="#循环结构" class="headerlink" title="循环结构"></a>循环结构</h2><h3 id="for-in循环"><a href="#for-in循环" class="headerlink" title="for-in循环"></a>for-in循环</h3><p>如果明确的知道循环执行的次数或者要对一个容器进行迭代（后面会讲到），那么我们推荐使用<code>for-in</code>循环。</p>
+<ul>
+<li><code>range(101)</code>可以产生一个0到100的整数序列。</li>
+<li><code>range(1, 100)</code>可以产生一个1到99的整数序列。</li>
+<li><code>range(1, 100, 2)</code>可以产生一个1到99的奇数序列，其中的2是步长，即数值序列的增量。</li>
+</ul>
+<h3 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h3><p>如果要构造不知道具体循环次数的循环结构，我们推荐使用<code>while</code>循环。<code>while</code>循环通过一个能够产生或转换出<code>bool</code>值的表达式来控制循环，表达式的值为<code>True</code>循环继续，表达式的值为<code>False</code>循环结束。下面我们通过一个“猜数字”的小游戏（计算机出一个1~100之间的随机数，人输入自己猜的数字，计算机给出对应的提示信息，直到人猜出计算机出的数字）来看看如何使用<code>while</code>循环。</p>
+<blockquote>
+<p><strong>说明：</strong> <code>break</code>关键字来提前终止循环，需要注意的是<code>break</code>只能终止它所在的那个循环，这一点在使用嵌套的循环结构需要引起注意。除了<code>break</code>之外，还有另一个关键字是<code>continue</code>，它可以用来放弃本次循环后续的代码直接让循环进入下一轮。</p>
+</blockquote>
+<h2 id="函数和模块的使用"><a href="#函数和模块的使用" class="headerlink" title="函数和模块的使用"></a>函数和模块的使用</h2><p>编程大师<em>Martin Fowler</em>先生曾经说过：“<strong>代码有很多种坏味道，重复是最坏的一种！</strong>”，要写出高质量的代码首先要解决的就是重复代码的问题。</p>
+<h3 id="定义函数"><a href="#定义函数" class="headerlink" title="定义函数"></a>定义函数</h3><p>在Python中可以使用<code>def</code>关键字来定义函数，和变量一样每个函数也有一个响亮的名字，而且命名规则跟变量的命名规则是一致的。在函数名后面的圆括号中可以放置传递给函数的参数，这一点和数学上的函数非常相似，程序中函数的参数就相当于是数学上说的函数的自变量，而函数执行完成后我们可以通过<code>return</code>关键字来返回一个值，这相当于数学上说的函数的因变量。</p>
+<h3 id="函数的参数"><a href="#函数的参数" class="headerlink" title="函数的参数"></a>函数的参数</h3><p>函数是绝大多数编程语言中都支持的一个代码的“构建块”，但是Python中的函数与其他语言中的函数还是有很多不太相同的地方，其中一个显著的区别就是Python对函数参数的处理。在Python中，函数的参数可以有默认值，也支持使用可变参数，所以Python并不需要像其他语言一样支持<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU1JTg3JUJEJUU2JTk1JUIwJUU5JTg3JThEJUU4JUJEJUJE">函数的重载<i class="fa fa-external-link-alt"></i></span>，因为我们在定义一个函数的时候可以让它有多种不同的使用方式.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在参数名前面的*表示args是一个可变参数</span></span><br><span class="line"><span class="comment"># 即在调用add函数时可以传入0个或多个参数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">*args</span>):</span><br><span class="line">    total = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> val <span class="keyword">in</span> args:</span><br><span class="line">        total += val</span><br><span class="line">    <span class="keyword">return</span> total</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(add())</span><br><span class="line"><span class="built_in">print</span>(add(<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(add(<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line"><span class="built_in">print</span>(add(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>))</span><br><span class="line"><span class="built_in">print</span>(add(<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>))</span><br></pre></td></tr></table></figure>
+
+<h3 id="用模块管理函数"><a href="#用模块管理函数" class="headerlink" title="用模块管理函数"></a>用模块管理函数</h3><p>需要说明的是，如果我们导入的模块除了定义函数之外还中有可以执行代码，那么Python解释器在导入这个模块时就会执行这些代码，事实上我们可能并不希望如此，因此如果我们在模块中编写了执行代码，最好是将这些执行代码放入如下所示的条件中，这样的话除非直接运行该模块，if条件下的这些代码是不会执行的，因为只有直接执行的模块的名字才是“__main__”。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bar</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># __name__是Python中一个隐含的变量它代表了模块的名字</span></span><br><span class="line"><span class="comment"># 只有被Python解释器直接执行的模块的名字才是__main__</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;call foo()&#x27;</span>)</span><br><span class="line">    foo()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;call bar()&#x27;</span>)</span><br><span class="line">    bar()</span><br></pre></td></tr></table></figure>
+<h2 id="字符串和常用数据结构"><a href="#字符串和常用数据结构" class="headerlink" title="字符串和常用数据结构"></a>字符串和常用数据结构</h2><ul>
+<li>sorted函数返回列表排序后的拷贝不会修改传入的列表</li>
+<li>函数的设计就应该像sorted函数一样尽可能不产生副作用</li>
+<li>通过<code>yield</code>关键字将一个普通函数改造成生成器函数。</li>
+</ul>
+<h3 id="使用元组"><a href="#使用元组" class="headerlink" title="使用元组"></a>使用元组</h3><ol>
+<li>元组中的元素是无法修改的</li>
+<li>元组在创建时间和占用的空间上面都优于列表。</li>
+</ol>
+<h2 id="面向对象编程基础"><a href="#面向对象编程基础" class="headerlink" title="面向对象编程基础"></a>面向对象编程基础</h2><p>类是抽象的概念，而对象是具体的东西。在面向对象编程的世界中，一切皆为对象，对象都有属性和行为，每个对象都是独一无二的，而且对象一定属于某个类（型）</p>
+<p>在Python中可以使用<code>class</code>关键字定义类，然后在类中通过之前学习过的函数来定义方法，这样就可以将对象的动态特征描述出来，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="comment"># __init__是一个特殊方法用于在创建对象时进行初始化操作</span></span><br><span class="line">    <span class="comment"># 通过这个方法我们可以为学生对象绑定name和age两个属性</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, age</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        self.age = age</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">study</span>(<span class="params">self, course_name</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;%s正在学习%s.&#x27;</span> % (self.name, course_name))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># PEP 8要求标识符的名字用全小写多个单词用下划线连接</span></span><br><span class="line">    <span class="comment"># 但是部分程序员和公司更倾向于使用驼峰命名法(驼峰标识)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">watch_movie</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self.age &lt; <span class="number">18</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s只能观看《熊出没》.&#x27;</span> % self.name)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s正在观看岛国爱情大电影.&#x27;</span> % self.name)</span><br></pre></td></tr></table></figure>
+
+<h2 id="面向对象进阶"><a href="#面向对象进阶" class="headerlink" title="面向对象进阶"></a>面向对象进阶</h2><h3 id="property装饰器"><a href="#property装饰器" class="headerlink" title="@property装饰器"></a>@property装饰器</h3><p>使用@property包装器来包装getter和setter方法，使得对属性的访问既安全又方便，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, age</span>):</span><br><span class="line">        self._name = name</span><br><span class="line">        self._age = age</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 访问器 - getter方法</span></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">name</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._name</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 访问器 - getter方法</span></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">age</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._age</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 修改器 - setter方法</span></span><br><span class="line"><span class="meta">    @age.setter</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">age</span>(<span class="params">self, age</span>):</span><br><span class="line">        self._age = age</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">play</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self._age &lt;= <span class="number">16</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s正在玩飞行棋.&#x27;</span> % self._name)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s正在玩斗地主.&#x27;</span> % self._name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    person = Person(<span class="string">&#x27;王大锤&#x27;</span>, <span class="number">12</span>)</span><br><span class="line">    person.play()</span><br><span class="line">    person.age = <span class="number">22</span></span><br><span class="line">    person.play()</span><br><span class="line">    <span class="comment"># person.name = &#x27;白元芳&#x27;  # AttributeError: can&#x27;t set attribute</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h3 id="slots-魔法"><a href="#slots-魔法" class="headerlink" title="__slots__魔法"></a>__slots__魔法</h3><p>通常，动态语言允许我们在程序运行时给对象绑定新的属性或方法，当然也可以对已经绑定的属性和方法进行解绑定。但是如果我们需要限定自定义类型的对象只能绑定某些属性，可以通过在类中定义__slots__变量来进行限定。需要注意的是__slots__的限定只对当前类的对象生效，对子类并不起任何作用。</p>
+<ul>
+<li><h1 id="限定Person对象只能绑定-name-age和-gender属性"><a href="#限定Person对象只能绑定-name-age和-gender属性" class="headerlink" title="限定Person对象只能绑定_name, _age和_gender属性"></a>限定Person对象只能绑定_name, _age和_gender属性</h1><ul>
+<li>__slots__ = (‘_name’, ‘_age’, ‘_gender’)</li>
+</ul>
+</li>
+</ul>
+<h3 id="静态方法和类方法"><a href="#静态方法和类方法" class="headerlink" title="静态方法和类方法"></a>静态方法和类方法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line">   <span class="keyword">def</span> <span class="title function_">is_valid</span>(<span class="params">a, b, c</span>):</span><br><span class="line">       <span class="keyword">return</span> a + b &gt; c <span class="keyword">and</span> b + c &gt; a <span class="keyword">and</span> a + c &gt; b</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@classmethod</span></span><br><span class="line">   <span class="keyword">def</span> <span class="title function_">now</span>(<span class="params">cls</span>):</span><br><span class="line">       ctime = localtime(time())</span><br><span class="line">       <span class="keyword">return</span> cls(ctime.tm_hour, ctime.tm_min, ctime.tm_sec)</span><br></pre></td></tr></table></figure>
+
+<h3 id="类之间的关系"><a href="#类之间的关系" class="headerlink" title="类之间的关系"></a>类之间的关系</h3><p>简单的说，类和类之间的关系有三种：is-a、has-a和use-a关系。</p>
+<h3 id="继承和多态"><a href="#继承和多态" class="headerlink" title="继承和多态"></a>继承和多态</h3>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1750,7 +1756,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-count">70</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
