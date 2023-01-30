@@ -263,8 +263,14 @@
 <!-- hext-next文档 -->
 <!-- https://theme-next.js.org/docs/advanced-settings/front-matter.html?highlight=hexo+generator+index -->
 
+
+<!-- 待翻阅博客 -->
+<!-- http://chuquan.me/2021/02/14/understand-ios-library-and-framework/ -->
+<!-- https://blog.csdn.net/m_miao001/article/details/81671692 -->
+<!-- https://www.jianshu.com/p/231b1cebf477 -->
+
 <h1 id="欢迎来到我的博客"><a href="#欢迎来到我的博客" class="headerlink" title="欢迎来到我的博客"></a>欢迎来到我的博客</h1><blockquote>
-<p>学习一些东西，记录一些东西。 这里是目录索引。 左侧边栏有<code>搜索</code>框，可以关键字检索整个博客内容。</p>
+<p>学习一些东西，记录一些东西。 左侧边栏有<code>搜索</code>框，可以关键字检索整个博客内容。</p>
 </blockquote>
 <h2 id="记录-索引"><a href="#记录-索引" class="headerlink" title="记录/索引"></a>记录/索引</h2><ul>
 <li><a href="./iOS/performance/modularization.html">组件化记录-未完</a></li>
@@ -285,6 +291,13 @@
 <li><span class="exturl" data-url="aHR0cHM6Ly9zd2lmdC5nZy8=">Swift 翻译组<i class="fa fa-external-link-alt"></i></span></li>
 <li><span class="exturl" data-url="aHR0cHM6Ly9zd2lmdC5vcmcvc291cmNlLWNvZGUv">Swift source code<i class="fa fa-external-link-alt"></i></span></li>
 <li><span class="exturl" data-url="aHR0cHM6Ly9vcGVuc291cmNlLmFwcGxlLmNvbS90YXJiYWxscw==">苹果源码库<i class="fa fa-external-link-alt"></i></span></li>
+</ul>
+<h2 id="面试快餐"><a href="#面试快餐" class="headerlink" title="面试快餐"></a>面试快餐</h2><ul>
+<li>SideTable相关<br>  定义在objc-private文件下。  由<code>static objc::ExplicitInit&lt;StripedMap&lt;SideTable&gt;&gt; SideTablesMap;</code> 全局静态变量<br>  类型为StripedMap，iOS有8张SideTable表，mac有64张， 重载了[]方法，可以通过对象指针分配其中一张表Sidetable，<ul>
+<li><span class="exturl" data-url="aHR0cHM6Ly93d3cuamlhbnNodS5jb20vcC8xM2M0ZmIxY2VkZWE=">https://www.jianshu.com/p/13c4fb1cedea<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0xHQmFtYm9vL2lPUy1hcnRpY2xlLjAyL2Jsb2IvbWFpbi8lRTklOTglQkYlRTklODclOEMlRTMlODAlODElRTUlQUQlOTclRTglOEElODJpT1MlRTklOUQlQTIlRTglQUYlOTUlRTklQTIlOTglRTQlQjklOEJSdW50aW1lJUU3JTlCJUI4JUU1JTg1JUIzJUU5JTk3JUFFJUU5JUEyJTk4MiVFRiVCQyU4OCVFOSU5OSU4NCVFNyVBRCU5NCVFNiVBMSU4OCVFRiVCQyU4OS5tZA==">gihub面试大全<i class="fa fa-external-link-alt"></i></span></li>
+</ul>
+</li>
 </ul>
 <h2 id="以后慢慢积累补充"><a href="#以后慢慢积累补充" class="headerlink" title="以后慢慢积累补充"></a>以后慢慢积累补充</h2><ul>
 <li><a href="./iOS/crashrepaort/crashanalysis.html">iOS程序崩溃和抓取原理</a></li>
@@ -317,7 +330,6 @@
 <li><a href="./iOS/hybrid/hybrid.html">Hybrid浅谈</a></li>
 </ul>
 </li>
-<li><a href="./iOS/study.html">面试快餐</a></li>
 <li><a href="./categories/iOS/%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">iOS源码学习</a><ul>
 <li><a href="./iOS/origincode/metaclass.html">什么是元类</a></li>
 <li><a href="./iOS/origincode/origincodestudy.html">类的本质</a></li>
@@ -338,7 +350,6 @@
 <li><a href="./iOS/interview/">部分索引</a></li>
 <li><a href="./iOS/interview/memory">内存管理</a></li>
 <li><a href="./iOS/interview/xingneng">性能优化</a></li>
-<li><a href="">待填补</a></li>
 </ul>
 <h2 id="待处理的事情-计划"><a href="#待处理的事情-计划" class="headerlink" title="待处理的事情/计划"></a>待处理的事情/计划</h2><ol>
 <li>项目总结、沉淀</li>
@@ -381,77 +392,6 @@
             </div>
           <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/future/index.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack Wang">
-      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="王科杰">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/future/index.html" class="post-title-link" itemprop="url">post</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-14 11:36:24" itemprop="dateCreated datePublished" datetime="2023-01-14T11:36:24+08:00">2023-01-14</time>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/future/index.html#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/future/index.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
       
     </div>
 
@@ -1775,6 +1715,186 @@ mach_init(); // from libc.a
 </ul>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3dhbmdrZWppZS9pT1MtUGVyZm9ybWFuY2UtT3B0aW1pemF0aW9u">汇总<i class="fa fa-external-link-alt"></i></span></p>
 <p><span class="exturl" data-url="aHR0cHM6Ly9pbWFnZXMuYXBwbGUuY29tL21lZGlhL3VzL29zeC8yMDEzL2RvY3MvT1NYX01hdmVyaWNrc19Db3JlX1RlY2hub2xvZ3lfT3ZlcnZpZXcucGRm">https://images.apple.com/media/us/osx/2013/docs/OSX_Mavericks_Core_Technology_Overview.pdf<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/iOS/performance/modularization.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack Wang">
+      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王科杰">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/iOS/performance/modularization.html" class="post-title-link" itemprop="url">组件化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-30 16:02:25" itemprop="dateCreated datePublished" datetime="2021-08-30T16:02:25+08:00">2021-08-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/iOS/performance/modularization.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/iOS/performance/modularization.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="组件化"><a href="#组件化" class="headerlink" title="组件化"></a>组件化</h2><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>由于我们的工程代码越来越多，文件原来越多，编译速度直线下降，工作效率直线下降，甚至会影响情绪（误 ）</p>
+<p>所以计划将所有pod进行静态库构建，这样编译的时候就不会再重编了，再加上我们组件化也在持续推进，最终可能只需要编我修改的库就行了（理想状态）</p>
+<h2 id="静态库构建"><a href="#静态库构建" class="headerlink" title="静态库构建"></a>静态库构建</h2><ol>
+<li>静态库构建最初方案与尝试<br>最初指定的方案是在pod更新的时候进行打包，基于cocoapods-packager(后简称为packager)进行魔改。魔改后packger整体的方案是传入Podfile，在指定位置重新创建工程，根据Podfile与依赖进行libtool编译(动态库是使用xcodebuild，但我们不用动态库)，然后将编译好的静态库拷贝出来。为什么要传入Podfile呢，在之前的packager是使用podspec进行工程生成，这会导致生成的静态库所依赖的其他pod版本号会和主工程中的Podfile对不上。所以我们需要维护一个和主工程Podfile相同版本号的Podfile（是不是有点绕）</li>
+</ol>
+<p>其实packger内部也是使用Podspec生成Podfile的，我们只是做了直接传入Podfile，省去了生成的步骤。原理很简单，但实现还是需要摸索了一段时间。在扒了cocoapods源码后，发现cocoapods对Podfile对象提供了一个from_ruby的方法，这使得我们可以直接使用Podfile ruby文件就可以获取一个Podfile对象，但我们还需要对Podfile进行一些修改。我们将Podfile转化为yaml，然后将库中Podfile写的../ ./ 这种相对路径修改为工程地址（这是因为使用相对路径会导致生成的工程引用的代码文件不会被拷贝到工程下，源码调试会有问题），关闭uses_frameworks。</p>
+<p>我们对packger还做了一些其他的修改。使用Podfile；修改生成工程的地址；对生成的工程<code>Build Setting中的GCC_GENERATE_DEBUGGING_SYMBOLS</code>打开（后面会介绍这个字段是干什么用的）；修改了编译架构，只保留了arm64；修改了一些默认参数；增加了将生成的工程拷贝出来的参数；</p>
+<p>这个魔改后的cocoapods plugin会镶嵌在自动更新pod脚本当中，使用的时候会询问是否要构建静态库。</p>
+<p>但这个方案有两个问题，首先是需要维护一个和主工程版本号相同的Podfile比较麻烦，第二个是当依赖的库有变动的时候这个库的静态库也需要重新构建（包括依赖的依赖的依赖… 老套娃了）。这个其实可以通过分析Podfile.lock文件来寻找影响的所有库，但未免有些麻烦了。</p>
+<ol start="2">
+<li>最终方案<br>​我们既然不想维护一份单独的Podfile的话，那我们直接使用主工程不就好了吗？</li>
+</ol>
+<p>所以最终我们选择了使用主工程编译后的产物来当做我们使用的静态库。</p>
+<p>我们在工程内使用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xcodebuild CONFIGURATION_BUILD_DIR=&quot;#&#123;library_path&#125;&quot; clean build -configuration Debug -scheme Pods-XXX -workspace &quot;#&#123;project_path&#125;/XXX.xcworkspace&quot; -arch arm64 -sdk iphoneos</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在 library_path 的位置生成所有静态库与bundle。这是我们的主体思路。</li>
+<li>在library_pods.json填入我们需要更新的库名（所有库名在工程pod update时候会在工程文件夹中生成一个current_mmpods.json当中）。</li>
+<li>分析 ~/.cocoapods/repos 中都有什么repo，获取repo的Git地址。</li>
+<li>分析Podfile.lock获取Pod都在那个repo中、版本号、是否被当成subspec引入。</li>
+<li>使用xcodebuild构建。</li>
+<li>遍历library_pods.json。<ul>
+<li>从工程中拷贝源码。</li>
+<li>拷贝构建完成的静态库。</li>
+<li>从bundle中拷贝metalllib（.metal文件特有）生成对应的bundle。</li>
+<li>拷贝Podfile.lock（为了查询是什么情况下构建的静态库）。</li>
+<li>repo中拷贝Podspec。</li>
+<li>如果Podspec没有被转化为json，就把它转成json。</li>
+<li>处理Podspec<ul>
+<li>将静态库加入vendored_libraries。</li>
+<li>将源码路径加入Podfile（稍后讲到源码调试的时候会讲）。</li>
+<li>将使用的subspec中的一些字段比如source_files加入到最外面，这里是因为如果工程只引入了subspec的话，外层的对应字段会失效。</li>
+</ul>
+</li>
+<li>将bundle路径加入到resources。</li>
+</ul>
+</li>
+<li>构建源码的zip。</li>
+<li>构建完整的zip（包含源码zip）。</li>
+<li>上传完整的zip（这里踩了很多坑我们稍后再说）。</li>
+<li>提交Podspec至对应的静态库单独的repo仓库中。</li>
+</ul>
+<p>好了，至此我们已经成功构建了一个使用静态库的Pod版本，版本号为为当前版本号.a.debug eg 1.0.0.a.debug。</p>
+<p>我们每个版本之后进行统一回扫也不会存在有某些依赖的库更新上层库没更新的问题了。</p>
+<h2 id="源码调试"><a href="#源码调试" class="headerlink" title="源码调试"></a>源码调试</h2><p><span class="exturl" data-url="aHR0cHM6Ly90ZWNoLm1laXR1YW4uY29tLzIwMTkvMDgvMDgvdGhlLXRoaW5ncy1iZWhpbmQtdGhlLWlvcy1wcm9qZWN0LXpzb3VyY2UtY29tbWFuZC5odG1s">https://tech.meituan.com/2019/08/08/the-things-behind-the-ios-project-zsource-command.html<i class="fa fa-external-link-alt"></i></span></p>
+<ol>
+<li>源码调试原理与过程<br>切换完静态库之后直接带来了一个问题就是大家无法看到源码，没办法根据crash寻找代码，没法打断点了。</li>
+</ol>
+<p>​为了解决这个问题，我们查阅了资料发现使用dwarfdump可以分析出静态库中AT_comp_dir的这个字段，AT_comp_dir代表编译地址，只要源码在这个位置，xcode就会根据它去寻找代码，当然了只是显示，编译还是使用静态库来编译的。（前文说的GCC_GENERATE_DEBUGGING_SYMBOLS就是为了生成这个字段用的，不过我们统一构建后就不需要再去用脚本设置了。）</p>
+<p>​换句话说就是只要我们其他电脑上在当时构建静态库的源码路径上还是有源代码的，xcode就可以自动寻找到代码并显示。不过在我们尝试了软链接、硬链接和文件拷贝后，软链接和硬链接都有相应的问题（找不到源码或者无法进行断点调试）。最终我们还是选择了文件拷贝（又为大家岌岌可危的硬盘空间火上浇油了，不过没有很大啦。）</p>
+<p>​现在问题来了我们需要找到一个大家都有的且有权限的路径下面进行静态库构建在经过大量尝试之后我们选择了 /private/var/folders/cocoapods/MOMO_iOS_Binary 这个路径来进行构建所以打包机上的工程师在这个路径下面的。</p>
+<p>同时我们也支持的在工程中直接对源码进行断点，这个我们等下再说。</p>
+<p>我们先来介绍一下我们为此做了什么工作：</p>
+<ul>
+<li>上文提到的源码zip就是为了一起打到zip包中方便我们pod update的时候获取源码的（考虑到再去下载可能会更麻烦）。</li>
+<li>需要把源码的zip包 xxx.binary 加入到podspec的Podfile字段中，否则update后工程中是没有它的。</li>
+<li>在我们进行pod update的时候使用Podfile提供的hook pre_install(在cocoapods拷贝文件完成之后)调用解压脚本将我们所有存在 xxx.binaryzip的文件全部解压到指定路径也就是编译时候的的路径。</li>
+<li>然后使用Podfile的另外一个hook post_integrate (在Integrating client project之后)（v1.10版本才提供，当前可调用工程/Binary/handle_add_source_file_to_project.sh）。<br>这个路径其实可以通过dwarfdump来获取，但是执行的有点慢，不过我们都自己制定了路径了，那不如还是把路径写死吧！</li>
+</ul>
+<blockquote>
+<p>dwarfdump xxx | grep “AT_comp_dir” | head -1 | cut -d \“ -f2 </p>
+</blockquote>
+<p>这一步我们分析了xcodeproj文件，可以将目标路径的整个文件夹当成一个Group加入到我们在Pod的xcodeproj文件中的SourceCode路径下。这些文件是不会被编译的，因为没有被加入到Build Phases中。</p>
+<p>至此，我们就可以在工程目录中看到源码，可以直接打断点，当crash或者assert时也会直接跳转到对应位置啦（如果不是为了看源码，其实可以不操作第四步的）。</p>
+<ol start="2">
+<li>我有多个工程对应不同的源码版本怎么办呢？<br>首先我们先重申一个概念，只要静态库中的AT_comp_dir对应的地方有源码，xcode会自动找到代码。<br>最初我们的做法是不管什么版本的代码，只要是同名pod都会在默认的位置进行编译，如 Pods/AFNetworking。<br>这样对于我们只有一个工程的情况确实没问题。但众所周知，大家的电脑里最少都有两个以上的工程副本。当处于不同的分支的时候有可能同一pod对应的就是不同的版本。这就会出现，我并不信任我当前调试的代码是不是和我当前的pod版本所对应。</li>
+</ol>
+<p>我们为了解决这个问题，分为编译和解压两个部分。</p>
+<p>编译<br>首先在打包的时候根据版本在不同的文件路径下编译。是不是有点没看懂，我先举个例子。假如我现在要给<br>AFNetworking,’1.0’版本进行静态库构建，它的原始代码路径为’工程/Pods/AFNetworking/xxx’。我们只需要把它改为工程/Pods/AFNetworking/1.0/xxx，这样在不同版本的情况下打包不就可以区分了吗？我们最终采用的是软链接，在’工程/Pods/AFNetworking/‘中创建一个名为1.0的软链接，链接’工程/Pods/AFNetworking/‘，这里有点绕，就是在目录下创建了一个指向自己的软链接，类似祖传套娃。</p>
+<p>然后我们还需要修改project的group path,不改的话还是使用原来的路径编译。还是用AFNetworking来举例。原始的project group为</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">9</span>F144D000000D0 <span class="regexp">/* AFNetworking */</span> = &#123;</span><br><span class="line">			isa = PBXGroup;</span><br><span class="line">			children = (</span><br><span class="line">				<span class="number">9</span>F144D00000100 <span class="regexp">/* AFNetworking.h */</span>,</span><br><span class="line">				<span class="number">9</span>F144D000000E0 <span class="regexp">/* AFURLRequestSerialization.h */</span>,</span><br><span class="line">				<span class="number">9</span>F144D000000F0 <span class="regexp">/* AFURLResponseSerialization.h */</span>,</span><br><span class="line">				<span class="number">9</span>F144D00000250 <span class="regexp">/* Frameworks */</span>,</span><br><span class="line">				<span class="number">9</span>F144D00000110 <span class="regexp">/* NSURLSession */</span>,</span><br><span class="line">				<span class="number">9</span>F144D00000150 <span class="regexp">/* Reachability */</span>,</span><br><span class="line">				<span class="number">9</span>F144D00000170 <span class="regexp">/* Security */</span>,</span><br><span class="line">				<span class="number">9</span>F144D00000190 <span class="regexp">/* Serialization */</span>,</span><br><span class="line">				<span class="number">9</span>F144D000002D0 <span class="regexp">/* Support Files */</span>,</span><br><span class="line">				<span class="number">9</span>F144D000001A0 <span class="regexp">/* UIKit */</span>,</span><br><span class="line">			);</span><br><span class="line">			name = AFNetworking;</span><br><span class="line">			path = AFNetworking;</span><br><span class="line">			sourceTree = <span class="string">&quot;&lt;group&gt;&quot;</span>;</span><br><span class="line">		&#125;;</span><br></pre></td></tr></table></figure>
+<p>我们需要把path修改为AFNetworking/1.0，然后就会发现编译不过了。因为有一个地方有些问题</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">9</span>F144D000002D0 <span class="regexp">/* Support Files */</span> = &#123;</span><br><span class="line">			isa = PBXGroup;</span><br><span class="line">			children = (</span><br><span class="line">				<span class="number">9</span>F144D000002E0 <span class="regexp">/* AFNetworking.debug.xcconfig */</span>,</span><br><span class="line">				<span class="number">9</span>F144D000002F0 <span class="regexp">/* AFNetworking.release.xcconfig */</span>,</span><br><span class="line">			);</span><br><span class="line">			name = <span class="string">&quot;Support Files&quot;</span>;</span><br><span class="line">			path = <span class="string">&quot;../Target Support Files/AFNetworking&quot;</span>;</span><br><span class="line">			sourceTree = <span class="string">&quot;&lt;group&gt;&quot;</span>;</span><br><span class="line">		&#125;;</span><br></pre></td></tr></table></figure>
+<p>发现问题所在了没？Support Files的path使用的是相对路径，因为我们相当于在上面多建立了一层文件结构所以这里要改为</p>
+<ul>
+<li>path = “../../Target Support Files/AFNetworking”;<br>以上修改完成之后就可以进行编译了。</li>
+</ul>
+<p>解压<br>解压就比较简明易懂了，就是解压到和编译时相同的路径就可以了。这样我们就可以同时存在不同版本的代码了！</p>
+<h2 id="源码与静态库切换"><a href="#源码与静态库切换" class="headerlink" title="源码与静态库切换"></a>源码与静态库切换</h2><p>先判断是否有二进制 git cat-file -e origin/master:#{first_name}/#{version + library_version_suffix}/#{first_name}.podspec.json</p>
+<h2 id="大文件存储"><a href="#大文件存储" class="headerlink" title="大文件存储"></a>大文件存储</h2><p>现在流程都跑通的，但我们每个版本都会构建新的静态库，那么我们的git仓库岂不是爆炸了吗？</p>
+<p>我们最初有讨论将所有.a文件忽略掉，但这需要每次拉代码后进行一次pod update将静态库拉回来，有些麻烦。</p>
+<p>经过调研和验证后我们选择了Git提供的Git LFS进行大文件存储，它实质上是讲所有文件传到Git LFS的仓库中而不是我们的工程仓库，在我们的工程仓库中会有一个类似指针的文件指向Git LFS仓库中的文件，所以我们仓库不会变大（理论上是会变大因为有一个指针文件）。当我们进行git pull的时候同时会进行git lfs pull将文件下载下来，这样解决了我们大文件存储的问题。</p>
+<p>具体就是在.gitattribute中将*.a加入到Git LFS中。同时我们也加入了*.binaryzip</p>
+<p>其实理论上可以进行工程回扫，将之前的所有commit都进行重建，这样我们的仓库就会从现在的十几个G减少到3个G左右，但需要SA配合，我们的电脑向Git服务器推因为过大，有三万多个commit，会在传输完成后被Git服务器中断连接，所以目前还没搞。</p>
+<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><p>Q：Podfile.lock是一个什么样的文件</p>
+<p>A：Podfile.lock实际上是一个yaml文件，类似于json</p>
+<p>Q：lottie-ios为什么没有切为静态库</p>
+<p>A：有些库在spec中dependency这个库的时候限制了版本号 ~&gt; 2.0，但cocoapods没有识别 2.0.a.debug 为2.x版本内</p>
+<p>Q：ReactiveCocoa为什么和其他切换静态库的方式不一样</p>
+<p>A：我们自动打出来的静态库，头文件会被增加RAC前缀，导致文件找不到。于是用单一构建的方式来构建了一版。</p>
+<p>Q：为啥Jenkins打带有Git-LFS的包会报错？</p>
+<p>A：因为Jenkins寻找的路径是xcode的目录，我们需要把Git-LFS拷贝到xcode目录中</p>
+<p>cp $(which git-lfs) /Applications/Xcode.app/Contents/Developer/usr/libexec/git-core</p>
+<h2 id="启动速度优化"><a href="#启动速度优化" class="headerlink" title="启动速度优化"></a>启动速度优化</h2><ul>
+<li>静态库</li>
+<li>二进制重排，clang插桩 </li>
+</ul>
+<p>Total pre-main time: 1.2 seconds (100.0%)<br>         dylib loading time: 567.72 milliseconds (45.5%)<br>        rebase/binding time: 105.14 milliseconds (8.4%)<br>            ObjC setup time:  40.01 milliseconds (3.2%)<br>           initializer time: 532.47 milliseconds (42.7%)<br>           slowest intializers :<br>             libSystem.B.dylib :   4.70 milliseconds (0.3%)<br>          libglInterpose.dylib : 295.89 milliseconds (23.7%)<br>                  AFNetworking :  48.75 milliseconds (3.9%)<br>                         Oasis : 285.94 milliseconds (22.9%)</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><span class="exturl" data-url="aHR0cHM6Ly90ZWNoLm1laXR1YW4uY29tLzIwMTkvMDgvMDgvdGhlLXRoaW5ncy1iZWhpbmQtdGhlLWlvcy1wcm9qZWN0LXpzb3VyY2UtY29tbWFuZC5odG1s">https://tech.meituan.com/2019/08/08/the-things-behind-the-ios-project-zsource-command.html<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>

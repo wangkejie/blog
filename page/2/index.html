@@ -203,186 +203,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/iOS/performance/modularization.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack Wang">
-      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="王科杰">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/iOS/performance/modularization.html" class="post-title-link" itemprop="url">组件化</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-08-30 16:02:25" itemprop="dateCreated datePublished" datetime="2021-08-30T16:02:25+08:00">2021-08-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/iOS/performance/modularization.html#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/iOS/performance/modularization.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="组件化"><a href="#组件化" class="headerlink" title="组件化"></a>组件化</h2><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>由于我们的工程代码越来越多，文件原来越多，编译速度直线下降，工作效率直线下降，甚至会影响情绪（误 ）</p>
-<p>所以计划将所有pod进行静态库构建，这样编译的时候就不会再重编了，再加上我们组件化也在持续推进，最终可能只需要编我修改的库就行了（理想状态）</p>
-<h2 id="静态库构建"><a href="#静态库构建" class="headerlink" title="静态库构建"></a>静态库构建</h2><ol>
-<li>静态库构建最初方案与尝试<br>最初指定的方案是在pod更新的时候进行打包，基于cocoapods-packager(后简称为packager)进行魔改。魔改后packger整体的方案是传入Podfile，在指定位置重新创建工程，根据Podfile与依赖进行libtool编译(动态库是使用xcodebuild，但我们不用动态库)，然后将编译好的静态库拷贝出来。为什么要传入Podfile呢，在之前的packager是使用podspec进行工程生成，这会导致生成的静态库所依赖的其他pod版本号会和主工程中的Podfile对不上。所以我们需要维护一个和主工程Podfile相同版本号的Podfile（是不是有点绕）</li>
-</ol>
-<p>其实packger内部也是使用Podspec生成Podfile的，我们只是做了直接传入Podfile，省去了生成的步骤。原理很简单，但实现还是需要摸索了一段时间。在扒了cocoapods源码后，发现cocoapods对Podfile对象提供了一个from_ruby的方法，这使得我们可以直接使用Podfile ruby文件就可以获取一个Podfile对象，但我们还需要对Podfile进行一些修改。我们将Podfile转化为yaml，然后将库中Podfile写的../ ./ 这种相对路径修改为工程地址（这是因为使用相对路径会导致生成的工程引用的代码文件不会被拷贝到工程下，源码调试会有问题），关闭uses_frameworks。</p>
-<p>我们对packger还做了一些其他的修改。使用Podfile；修改生成工程的地址；对生成的工程<code>Build Setting中的GCC_GENERATE_DEBUGGING_SYMBOLS</code>打开（后面会介绍这个字段是干什么用的）；修改了编译架构，只保留了arm64；修改了一些默认参数；增加了将生成的工程拷贝出来的参数；</p>
-<p>这个魔改后的cocoapods plugin会镶嵌在自动更新pod脚本当中，使用的时候会询问是否要构建静态库。</p>
-<p>但这个方案有两个问题，首先是需要维护一个和主工程版本号相同的Podfile比较麻烦，第二个是当依赖的库有变动的时候这个库的静态库也需要重新构建（包括依赖的依赖的依赖… 老套娃了）。这个其实可以通过分析Podfile.lock文件来寻找影响的所有库，但未免有些麻烦了。</p>
-<ol start="2">
-<li>最终方案<br>​我们既然不想维护一份单独的Podfile的话，那我们直接使用主工程不就好了吗？</li>
-</ol>
-<p>所以最终我们选择了使用主工程编译后的产物来当做我们使用的静态库。</p>
-<p>我们在工程内使用</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xcodebuild CONFIGURATION_BUILD_DIR=&quot;#&#123;library_path&#125;&quot; clean build -configuration Debug -scheme Pods-XXX -workspace &quot;#&#123;project_path&#125;/XXX.xcworkspace&quot; -arch arm64 -sdk iphoneos</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在 library_path 的位置生成所有静态库与bundle。这是我们的主体思路。</li>
-<li>在library_pods.json填入我们需要更新的库名（所有库名在工程pod update时候会在工程文件夹中生成一个current_mmpods.json当中）。</li>
-<li>分析 ~/.cocoapods/repos 中都有什么repo，获取repo的Git地址。</li>
-<li>分析Podfile.lock获取Pod都在那个repo中、版本号、是否被当成subspec引入。</li>
-<li>使用xcodebuild构建。</li>
-<li>遍历library_pods.json。<ul>
-<li>从工程中拷贝源码。</li>
-<li>拷贝构建完成的静态库。</li>
-<li>从bundle中拷贝metalllib（.metal文件特有）生成对应的bundle。</li>
-<li>拷贝Podfile.lock（为了查询是什么情况下构建的静态库）。</li>
-<li>repo中拷贝Podspec。</li>
-<li>如果Podspec没有被转化为json，就把它转成json。</li>
-<li>处理Podspec<ul>
-<li>将静态库加入vendored_libraries。</li>
-<li>将源码路径加入Podfile（稍后讲到源码调试的时候会讲）。</li>
-<li>将使用的subspec中的一些字段比如source_files加入到最外面，这里是因为如果工程只引入了subspec的话，外层的对应字段会失效。</li>
-</ul>
-</li>
-<li>将bundle路径加入到resources。</li>
-</ul>
-</li>
-<li>构建源码的zip。</li>
-<li>构建完整的zip（包含源码zip）。</li>
-<li>上传完整的zip（这里踩了很多坑我们稍后再说）。</li>
-<li>提交Podspec至对应的静态库单独的repo仓库中。</li>
-</ul>
-<p>好了，至此我们已经成功构建了一个使用静态库的Pod版本，版本号为为当前版本号.a.debug eg 1.0.0.a.debug。</p>
-<p>我们每个版本之后进行统一回扫也不会存在有某些依赖的库更新上层库没更新的问题了。</p>
-<h2 id="源码调试"><a href="#源码调试" class="headerlink" title="源码调试"></a>源码调试</h2><p><span class="exturl" data-url="aHR0cHM6Ly90ZWNoLm1laXR1YW4uY29tLzIwMTkvMDgvMDgvdGhlLXRoaW5ncy1iZWhpbmQtdGhlLWlvcy1wcm9qZWN0LXpzb3VyY2UtY29tbWFuZC5odG1s">https://tech.meituan.com/2019/08/08/the-things-behind-the-ios-project-zsource-command.html<i class="fa fa-external-link-alt"></i></span></p>
-<ol>
-<li>源码调试原理与过程<br>切换完静态库之后直接带来了一个问题就是大家无法看到源码，没办法根据crash寻找代码，没法打断点了。</li>
-</ol>
-<p>​为了解决这个问题，我们查阅了资料发现使用dwarfdump可以分析出静态库中AT_comp_dir的这个字段，AT_comp_dir代表编译地址，只要源码在这个位置，xcode就会根据它去寻找代码，当然了只是显示，编译还是使用静态库来编译的。（前文说的GCC_GENERATE_DEBUGGING_SYMBOLS就是为了生成这个字段用的，不过我们统一构建后就不需要再去用脚本设置了。）</p>
-<p>​换句话说就是只要我们其他电脑上在当时构建静态库的源码路径上还是有源代码的，xcode就可以自动寻找到代码并显示。不过在我们尝试了软链接、硬链接和文件拷贝后，软链接和硬链接都有相应的问题（找不到源码或者无法进行断点调试）。最终我们还是选择了文件拷贝（又为大家岌岌可危的硬盘空间火上浇油了，不过没有很大啦。）</p>
-<p>​现在问题来了我们需要找到一个大家都有的且有权限的路径下面进行静态库构建在经过大量尝试之后我们选择了 /private/var/folders/cocoapods/MOMO_iOS_Binary 这个路径来进行构建所以打包机上的工程师在这个路径下面的。</p>
-<p>同时我们也支持的在工程中直接对源码进行断点，这个我们等下再说。</p>
-<p>我们先来介绍一下我们为此做了什么工作：</p>
-<ul>
-<li>上文提到的源码zip就是为了一起打到zip包中方便我们pod update的时候获取源码的（考虑到再去下载可能会更麻烦）。</li>
-<li>需要把源码的zip包 xxx.binary 加入到podspec的Podfile字段中，否则update后工程中是没有它的。</li>
-<li>在我们进行pod update的时候使用Podfile提供的hook pre_install(在cocoapods拷贝文件完成之后)调用解压脚本将我们所有存在 xxx.binaryzip的文件全部解压到指定路径也就是编译时候的的路径。</li>
-<li>然后使用Podfile的另外一个hook post_integrate (在Integrating client project之后)（v1.10版本才提供，当前可调用工程/Binary/handle_add_source_file_to_project.sh）。<br>这个路径其实可以通过dwarfdump来获取，但是执行的有点慢，不过我们都自己制定了路径了，那不如还是把路径写死吧！</li>
-</ul>
-<blockquote>
-<p>dwarfdump xxx | grep “AT_comp_dir” | head -1 | cut -d \“ -f2 </p>
-</blockquote>
-<p>这一步我们分析了xcodeproj文件，可以将目标路径的整个文件夹当成一个Group加入到我们在Pod的xcodeproj文件中的SourceCode路径下。这些文件是不会被编译的，因为没有被加入到Build Phases中。</p>
-<p>至此，我们就可以在工程目录中看到源码，可以直接打断点，当crash或者assert时也会直接跳转到对应位置啦（如果不是为了看源码，其实可以不操作第四步的）。</p>
-<ol start="2">
-<li>我有多个工程对应不同的源码版本怎么办呢？<br>首先我们先重申一个概念，只要静态库中的AT_comp_dir对应的地方有源码，xcode会自动找到代码。<br>最初我们的做法是不管什么版本的代码，只要是同名pod都会在默认的位置进行编译，如 Pods/AFNetworking。<br>这样对于我们只有一个工程的情况确实没问题。但众所周知，大家的电脑里最少都有两个以上的工程副本。当处于不同的分支的时候有可能同一pod对应的就是不同的版本。这就会出现，我并不信任我当前调试的代码是不是和我当前的pod版本所对应。</li>
-</ol>
-<p>我们为了解决这个问题，分为编译和解压两个部分。</p>
-<p>编译<br>首先在打包的时候根据版本在不同的文件路径下编译。是不是有点没看懂，我先举个例子。假如我现在要给<br>AFNetworking,’1.0’版本进行静态库构建，它的原始代码路径为’工程/Pods/AFNetworking/xxx’。我们只需要把它改为工程/Pods/AFNetworking/1.0/xxx，这样在不同版本的情况下打包不就可以区分了吗？我们最终采用的是软链接，在’工程/Pods/AFNetworking/‘中创建一个名为1.0的软链接，链接’工程/Pods/AFNetworking/‘，这里有点绕，就是在目录下创建了一个指向自己的软链接，类似祖传套娃。</p>
-<p>然后我们还需要修改project的group path,不改的话还是使用原来的路径编译。还是用AFNetworking来举例。原始的project group为</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">9</span>F144D000000D0 <span class="regexp">/* AFNetworking */</span> = &#123;</span><br><span class="line">			isa = PBXGroup;</span><br><span class="line">			children = (</span><br><span class="line">				<span class="number">9</span>F144D00000100 <span class="regexp">/* AFNetworking.h */</span>,</span><br><span class="line">				<span class="number">9</span>F144D000000E0 <span class="regexp">/* AFURLRequestSerialization.h */</span>,</span><br><span class="line">				<span class="number">9</span>F144D000000F0 <span class="regexp">/* AFURLResponseSerialization.h */</span>,</span><br><span class="line">				<span class="number">9</span>F144D00000250 <span class="regexp">/* Frameworks */</span>,</span><br><span class="line">				<span class="number">9</span>F144D00000110 <span class="regexp">/* NSURLSession */</span>,</span><br><span class="line">				<span class="number">9</span>F144D00000150 <span class="regexp">/* Reachability */</span>,</span><br><span class="line">				<span class="number">9</span>F144D00000170 <span class="regexp">/* Security */</span>,</span><br><span class="line">				<span class="number">9</span>F144D00000190 <span class="regexp">/* Serialization */</span>,</span><br><span class="line">				<span class="number">9</span>F144D000002D0 <span class="regexp">/* Support Files */</span>,</span><br><span class="line">				<span class="number">9</span>F144D000001A0 <span class="regexp">/* UIKit */</span>,</span><br><span class="line">			);</span><br><span class="line">			name = AFNetworking;</span><br><span class="line">			path = AFNetworking;</span><br><span class="line">			sourceTree = <span class="string">&quot;&lt;group&gt;&quot;</span>;</span><br><span class="line">		&#125;;</span><br></pre></td></tr></table></figure>
-<p>我们需要把path修改为AFNetworking/1.0，然后就会发现编译不过了。因为有一个地方有些问题</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">9</span>F144D000002D0 <span class="regexp">/* Support Files */</span> = &#123;</span><br><span class="line">			isa = PBXGroup;</span><br><span class="line">			children = (</span><br><span class="line">				<span class="number">9</span>F144D000002E0 <span class="regexp">/* AFNetworking.debug.xcconfig */</span>,</span><br><span class="line">				<span class="number">9</span>F144D000002F0 <span class="regexp">/* AFNetworking.release.xcconfig */</span>,</span><br><span class="line">			);</span><br><span class="line">			name = <span class="string">&quot;Support Files&quot;</span>;</span><br><span class="line">			path = <span class="string">&quot;../Target Support Files/AFNetworking&quot;</span>;</span><br><span class="line">			sourceTree = <span class="string">&quot;&lt;group&gt;&quot;</span>;</span><br><span class="line">		&#125;;</span><br></pre></td></tr></table></figure>
-<p>发现问题所在了没？Support Files的path使用的是相对路径，因为我们相当于在上面多建立了一层文件结构所以这里要改为</p>
-<ul>
-<li>path = “../../Target Support Files/AFNetworking”;<br>以上修改完成之后就可以进行编译了。</li>
-</ul>
-<p>解压<br>解压就比较简明易懂了，就是解压到和编译时相同的路径就可以了。这样我们就可以同时存在不同版本的代码了！</p>
-<h2 id="源码与静态库切换"><a href="#源码与静态库切换" class="headerlink" title="源码与静态库切换"></a>源码与静态库切换</h2><p>先判断是否有二进制 git cat-file -e origin/master:#{first_name}/#{version + library_version_suffix}/#{first_name}.podspec.json</p>
-<h2 id="大文件存储"><a href="#大文件存储" class="headerlink" title="大文件存储"></a>大文件存储</h2><p>现在流程都跑通的，但我们每个版本都会构建新的静态库，那么我们的git仓库岂不是爆炸了吗？</p>
-<p>我们最初有讨论将所有.a文件忽略掉，但这需要每次拉代码后进行一次pod update将静态库拉回来，有些麻烦。</p>
-<p>经过调研和验证后我们选择了Git提供的Git LFS进行大文件存储，它实质上是讲所有文件传到Git LFS的仓库中而不是我们的工程仓库，在我们的工程仓库中会有一个类似指针的文件指向Git LFS仓库中的文件，所以我们仓库不会变大（理论上是会变大因为有一个指针文件）。当我们进行git pull的时候同时会进行git lfs pull将文件下载下来，这样解决了我们大文件存储的问题。</p>
-<p>具体就是在.gitattribute中将*.a加入到Git LFS中。同时我们也加入了*.binaryzip</p>
-<p>其实理论上可以进行工程回扫，将之前的所有commit都进行重建，这样我们的仓库就会从现在的十几个G减少到3个G左右，但需要SA配合，我们的电脑向Git服务器推因为过大，有三万多个commit，会在传输完成后被Git服务器中断连接，所以目前还没搞。</p>
-<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><p>Q：Podfile.lock是一个什么样的文件</p>
-<p>A：Podfile.lock实际上是一个yaml文件，类似于json</p>
-<p>Q：lottie-ios为什么没有切为静态库</p>
-<p>A：有些库在spec中dependency这个库的时候限制了版本号 ~&gt; 2.0，但cocoapods没有识别 2.0.a.debug 为2.x版本内</p>
-<p>Q：ReactiveCocoa为什么和其他切换静态库的方式不一样</p>
-<p>A：我们自动打出来的静态库，头文件会被增加RAC前缀，导致文件找不到。于是用单一构建的方式来构建了一版。</p>
-<p>Q：为啥Jenkins打带有Git-LFS的包会报错？</p>
-<p>A：因为Jenkins寻找的路径是xcode的目录，我们需要把Git-LFS拷贝到xcode目录中</p>
-<p>cp $(which git-lfs) /Applications/Xcode.app/Contents/Developer/usr/libexec/git-core</p>
-<h2 id="启动速度优化"><a href="#启动速度优化" class="headerlink" title="启动速度优化"></a>启动速度优化</h2><ul>
-<li>静态库</li>
-<li>二进制重排，clang插桩 </li>
-</ul>
-<p>Total pre-main time: 1.2 seconds (100.0%)<br>         dylib loading time: 567.72 milliseconds (45.5%)<br>        rebase/binding time: 105.14 milliseconds (8.4%)<br>            ObjC setup time:  40.01 milliseconds (3.2%)<br>           initializer time: 532.47 milliseconds (42.7%)<br>           slowest intializers :<br>             libSystem.B.dylib :   4.70 milliseconds (0.3%)<br>          libglInterpose.dylib : 295.89 milliseconds (23.7%)<br>                  AFNetworking :  48.75 milliseconds (3.9%)<br>                         Oasis : 285.94 milliseconds (22.9%)</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><span class="exturl" data-url="aHR0cHM6Ly90ZWNoLm1laXR1YW4uY29tLzIwMTkvMDgvMDgvdGhlLXRoaW5ncy1iZWhpbmQtdGhlLWlvcy1wcm9qZWN0LXpzb3VyY2UtY29tbWFuZC5odG1s">https://tech.meituan.com/2019/08/08/the-things-behind-the-ios-project-zsource-command.html<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wangkejie.com/iOS/performance/kadun.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -752,6 +572,9 @@
 <li>孙源大神的博客  <span class="exturl" data-url="aHR0cDovL2Jsb2cuc3Vubnl4eC5jb20vMjAxNC8xMC8xNS9iZWhpbmQtYXV0b3JlbGVhc2Uv">Autoreleasepool<i class="fa fa-external-link-alt"></i></span></li>
 <li><span class="exturl" data-url="aHR0cHM6Ly9zdWhvdS5naXRodWIuaW8vMjAxOC8wMS8yMS8lRTUlQjglQTYlRTclOUQlODAlRTklOTclQUUlRTklQTIlOTglRTclOUMlOEIlRTYlQkElOTAlRTclQTAlODEtLS0tJUU1JUFEJTkwJUU3JUJBJUJGJUU3JUE4JThCQXV0b1JlbGVhc2UlRTUlQUYlQjklRTglQjElQTElRTQlQkQlOTUlRTYlOTclQjYlRTklODclOEElRTYlOTQlQkUv">网上搜的<i class="fa fa-external-link-alt"></i></span></li>
 </ul>
+<h1 id="与runloop的关系"><a href="#与runloop的关系" class="headerlink" title="与runloop的关系"></a>与runloop的关系</h1><p>第一个 Observer ：<br>监视的事件是 Entry (即将进入Loop)，其回调内会调用 _objc_autoreleasePoolPush() 创建自动释放池。</p>
+<p>第二个 Observer ：<br>监视了两个事件：BeforeWaiting(准备进入休眠)<br>会调用_objc_autoreleasePoolPop() 和 _objc_autoreleasePoolPush() 释放旧的池并创建新池；</p>
+<p>Exit(即将退出Loop)<br>会调用 _objc_autoreleasePoolPop( ) 来释放自动释放池。</p>
 <ol>
 <li>子线程在使用autorelease对象时，如果没有autoreleasepool会在autoreleaseNoPage中懒加载一个出来。</li>
 <li>在runloop的run:beforeDate，以及一些source的callback中，有autoreleasepool的push和pop操作，总结就是系统在很多地方都差不多autorelease的管理操作。</li>
@@ -1398,6 +1221,77 @@
 <p>具体实现</p>
 <p>1、创建NSProxy的子类<br>2、hook dealloc函数的具体实现</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MIZombieSniffer</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*!</span></span><br><span class="line"><span class="comment"> *  @method installSniffer</span></span><br><span class="line"><span class="comment"> *  启动zombie检测</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">+ (<span class="type">void</span>)installSniffer;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*!</span></span><br><span class="line"><span class="comment"> *  @method uninstallSnifier</span></span><br><span class="line"><span class="comment"> *  停止zombie检测</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">+ (<span class="type">void</span>)uninstallSnifier;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*!</span></span><br><span class="line"><span class="comment"> *  @method appendIgnoreClass</span></span><br><span class="line"><span class="comment"> *  添加白名单类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">+ (<span class="type">void</span>)appendIgnoreClass: (Class)cls;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line">&lt;!-<span class="number">-2</span>、MIZombieSniffer.m--&gt;</span><br><span class="line"><span class="meta">#import <span class="string">&quot;MIZombieSniffer.h&quot;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&quot;MIZombieProxy.h&quot;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&lt;objc/runtime.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">void</span> (*MIDeallocPointer) (<span class="type">id</span> objc);</span><br><span class="line"><span class="comment">//野指针探测器是否开启</span></span><br><span class="line"><span class="keyword">static</span> <span class="type">BOOL</span> _enabled = <span class="literal">NO</span>;</span><br><span class="line"><span class="comment">//根类</span></span><br><span class="line"><span class="keyword">static</span> <span class="built_in">NSArray</span> *_rootClasses = <span class="literal">nil</span>;</span><br><span class="line"><span class="comment">//用于存储被释放的对象</span></span><br><span class="line"><span class="keyword">static</span> <span class="built_in">NSDictionary</span>&lt;<span class="type">id</span>, <span class="built_in">NSValue</span>*&gt; *_rootClassDeallocImps = <span class="literal">nil</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//白名单</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="built_in">NSMutableSet</span> *__mi_sniffer_white_lists()&#123;</span><br><span class="line">    <span class="comment">//创建白名单集合</span></span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">NSMutableSet</span> *mi_sniffer_white_lists;</span><br><span class="line">    <span class="comment">//单例初始化白名单集合</span></span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</span><br><span class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</span><br><span class="line">        mi_sniffer_white_lists = [[<span class="built_in">NSMutableSet</span> alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> mi_sniffer_white_lists;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="type">void</span> __mi_dealloc(__<span class="keyword">unsafe_unretained</span> <span class="type">id</span> obj)&#123;</span><br><span class="line">    <span class="comment">//获取对象的类</span></span><br><span class="line">    Class currentCls = [obj <span class="keyword">class</span>];</span><br><span class="line">    Class rootCls = currentCls;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//获取非NSObject和NSProxy的类</span></span><br><span class="line">    <span class="keyword">while</span> (rootCls != [<span class="built_in">NSObject</span> <span class="keyword">class</span>] &amp;&amp; rootCls != [<span class="built_in">NSProxy</span> <span class="keyword">class</span>]) &#123;</span><br><span class="line">        <span class="comment">//获取rootCls的父类，并赋值</span></span><br><span class="line">        rootCls = class_getSuperclass(rootCls);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//获取类名</span></span><br><span class="line">    <span class="built_in">NSString</span> *clsName = <span class="built_in">NSStringFromClass</span>(rootCls);</span><br><span class="line">    <span class="comment">//根据类名获取dealloc的imp指针</span></span><br><span class="line">    MIDeallocPointer deallocImp = <span class="literal">NULL</span>;</span><br><span class="line">    [[_rootClassDeallocImps objectForKey:clsName] getValue:&amp;deallocImp];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (deallocImp != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        deallocImp(obj);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//hook交换dealloc</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">inline</span> IMP __mi_swizzleMethodWithBlock(Method method, <span class="type">void</span> *block)&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     imp_implementationWithBlock ：接收一个block参数，将其拷贝到堆中，返回一个trampoline</span></span><br><span class="line"><span class="comment">     可以让block当做任何一个类的方法的实现，即当做类的方法的IMP来使用</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    IMP blockImp = imp_implementationWithBlock((__bridge <span class="type">id</span> _Nonnull)(block));</span><br><span class="line">    <span class="comment">//method_setImplementation 替换掉method的IMP</span></span><br><span class="line">    <span class="keyword">return</span> method_setImplementation(method, blockImp);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MIZombieSniffer</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//初始化根类</span></span><br><span class="line">+ (<span class="type">void</span>)initialize</span><br><span class="line">&#123;</span><br><span class="line">    _rootClasses = [@[[<span class="built_in">NSObject</span> <span class="keyword">class</span>], [<span class="built_in">NSProxy</span> <span class="keyword">class</span>]] <span class="keyword">retain</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> mark - public</span></span><br><span class="line">+ (<span class="type">void</span>)installSniffer&#123;</span><br><span class="line">    <span class="keyword">@synchronized</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!_enabled) &#123;</span><br><span class="line">            <span class="comment">//hook根类的dealloc方法</span></span><br><span class="line">            [<span class="keyword">self</span> _swizzleDealloc];</span><br><span class="line">            _enabled = <span class="literal">YES</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="type">void</span>)uninstallSnifier&#123;</span><br><span class="line">    <span class="keyword">@synchronized</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (_enabled) &#123;</span><br><span class="line">            <span class="comment">//还原dealloc方法</span></span><br><span class="line">            [<span class="keyword">self</span> _unswizzleDealloc];</span><br><span class="line">            _enabled = <span class="literal">NO</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//添加百名单</span></span><br><span class="line">+ (<span class="type">void</span>)appendIgnoreClass:(Class)cls&#123;</span><br><span class="line">    <span class="keyword">@synchronized</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">NSMutableSet</span> *whiteList = __mi_sniffer_white_lists();</span><br><span class="line">        <span class="built_in">NSString</span> *clsName = <span class="built_in">NSStringFromClass</span>(cls);</span><br><span class="line">        [clsName <span class="keyword">retain</span>];</span><br><span class="line">        [whiteList addObject:clsName];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> mark - private</span></span><br><span class="line">+ (<span class="type">void</span>)_swizzleDealloc&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="type">void</span> *swizzledDeallocBlock = <span class="literal">NULL</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//定义block，作为方法的IMP</span></span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</span><br><span class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</span><br><span class="line">        swizzledDeallocBlock = (__bridge <span class="type">void</span> *)[^<span class="type">void</span>(<span class="type">id</span> obj) &#123;</span><br><span class="line">            <span class="comment">//获取对象的类</span></span><br><span class="line">            Class currentClass = [obj <span class="keyword">class</span>];</span><br><span class="line">            <span class="comment">//获取类名</span></span><br><span class="line">            <span class="built_in">NSString</span> *clsName = <span class="built_in">NSStringFromClass</span>(currentClass);</span><br><span class="line">            <span class="comment">//判断该类是否在白名单类</span></span><br><span class="line">            <span class="keyword">if</span> ([__mi_sniffer_white_lists() containsObject: clsName]) &#123;</span><br><span class="line">                <span class="comment">//如果在白名单内，则直接释放对象</span></span><br><span class="line">                __mi_dealloc(obj);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//修改对象的isa指针，指向MIZombieProxy</span></span><br><span class="line">                <span class="comment">/*</span></span><br><span class="line"><span class="comment">                 valueWithBytes:objCType  创建并返回一个包含给定值的NSValue对象，该值会被解释为一个给定的NSObject类型</span></span><br><span class="line"><span class="comment">                 - 参数1：NSValue对象的值</span></span><br><span class="line"><span class="comment">                 - 参数2：给定值的对应的OC类型，需要使用编译器指令@encode来创建</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                <span class="built_in">NSValue</span> *objVal = [<span class="built_in">NSValue</span> valueWithBytes: &amp;obj objCType: <span class="keyword">@encode</span>(<span class="keyword">typeof</span>(obj))];</span><br><span class="line">                <span class="comment">//为obj设置指定的类</span></span><br><span class="line">                object_setClass(obj, [MIZombieProxy <span class="keyword">class</span>]);</span><br><span class="line">                <span class="comment">//保留对象原本的类</span></span><br><span class="line">                ((MIZombieProxy *)obj).originClass = currentClass;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">//设置在30s后调用dealloc将存储的对象释放，避免内存空间的增大</span></span><br><span class="line">                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(<span class="number">30</span> * <span class="built_in">NSEC_PER_SEC</span>)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                    __<span class="keyword">unsafe_unretained</span> <span class="type">id</span> deallocObj = <span class="literal">nil</span>;</span><br><span class="line">                    <span class="comment">//获取需要dealloc的对象</span></span><br><span class="line">                    [objVal getValue: &amp;deallocObj];</span><br><span class="line">                    <span class="comment">//设置对象的类为原本的类</span></span><br><span class="line">                    object_setClass(deallocObj, currentClass);</span><br><span class="line">                    <span class="comment">//释放</span></span><br><span class="line">                    __mi_dealloc(deallocObj);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">copy</span>];</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//交换了根类NSObject和NSProxy的dealloc方法为originalDeallocImp</span></span><br><span class="line">    <span class="built_in">NSMutableDictionary</span> *deallocImps = [<span class="built_in">NSMutableDictionary</span> dictionary];</span><br><span class="line">    <span class="comment">//遍历根类</span></span><br><span class="line">    <span class="keyword">for</span> (Class rootClass <span class="keyword">in</span> _rootClasses) &#123;</span><br><span class="line">        <span class="comment">//获取指定类中dealloc方法</span></span><br><span class="line">        Method oriMethod = class_getInstanceMethod([rootClass <span class="keyword">class</span>], <span class="built_in">NSSelectorFromString</span>(<span class="string">@&quot;dealloc&quot;</span>));</span><br><span class="line">        <span class="comment">//hook - 交换dealloc方法的IMP实现</span></span><br><span class="line">        IMP originalDeallocImp = __mi_swizzleMethodWithBlock(oriMethod, swizzledDeallocBlock);</span><br><span class="line">        <span class="comment">//设置IMP的具体实现</span></span><br><span class="line">        [deallocImps setObject: [<span class="built_in">NSValue</span> valueWithBytes: &amp;originalDeallocImp objCType: <span class="keyword">@encode</span>(<span class="keyword">typeof</span>(IMP))] forKey: <span class="built_in">NSStringFromClass</span>(rootClass)];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//_rootClassDeallocImps字典存储交换后的IMP实现</span></span><br><span class="line">    _rootClassDeallocImps = [deallocImps <span class="keyword">copy</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="type">void</span>)_unswizzleDealloc&#123;</span><br><span class="line">    <span class="comment">//还原dealloc交换的IMP</span></span><br><span class="line">    [_rootClasses enumerateObjectsUsingBlock:^(Class rootClass, <span class="built_in">NSUInteger</span> idx, <span class="type">BOOL</span> * _Nonnull stop) &#123;</span><br><span class="line">        IMP originDeallocImp = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="comment">//获取根类类名</span></span><br><span class="line">        <span class="built_in">NSString</span> *clsName = <span class="built_in">NSStringFromClass</span>(rootClass);</span><br><span class="line">        <span class="comment">//获取hook后的dealloc实现</span></span><br><span class="line">        [[_rootClassDeallocImps objectForKey:clsName] getValue:&amp;originDeallocImp];</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">NSParameterAssert</span>(originDeallocImp);</span><br><span class="line">        <span class="comment">//获取原本的dealloc实现</span></span><br><span class="line">        Method oriMethod = class_getInstanceMethod([rootClass <span class="keyword">class</span>], <span class="built_in">NSSelectorFromString</span>(<span class="string">@&quot;dealloc&quot;</span>));</span><br><span class="line">        <span class="comment">//还原dealloc的实现</span></span><br><span class="line">        method_setImplementation(oriMethod, originDeallocImp);</span><br><span class="line">    &#125;];</span><br><span class="line">    <span class="comment">//释放</span></span><br><span class="line">    [_rootClassDeallocImps release];</span><br><span class="line">    _rootClassDeallocImps = <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wangkejie.com/future/index.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack Wang">
+      <meta itemprop="description" content="书山有路勤为径，学海无涯苦作舟！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王科杰">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/future/index.html" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-14 11:36:24" itemprop="dateCreated datePublished" datetime="2020-01-14T11:36:24+08:00">2020-01-14</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/future/index.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/future/index.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
       
     </div>
 

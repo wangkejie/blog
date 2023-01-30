@@ -1123,7 +1123,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>下面是收集的RunLoop相关知识点，还有一些常见的问题或者用例<a href="./iOS/RunLoop/runloop.html">点击这里查看</a></p>
+          <p>首先是YY大神的理解<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmliaXJlbWUuY29tLzIwMTUvMDUvMTgvcnVubG9vcC8=">Autoreleasepool<i class="fa fa-external-link-alt"></i></span><br>下面是收集的RunLoop相关知识点，一些应用场景<a href="./iOS/RunLoop/runloop.html">点击这里查看</a></p>
 <p><a href="./iOS/RunLoop/runloopfanyi.html">官方文档翻译</a></p>
 <h2 id="一、RunLoop概念"><a href="#一、RunLoop概念" class="headerlink" title="一、RunLoop概念"></a>一、RunLoop概念</h2><p>RunLoop是通过内部维护的<code>事件循环(Event Loop)</code>来对<code>事件/消息进行管理</code>的一个对象。</p>
 <p>1、没有消息处理时，休眠已避免资源占用，由用户态切换到内核态(CPU-内核态和用户态)<br>2、有消息需要处理时，立刻被唤醒，由内核态切换到用户态</p>
@@ -1318,7 +1318,14 @@
 <h2 id="六、解释一下-NSTimer。"><a href="#六、解释一下-NSTimer。" class="headerlink" title="六、解释一下 NSTimer。"></a>六、解释一下 <code>NSTimer</code>。</h2><p><code>NSTimer</code> 其实就是 <code>CFRunLoopTimerRef</code>，他们之间是 <code>toll-free bridged</code> 的。一个 <code>NSTimer</code> 注册到 <code>RunLoop</code> 后，<code>RunLoop</code> 会为其重复的时间点注册好事件。例如 <code>10:00</code>, <code>10:10</code>, <code>10:20</code> 这几个时间点。<code>RunLoop</code> 为了节省资源，并不会在非常准确的时间点回调这个<code>Timer</code>。<code>Timer</code> 有个属性叫做 <code>Tolerance</code> (宽容度)，标示了当时间点到后，容许有多少最大误差。</p>
 <p>如果某个时间点被错过了，例如执行了一个很长的任务，则那个时间点的回调也会跳过去，不会延后执行。就比如等公交，如果 10:10 时我忙着玩手机错过了那个点的公交，那我只能等 10:20 这一趟了。</p>
 <p><code>CADisplayLink</code> 是一个和屏幕刷新率一致的定时器（但实际实现原理更复杂，和 NSTimer 并不一样，其内部实际是操作了一个 <code>Source</code>）。如果在两次屏幕刷新之间执行了一个长任务，那其中就会有一帧被跳过去（和 <code>NSTimer</code> 相似），造成界面卡顿的感觉。在快速滑动 <code>TableView</code> 时，即使一帧的卡顿也会让用户有所察觉。<code>Facebook</code> 开源的 <code>AsyncDisplayLink</code> 就是为了解决界面卡顿的问题，其内部也用到了 <code>RunLoop</code>。</p>
-<h2 id="七、等待补充中。。。"><a href="#七、等待补充中。。。" class="headerlink" title="七、等待补充中。。。"></a>七、等待补充中。。。</h2>
+<h2 id="七、等待补充中。。。"><a href="#七、等待补充中。。。" class="headerlink" title="七、等待补充中。。。"></a>七、等待补充中。。。</h2><ul>
+<li>Timer</li>
+<li>autoreleasePool创建</li>
+<li>线程保活</li>
+<li>检测卡顿</li>
+<li>scrollview的更新 TrackingRunloopMode下不做操作，添加到 defaultmode下</li>
+</ul>
+
       
     </div>
 
