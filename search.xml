@@ -43,6 +43,11 @@
 <li><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0xHQmFtYm9vL2lPUy1hcnRpY2xlLjAyL2Jsb2IvbWFpbi8lRTklOTglQkYlRTklODclOEMlRTMlODAlODElRTUlQUQlOTclRTglOEElODJpT1MlRTklOUQlQTIlRTglQUYlOTUlRTklQTIlOTglRTQlQjklOEJSdW50aW1lJUU3JTlCJUI4JUU1JTg1JUIzJUU5JTk3JUFFJUU5JUEyJTk4MiVFRiVCQyU4OCVFOSU5OSU4NCVFNyVBRCU5NCVFNiVBMSU4OCVFRiVCQyU4OS5tZA==">gihub面试大全<i class="fa fa-external-link-alt"></i></span></li>
 </ul>
 </li>
+<li>关联对象。 解决weak可以包装一层，属性弱引用。</li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLjUxY3RvLmNvbS91XzE1Mjk1NDg4LzMxMjk0NzM=">HTTP3.0<i class="fa fa-external-link-alt"></i></span><br>  TCP四元组(源IP、源端口、目标IP、目的端口)，网络发生变化的时候，重连。QUIC采用Connection ID不关心四元组</li>
+<li>AutoReleasePool 与线程一一对应，page结构体中有thread成员。 TLS(Thread local Stroge)hotPage。 嵌套用哨兵对象</li>
+<li><span class="exturl" data-url="aHR0cHM6Ly93d3cuamlhbnNodS5jb20vcC9jMTc5M2JjMmNhMTM=">为什么会有元类的设计<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9ub25nY2hhb3poZS5naXRodWIuaW8vMjAxOS8wOS8wOC9pc0VxdWFsJUU1JTkyJThDaGFzaCVFNyU5QSU4NCVFNSU4NSVCMyVFNyVCMyVCQi8=">isEqual 和 hash<i class="fa fa-external-link-alt"></i></span></li>
 </ul>
 <h2 id="以后慢慢积累补充"><a href="#以后慢慢积累补充" class="headerlink" title="以后慢慢积累补充"></a>以后慢慢积累补充</h2><ul>
 <li><a href="./iOS/crashrepaort/crashanalysis.html">iOS程序崩溃和抓取原理</a></li>
@@ -272,6 +277,40 @@ dskjdhjksgdhjs -->
       </tags>
   </entry>
   <entry>
+    <title>Flutter</title>
+    <url>/flutter/index.html</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Flutter已经面世这么长时间了，不抽空学习一下，实在是对不起自己。也是由于前天面试被问到Flutter的一些东西，一脸懵逼，真不是一个合格的iOS开发猿！！！</p>
+<p>分享一下学习经验和心得，纪录一下学习过程的疑问。</p>
+<p>官网学习，手敲练习<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0phY2stVmluZy9mbHV0dGVyLXN0dWR5">demo源码<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="学习之前我有几个问题问自己"><a href="#学习之前我有几个问题问自己" class="headerlink" title="学习之前我有几个问题问自己"></a>学习之前我有几个问题问自己</h2><ul>
+<li>为什么大家都说Flutter比RN和Weex流畅？ </li>
+<li>和RN、Weex实现原理对比, Flutter的实现原理是什么？</li>
+<li>怎么和Native通讯？</li>
+</ul>
+<span id="more"></span>
+<h1 id="初见"><a href="#初见" class="headerlink" title="初见"></a>初见</h1><p>clone flutter到本地，配置环境变量，略…</p>
+<p>入口函数 lib/main.dart. 中 void main(), 启动一个app，就是 runApp(<Widget>);</p>
+<p>对于Flutter来说，万物皆<Widget>, 主App窗口也是一个Widget。</p>
+<p>然后就是Widget内部再嵌套子视图Widget，一个套一个，我们可以称之为树节点</p>
+<h2 id="有状态和无状态的Widget"><a href="#有状态和无状态的Widget" class="headerlink" title="有状态和无状态的Widget"></a>有状态和无状态的Widget</h2><p>有状态的StatefulWidget,就是在setState()的时候，会重新绘制 Widget树，从而达到了更新状态的目的。 并且 State和Widget是分离的，也就保证了Widget树(界面)重新绘制的时候，数据不会丢失。</p>
+<h2 id="布局"><a href="#布局" class="headerlink" title="布局"></a>布局</h2><ul>
+<li>竖向排列，也就是Column</li>
+<li>横向排列，也就是Row</li>
+</ul>
+<p>好好运用 <code>Expanded</code>,<code>Container</code>等, </p>
+<blockquote>
+<p>注意：如果要添加<code>填充</code>，<code>边距</code>，<code>边框</code>或<code>背景色</code>，请使用<code>Container</code>来设置<code>!!!</code></p>
+</blockquote>
+<p>暂停。。。有些事情耽搁，后续继续写<br><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vZW50cnkvNWFmYTk3Njk1MTg4MjU0Mjg2MzBhNjFj">看完删除<i class="fa fa-external-link-alt"></i></span></p>
+]]></content>
+      <categories>
+        <category>flutter</category>
+      </categories>
+      <tags>
+        <tag>flutter</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>https</title>
     <url>/computer/https.html</url>
     <content><![CDATA[<h1 id="https"><a href="#https" class="headerlink" title="https"></a>https</h1><p>SSL 的握手协议非常有效的让客户和服务器之间完成相互之间的身份认证，其主要过程如下：</p>
@@ -429,40 +468,6 @@ dskjdhjksgdhjs -->
       <tags>
         <tag>字符串</tag>
         <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Flutter</title>
-    <url>/flutter/index.html</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Flutter已经面世这么长时间了，不抽空学习一下，实在是对不起自己。也是由于前天面试被问到Flutter的一些东西，一脸懵逼，真不是一个合格的iOS开发猿！！！</p>
-<p>分享一下学习经验和心得，纪录一下学习过程的疑问。</p>
-<p>官网学习，手敲练习<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0phY2stVmluZy9mbHV0dGVyLXN0dWR5">demo源码<i class="fa fa-external-link-alt"></i></span></p>
-<h2 id="学习之前我有几个问题问自己"><a href="#学习之前我有几个问题问自己" class="headerlink" title="学习之前我有几个问题问自己"></a>学习之前我有几个问题问自己</h2><ul>
-<li>为什么大家都说Flutter比RN和Weex流畅？ </li>
-<li>和RN、Weex实现原理对比, Flutter的实现原理是什么？</li>
-<li>怎么和Native通讯？</li>
-</ul>
-<span id="more"></span>
-<h1 id="初见"><a href="#初见" class="headerlink" title="初见"></a>初见</h1><p>clone flutter到本地，配置环境变量，略…</p>
-<p>入口函数 lib/main.dart. 中 void main(), 启动一个app，就是 runApp(<Widget>);</p>
-<p>对于Flutter来说，万物皆<Widget>, 主App窗口也是一个Widget。</p>
-<p>然后就是Widget内部再嵌套子视图Widget，一个套一个，我们可以称之为树节点</p>
-<h2 id="有状态和无状态的Widget"><a href="#有状态和无状态的Widget" class="headerlink" title="有状态和无状态的Widget"></a>有状态和无状态的Widget</h2><p>有状态的StatefulWidget,就是在setState()的时候，会重新绘制 Widget树，从而达到了更新状态的目的。 并且 State和Widget是分离的，也就保证了Widget树(界面)重新绘制的时候，数据不会丢失。</p>
-<h2 id="布局"><a href="#布局" class="headerlink" title="布局"></a>布局</h2><ul>
-<li>竖向排列，也就是Column</li>
-<li>横向排列，也就是Row</li>
-</ul>
-<p>好好运用 <code>Expanded</code>,<code>Container</code>等, </p>
-<blockquote>
-<p>注意：如果要添加<code>填充</code>，<code>边距</code>，<code>边框</code>或<code>背景色</code>，请使用<code>Container</code>来设置<code>!!!</code></p>
-</blockquote>
-<p>暂停。。。有些事情耽搁，后续继续写<br><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vZW50cnkvNWFmYTk3Njk1MTg4MjU0Mjg2MzBhNjFj">看完删除<i class="fa fa-external-link-alt"></i></span></p>
-]]></content>
-      <categories>
-        <category>flutter</category>
-      </categories>
-      <tags>
-        <tag>flutter</tag>
       </tags>
   </entry>
   <entry>
@@ -3247,6 +3252,7 @@ mach_init(); // from libc.a
     <title>RunTime知识</title>
     <url>/iOS/RunTime/index.html</url>
     <content><![CDATA[<p>这里主要收集RunTime相关东西</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuamlhbnNodS5jb20vcC9jMTc5M2JjMmNhMTM=">为什么会有元类<i class="fa fa-external-link-alt"></i></span></p>
 <h2 id="如何运用-Runtime-进行模型的归解档"><a href="#如何运用-Runtime-进行模型的归解档" class="headerlink" title="如何运用 Runtime 进行模型的归解档"></a>如何运用 <code>Runtime</code> 进行模型的归解档</h2><p><code>Runtime</code> 遍历 <code>ivar_list</code>。</p>
 <h2 id="如何运用-Runtime-字典转模型？"><a href="#如何运用-Runtime-字典转模型？" class="headerlink" title="如何运用 Runtime 字典转模型？"></a>如何运用 <code>Runtime</code> 字典转模型？</h2><p><code>Runtime</code> 遍历 <code>ivar_list</code>,结合 <code>KVC</code> 赋值。</p>
 <h2 id="如何给-Category-添加属性？关联对象以什么形式进行存储？"><a href="#如何给-Category-添加属性？关联对象以什么形式进行存储？" class="headerlink" title="如何给 Category 添加属性？关联对象以什么形式进行存储？"></a>如何给 <code>Category</code> 添加属性？关联对象以什么形式进行存储？</h2><p>查看的是 <code>关联对象</code> 的知识点。</p>
@@ -3311,6 +3317,144 @@ mach_init(); // from libc.a
       </categories>
       <tags>
         <tag>scrollView</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>iOS 算法收集</title>
+    <url>/iOS/algorithm/index.html</url>
+    <content><![CDATA[<h2 id="回溯算法-问题"><a href="#回溯算法-问题" class="headerlink" title="回溯算法 问题"></a>回溯算法 问题</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>题目链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>子集、组合</td>
+<td>子集、子集 II、组合、组合总和、组合总和 II</td>
+</tr>
+<tr>
+<td>全排列</td>
+<td>全排列、全排列 II、字符串的全排列、字母大小写全排列</td>
+</tr>
+<tr>
+<td>搜索</td>
+<td>解数独、单词搜索、N皇后、分割回文串、二进制手表</td>
+</tr>
+</tbody></table>
+<p>参考力扣解法<br><span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS1jbi5jb20vcHJvYmxlbXMvc3Vic2V0cy9zb2x1dGlvbi9jLXpvbmctamllLWxpYW8taHVpLXN1LXdlbi10aS1sZWkteGluZy1kYWktbmktZ2FvLS8=">C++<i class="fa fa-external-link-alt"></i></span><br><span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS1jbi5jb20vcHJvYmxlbXMvc3Vic2V0cy9zb2x1dGlvbi9lci1qaW4temhpLXdlaS16aHUtZ2UtbWVpLWp1LWRmc3Nhbi1jaG9uZy1zaS1sdS05Yy8=">java<i class="fa fa-external-link-alt"></i></span></p>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>①递归树<br>②找结束条件<br>③找准选择列表<br>④判断是否需要剪枝<br>⑤做出选择<br>⑥撤销选择</p>
+<blockquote>
+<p>总结：可以发现“排列”类型问题和“子集、组合”问题不同在于：“排列”问题使用used数组来标识选择列表，而“子集、组合”问题则使用start参数</p>
+</blockquote>
+<h2 id="1、不用中间变量-用两种方法交换A和B的值"><a href="#1、不用中间变量-用两种方法交换A和B的值" class="headerlink" title="1、不用中间变量,用两种方法交换A和B的值"></a><strong>1、不用中间变量,用两种方法交换A和B的值</strong></h2><figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1.中间变量</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">   <span class="type">int</span> temp = a;</span><br><span class="line">   a = b;</span><br><span class="line">   b = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.加法</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">   a = a + b;</span><br><span class="line">   b = a - b;</span><br><span class="line">   a = a - b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3.异或（相同为0，不同为1. 可以理解为不进位加法）</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">   a = a ^ b;</span><br><span class="line">   b = a ^ b;</span><br><span class="line">   a = a ^ b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、求最大公约数"><a href="#2、求最大公约数" class="headerlink" title="2、求最大公约数"></a><strong>2、求最大公约数</strong></h2><figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** 1.直接遍历法 */</span></span><br><span class="line"><span class="built_in">int</span> max<span class="constructor">CommonDivisor(<span class="params">int</span> <span class="params">a</span>, <span class="params">int</span> <span class="params">b</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">int</span> max = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;=b; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a % i<span class="operator"> == </span><span class="number">0</span><span class="operator"> &amp;&amp; </span>b % i<span class="operator"> == </span><span class="number">0</span>) &#123;</span><br><span class="line">            max = i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return max;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/** 2.辗转相除法 */</span></span><br><span class="line"><span class="built_in">int</span> max<span class="constructor">CommonDivisor(<span class="params">int</span> <span class="params">a</span>, <span class="params">int</span> <span class="params">b</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">int</span> r;</span><br><span class="line">    <span class="keyword">while</span>(a % b &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        r = a % b;</span><br><span class="line">        a = b;</span><br><span class="line">        b = r;</span><br><span class="line">    &#125;</span><br><span class="line">    return b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 扩展：最小公倍数 = (a * b)/最大公约数</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3、模拟栈操作"><a href="#3、模拟栈操作" class="headerlink" title="3、模拟栈操作"></a><strong>3、模拟栈操作</strong></h2><ul>
+<li>栈是一种数据结构，特点：先进后出 -</li>
+<li>练习：使用全局变量模拟栈的操作</li>
+</ul>
+<p><strong>#include &lt;stdio.h&gt;<br>#include &lt;stdbool.h&gt;<br>#include &lt;assert.h&gt;</strong></p>
+<p>//保护全局变量：在全局变量前加static后，这个全局变量就只能在本文件中使用<br>static int data[1024];//栈最多能保存1024个数据<br>static int count = 0;//目前已经放了多少个数(相当于栈顶位置)</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//数据入栈 push</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push</span>(<span class="params"><span class="built_in">int</span> x</span>)</span>&#123;</span><br><span class="line">    assert(!full());<span class="comment">//防止数组越界</span></span><br><span class="line">    data[count++] = x;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//数据出栈 pop</span></span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">pop</span>()</span>&#123;</span><br><span class="line">    assert(!empty());</span><br><span class="line">    <span class="keyword">return</span> data[--count];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//查看栈顶元素 top</span></span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">top</span>()</span>&#123;</span><br><span class="line">    assert(!empty());</span><br><span class="line">    <span class="keyword">return</span> data[count<span class="number">-1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//查询栈满 full</span></span><br><span class="line"><span class="function"><span class="built_in">bool</span> <span class="title">full</span>()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(count &gt;= <span class="number">1024</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//查询栈空 empty</span></span><br><span class="line"><span class="function"><span class="built_in">bool</span> <span class="title">empty</span>()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(count &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">main</span>()</span>&#123;</span><br><span class="line">    <span class="comment">//入栈</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++) &#123;</span><br><span class="line">        push(i);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">//出栈</span></span><br><span class="line">    <span class="keyword">while</span>(!empty())&#123;</span><br><span class="line">        printf(<span class="string">&quot;%d &quot;</span>, top()); <span class="comment">//栈顶元素</span></span><br><span class="line">        pop(); <span class="comment">//出栈</span></span><br><span class="line">    &#125;</span><br><span class="line">    printf(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4、排序算法"><a href="#4、排序算法" class="headerlink" title="4、排序算法"></a><strong>4、排序算法</strong></h2><p>选择排序、冒泡排序、插入排序三种排序算法可以总结为如下：<br>都将数组分为已排序部分和未排序部分。</p>
+<p>1.选择排序将已排序部分定义在左端，然后选择未排序部分的最小元素和未排序部分的第一个元素交换。</p>
+<p>2.冒泡排序将已排序部分定义在右端，在遍历未排序部分的过程执行交换，将最大元素交换到最右端。</p>
+<p>3.插入排序将已排序部分定义在左端，将未排序部分元的第一个元素插入到已排序部分合适的位置。</p>
+<p><strong>4.1、选择排序</strong></p>
+<ul>
+<li>【选择排序】：最值出现在起始端</li>
+<li>第1趟：在n个数中找到最小(大)数与第一个数交换位置</li>
+<li>第2趟：在剩下n-1个数中找到最小(大)数与第二个数交换位置</li>
+<li>重复这样的操作…依次与第三个、第四个…数交换位置</li>
+<li>第n-1趟，最终可实现数据的升序（降序）排列。</li>
+</ul>
+<figure class="highlight glsl"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> selectSort(<span class="type">int</span> *arr, <span class="type">int</span> <span class="built_in">length</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">length</span> - <span class="number">1</span>; i++) &#123; <span class="comment">//趟数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; <span class="built_in">length</span>; j++) &#123; <span class="comment">//比较次数</span></span><br><span class="line">            <span class="keyword">if</span> (arr[i] &gt; arr[j]) &#123;</span><br><span class="line">                <span class="type">int</span> temp = arr[i];</span><br><span class="line">                arr[i] = arr[j];</span><br><span class="line">                arr[j] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>4.2、冒泡排序</strong></p>
+<ul>
+<li>【冒泡排序】：相邻元素两两比较，比较完一趟，最值出现在末尾</li>
+<li>第1趟：依次比较相邻的两个数，不断交换（小数放前，大数放后）逐个推进，最值最后出现在第n个元素位置</li>
+<li>第2趟：依次比较相邻的两个数，不断交换（小数放前，大数放后）逐个推进，最值最后出现在第n-1个元素位置</li>
+<li>……   ……</li>
+<li>第n-1趟：依次比较相邻的两个数，不断交换（小数放前，大数放后）逐个推进，最值最后出现在第2个元素位置</li>
+</ul>
+<figure class="highlight glsl"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> bublleSort(<span class="type">int</span> *arr, <span class="type">int</span> <span class="built_in">length</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">length</span> - <span class="number">1</span>; i++) &#123; <span class="comment">//趟数</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="built_in">length</span> - i - <span class="number">1</span>; j++) &#123; <span class="comment">//比较次数</span></span><br><span class="line">            <span class="keyword">if</span>(arr[j] &gt; arr[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="type">int</span> temp = arr[j];</span><br><span class="line">                arr[j] = arr[j+<span class="number">1</span>];</span><br><span class="line">                arr[j+<span class="number">1</span>] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5、折半查找（二分查找）"><a href="#5、折半查找（二分查找）" class="headerlink" title="#### 5、折半查找（二分查找）"></a>#### 5、折半查找（二分查找）</h2><p>折半查找：优化查找时间（不用遍历全部数据）<br>折半查找的原理：</p>
+<ul>
+<li>1&gt; 数组必须是有序的</li>
+<li>2&gt; 必须已知min和max（知道范围）</li>
+<li>3&gt; 动态计算mid的值，取出mid对应的值进行比较</li>
+<li>4&gt; 如果mid对应的值大于要查找的值，那么max要变小为mid-1</li>
+<li>5&gt; 如果mid对应的值小于要查找的值，那么min要变大为mid+1</li>
+</ul>
+<p>// 已知一个有序数组, 和一个key, 要求从数组中找到key对应的索引位置</p>
+<figure class="highlight arcade"><table><tr><td class="code"><pre><span class="line">int findKey(int *arr, int <span class="built_in">length</span>, int key) &#123;</span><br><span class="line">    int <span class="built_in">min</span> = <span class="number">0</span>, <span class="built_in">max</span> = <span class="built_in">length</span> - <span class="number">1</span>, <span class="built_in">mid</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">min</span> &lt;= <span class="built_in">max</span>) &#123;</span><br><span class="line">        <span class="built_in">mid</span> = (<span class="built_in">min</span> + <span class="built_in">max</span>) / <span class="number">2</span>; <span class="comment">//计算中间值</span></span><br><span class="line">        <span class="keyword">if</span> (key &gt; arr[<span class="built_in">mid</span>]) &#123;</span><br><span class="line">            <span class="built_in">min</span> = <span class="built_in">mid</span> + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; arr[<span class="built_in">mid</span>]) &#123;</span><br><span class="line">            <span class="built_in">max</span> = <span class="built_in">mid</span> - <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">mid</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6、集合结构-线性结构-树形结构-图形结构"><a href="#6、集合结构-线性结构-树形结构-图形结构" class="headerlink" title="6、集合结构 线性结构 树形结构 图形结构"></a>6、集合结构 线性结构 树形结构 图形结构</h2><ul>
+<li>1.1、集合结构 说白了就是一个集合，就是一个圆圈中有很多个元素，元素与元素之间没有任何关系  这个很简单</li>
+<li>1.2、线性结构 说白了就是一个条线上站着很多个人。 这条线不一定是直的。也可以是弯的。也可以是值的 相当于一条线被分成了好几段的样子 （发挥你的想象力）。 线性结构是一对一的关系</li>
+<li>1.3、树形结构 说白了  做开发的肯定或多或少的知道xml 解析  树形结构跟他非常类似。也可以想象成一个金字塔。树形结构是一对多的关系</li>
+<li>1.4、图形结构 这个就比较复杂了。他呢 无穷。无边  无向（没有方向）图形机构 你可以理解为多对多 类似于我们人的交集关系</li>
+</ul>
+<h2 id="7、数据结构的存储"><a href="#7、数据结构的存储" class="headerlink" title="7、数据结构的存储"></a>7、数据结构的存储</h2><p>数据结构的存储一般常用的有两种   顺序存储结构 和 链式存储结构</p>
+<ul>
+<li>2.1  顺序存储结构</li>
+</ul>
+<p>发挥想象力啊。 举个列子。数组。1-2-3-4-5-6-7-8-9-10。这个就是一个顺序存储结构 ，存储是按顺序的  举例说明啊。 栈。做开发的都熟悉。栈是先进后出 ，后进先出的形式 对不对 ？！他的你可以这样理解</p>
+<p>hello world 在栈里面从栈底到栈顶的逻辑依次为 h-e-l-l-o-w-o-r-l-d 这就是顺序存储 再比如 队列 ，队列是先进先出的对吧，从头到尾 h-e-l-l-o-w-o-r-l-d 就是这样排对的</p>
+<ul>
+<li>2.2 链式存储结构</li>
+</ul>
+<p>再次发挥想象力 这个稍微复杂一点 这个图片我一直弄好 ，回头找美工问问，再贴上  例如 还是一个数组</p>
+<p>1-2-3-4-5-6-7-8-9-10  链式存储就不一样了 1(地址)-2(地址)-7(地址)-4(地址)-5(地址)-9(地址)-8(地址)-3(地址)-6(地址)-10(地址)。每个数字后面跟着一个地址 而且存储形式不再是顺序 ，也就说顺序乱了，1（地址） 1后面跟着的这个地址指向的是2，2后面的地址指向的是3，3后面的地址指向是谁你应该清楚了吧。他执行的时候是 1(地址)-2(地址)-3(地址)-4(地址)-5(地址)-6(地址)-7(地址)-8(地址)-9(地址)-10(地址)，但是存储的时候就是完全随机的。明白了？！</p>
+<h2 id="8、单向链表-双向链表-循环链表"><a href="#8、单向链表-双向链表-循环链表" class="headerlink" title="8、单向链表\双向链表\循环链表"></a>8、单向链表\双向链表\循环链表</h2><p>还是举例子。理解最重要。不要去死记硬背 哪些什么。定义啊。逻辑啊。理解才是最重要滴</p>
+<ul>
+<li>3.1 单向链表</li>
+</ul>
+<p>A-&gt;B-&gt;C-&gt;D-&gt;E-&gt;F-&gt;G-&gt;H. 这就是单向链表 H 是头 A 是尾 像一个只有一个头的火车一样 只能一个头拉着跑<br><img src="https://upload-images.jianshu.io/upload_images/13252132-681296a63ca929e4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<ul>
+<li>3.2 双向链表</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/13252132-b3d7480416c4f332.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<blockquote>
+<p>数组和链表区别：<br>数组：数组元素在内存上连续存放，可以通过下标查找元素；插入、删除需要移动大量元素，比较适用于元素很少变化的情况<br>链表：链表中的元素在内存中不是顺序存储的，查找慢，插入、删除只需要对元素指针重新赋值，效率高</p>
+</blockquote>
+<ul>
+<li>3.3 循环链表</li>
+</ul>
+<p>循环链表是与单向链表一样，是一种链式的存储结构，所不同的是，循环链表的最后一个结点的指针是指向该循环链表的第一个结点或者表头结点，从而构成一个环形的链。发挥想象力  A-&gt;B-&gt;C-&gt;D-&gt;E-&gt;F-&gt;G-&gt;H-&gt;A. 绕成一个圈。就像蛇吃自己的这就是循环  不需要去死记硬背哪些理论知识。</p>
+<h2 id="9、二叉树／平衡二叉树"><a href="#9、二叉树／平衡二叉树" class="headerlink" title="9、二叉树／平衡二叉树"></a>9、二叉树／平衡二叉树</h2><ul>
+<li>4.1 什么是二叉树</li>
+</ul>
+<p>树形结构下,两个节点以内 都称之为二叉树 不存在大于2 的节点 分为左子树 右子树 有顺序 不能颠倒 ，懵逼了吧，你肯定会想这是什么玩意，什么左子树右子树 ，都什么跟什么鬼？  现在我以普通话再讲一遍，你把二叉树看成一个人 ，人的头呢就是树的根 ，左子树就是左手，右子树就是右手，左右手可以都没有（残疾嘛，声明一下，绝非歧视残疾朋友，勿怪，勿怪就是举个例子，i am very sorry）  , 左右手呢可以有一个，就是不能颠倒。这样讲应该明白了吧</p>
+<p><strong>二叉树有五种表现形式</strong></p>
+<p>1.空的树（没有节点）可以理解为什么都没 像空气一样<br>2.只有根节点。 （理解一个人只有一个头 其他的什么都没，说的有点恐怖）<br>3.只有左子树 （一个头 一个左手 感觉越来越写不下去了）<br>4.只有右子树<br>5.左右子树都有</p>
+<p>二叉树可以转换成森林 树也可以转换成二叉树。这里就不介绍了 你做项目绝对用不到<br>数据结构大致介绍这么多吧。理解为主, 别死记，死记没什么用</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2>]]></content>
+      <categories>
+        <category>iOS</category>
+        <category>iOS算法</category>
+      </categories>
+      <tags>
+        <tag>iOS算法收集</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>iOS动画</title>
+    <url>/iOS/animation/index.html</url>
+    <content><![CDATA[<h2 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h2><p><code>AirBnb</code> 的 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FpcmJuYi9sb3R0aWUtaW9z">Lottie<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="Layar的认识"><a href="#Layar的认识" class="headerlink" title="Layar的认识"></a>Layar的认识</h2><p><code>layer</code> 层是涂层绘制、渲染、以及动画的完成者，它无法直接的处理触摸事件（也可以捕捉事件）<br><code>layer</code> 包含的方面非常多，常见的属性有 <code>Frame</code>、<code>Bounds</code>、<code>Position</code>、<code>AnchorPoint</code>、<code>Contents</code> 等等。<br>想详细了解 <code>CALayer</code> 以及动画的 ，可以看看这本书 - <span class="exturl" data-url="aHR0cHM6Ly9sZWdhY3kuZ2l0Ym9vay5jb20vYm9vay96c2lzbWUvaW9zLS9kZXRhaWxz">Core-Animation<i class="fa fa-external-link-alt"></i></span></p>
+]]></content>
+      <categories>
+        <category>iOS</category>
+        <category>iOS动画</category>
+      </categories>
+      <tags>
+        <tag>Objetive-C</tag>
       </tags>
   </entry>
   <entry>
@@ -3560,144 +3704,6 @@ mach_init(); // from libc.a
       <tags>
         <tag>RunLoop</tag>
         <tag>RunLoop翻译</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>iOS 算法收集</title>
-    <url>/iOS/algorithm/index.html</url>
-    <content><![CDATA[<h2 id="回溯算法-问题"><a href="#回溯算法-问题" class="headerlink" title="回溯算法 问题"></a>回溯算法 问题</h2><table>
-<thead>
-<tr>
-<th>类型</th>
-<th>题目链接</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>子集、组合</td>
-<td>子集、子集 II、组合、组合总和、组合总和 II</td>
-</tr>
-<tr>
-<td>全排列</td>
-<td>全排列、全排列 II、字符串的全排列、字母大小写全排列</td>
-</tr>
-<tr>
-<td>搜索</td>
-<td>解数独、单词搜索、N皇后、分割回文串、二进制手表</td>
-</tr>
-</tbody></table>
-<p>参考力扣解法<br><span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS1jbi5jb20vcHJvYmxlbXMvc3Vic2V0cy9zb2x1dGlvbi9jLXpvbmctamllLWxpYW8taHVpLXN1LXdlbi10aS1sZWkteGluZy1kYWktbmktZ2FvLS8=">C++<i class="fa fa-external-link-alt"></i></span><br><span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS1jbi5jb20vcHJvYmxlbXMvc3Vic2V0cy9zb2x1dGlvbi9lci1qaW4temhpLXdlaS16aHUtZ2UtbWVpLWp1LWRmc3Nhbi1jaG9uZy1zaS1sdS05Yy8=">java<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>①递归树<br>②找结束条件<br>③找准选择列表<br>④判断是否需要剪枝<br>⑤做出选择<br>⑥撤销选择</p>
-<blockquote>
-<p>总结：可以发现“排列”类型问题和“子集、组合”问题不同在于：“排列”问题使用used数组来标识选择列表，而“子集、组合”问题则使用start参数</p>
-</blockquote>
-<h2 id="1、不用中间变量-用两种方法交换A和B的值"><a href="#1、不用中间变量-用两种方法交换A和B的值" class="headerlink" title="1、不用中间变量,用两种方法交换A和B的值"></a><strong>1、不用中间变量,用两种方法交换A和B的值</strong></h2><figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1.中间变量</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">   <span class="type">int</span> temp = a;</span><br><span class="line">   a = b;</span><br><span class="line">   b = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.加法</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">   a = a + b;</span><br><span class="line">   b = a - b;</span><br><span class="line">   a = a - b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3.异或（相同为0，不同为1. 可以理解为不进位加法）</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">   a = a ^ b;</span><br><span class="line">   b = a ^ b;</span><br><span class="line">   a = a ^ b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2、求最大公约数"><a href="#2、求最大公约数" class="headerlink" title="2、求最大公约数"></a><strong>2、求最大公约数</strong></h2><figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** 1.直接遍历法 */</span></span><br><span class="line"><span class="built_in">int</span> max<span class="constructor">CommonDivisor(<span class="params">int</span> <span class="params">a</span>, <span class="params">int</span> <span class="params">b</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">int</span> max = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;=b; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a % i<span class="operator"> == </span><span class="number">0</span><span class="operator"> &amp;&amp; </span>b % i<span class="operator"> == </span><span class="number">0</span>) &#123;</span><br><span class="line">            max = i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return max;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/** 2.辗转相除法 */</span></span><br><span class="line"><span class="built_in">int</span> max<span class="constructor">CommonDivisor(<span class="params">int</span> <span class="params">a</span>, <span class="params">int</span> <span class="params">b</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">int</span> r;</span><br><span class="line">    <span class="keyword">while</span>(a % b &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        r = a % b;</span><br><span class="line">        a = b;</span><br><span class="line">        b = r;</span><br><span class="line">    &#125;</span><br><span class="line">    return b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 扩展：最小公倍数 = (a * b)/最大公约数</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="3、模拟栈操作"><a href="#3、模拟栈操作" class="headerlink" title="3、模拟栈操作"></a><strong>3、模拟栈操作</strong></h2><ul>
-<li>栈是一种数据结构，特点：先进后出 -</li>
-<li>练习：使用全局变量模拟栈的操作</li>
-</ul>
-<p><strong>#include &lt;stdio.h&gt;<br>#include &lt;stdbool.h&gt;<br>#include &lt;assert.h&gt;</strong></p>
-<p>//保护全局变量：在全局变量前加static后，这个全局变量就只能在本文件中使用<br>static int data[1024];//栈最多能保存1024个数据<br>static int count = 0;//目前已经放了多少个数(相当于栈顶位置)</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//数据入栈 push</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push</span>(<span class="params"><span class="built_in">int</span> x</span>)</span>&#123;</span><br><span class="line">    assert(!full());<span class="comment">//防止数组越界</span></span><br><span class="line">    data[count++] = x;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//数据出栈 pop</span></span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">pop</span>()</span>&#123;</span><br><span class="line">    assert(!empty());</span><br><span class="line">    <span class="keyword">return</span> data[--count];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//查看栈顶元素 top</span></span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">top</span>()</span>&#123;</span><br><span class="line">    assert(!empty());</span><br><span class="line">    <span class="keyword">return</span> data[count<span class="number">-1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//查询栈满 full</span></span><br><span class="line"><span class="function"><span class="built_in">bool</span> <span class="title">full</span>()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(count &gt;= <span class="number">1024</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//查询栈空 empty</span></span><br><span class="line"><span class="function"><span class="built_in">bool</span> <span class="title">empty</span>()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(count &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">main</span>()</span>&#123;</span><br><span class="line">    <span class="comment">//入栈</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++) &#123;</span><br><span class="line">        push(i);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">//出栈</span></span><br><span class="line">    <span class="keyword">while</span>(!empty())&#123;</span><br><span class="line">        printf(<span class="string">&quot;%d &quot;</span>, top()); <span class="comment">//栈顶元素</span></span><br><span class="line">        pop(); <span class="comment">//出栈</span></span><br><span class="line">    &#125;</span><br><span class="line">    printf(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="4、排序算法"><a href="#4、排序算法" class="headerlink" title="4、排序算法"></a><strong>4、排序算法</strong></h2><p>选择排序、冒泡排序、插入排序三种排序算法可以总结为如下：<br>都将数组分为已排序部分和未排序部分。</p>
-<p>1.选择排序将已排序部分定义在左端，然后选择未排序部分的最小元素和未排序部分的第一个元素交换。</p>
-<p>2.冒泡排序将已排序部分定义在右端，在遍历未排序部分的过程执行交换，将最大元素交换到最右端。</p>
-<p>3.插入排序将已排序部分定义在左端，将未排序部分元的第一个元素插入到已排序部分合适的位置。</p>
-<p><strong>4.1、选择排序</strong></p>
-<ul>
-<li>【选择排序】：最值出现在起始端</li>
-<li>第1趟：在n个数中找到最小(大)数与第一个数交换位置</li>
-<li>第2趟：在剩下n-1个数中找到最小(大)数与第二个数交换位置</li>
-<li>重复这样的操作…依次与第三个、第四个…数交换位置</li>
-<li>第n-1趟，最终可实现数据的升序（降序）排列。</li>
-</ul>
-<figure class="highlight glsl"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> selectSort(<span class="type">int</span> *arr, <span class="type">int</span> <span class="built_in">length</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">length</span> - <span class="number">1</span>; i++) &#123; <span class="comment">//趟数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; <span class="built_in">length</span>; j++) &#123; <span class="comment">//比较次数</span></span><br><span class="line">            <span class="keyword">if</span> (arr[i] &gt; arr[j]) &#123;</span><br><span class="line">                <span class="type">int</span> temp = arr[i];</span><br><span class="line">                arr[i] = arr[j];</span><br><span class="line">                arr[j] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>4.2、冒泡排序</strong></p>
-<ul>
-<li>【冒泡排序】：相邻元素两两比较，比较完一趟，最值出现在末尾</li>
-<li>第1趟：依次比较相邻的两个数，不断交换（小数放前，大数放后）逐个推进，最值最后出现在第n个元素位置</li>
-<li>第2趟：依次比较相邻的两个数，不断交换（小数放前，大数放后）逐个推进，最值最后出现在第n-1个元素位置</li>
-<li>……   ……</li>
-<li>第n-1趟：依次比较相邻的两个数，不断交换（小数放前，大数放后）逐个推进，最值最后出现在第2个元素位置</li>
-</ul>
-<figure class="highlight glsl"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> bublleSort(<span class="type">int</span> *arr, <span class="type">int</span> <span class="built_in">length</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">length</span> - <span class="number">1</span>; i++) &#123; <span class="comment">//趟数</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="built_in">length</span> - i - <span class="number">1</span>; j++) &#123; <span class="comment">//比较次数</span></span><br><span class="line">            <span class="keyword">if</span>(arr[j] &gt; arr[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="type">int</span> temp = arr[j];</span><br><span class="line">                arr[j] = arr[j+<span class="number">1</span>];</span><br><span class="line">                arr[j+<span class="number">1</span>] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="5、折半查找（二分查找）"><a href="#5、折半查找（二分查找）" class="headerlink" title="#### 5、折半查找（二分查找）"></a>#### 5、折半查找（二分查找）</h2><p>折半查找：优化查找时间（不用遍历全部数据）<br>折半查找的原理：</p>
-<ul>
-<li>1&gt; 数组必须是有序的</li>
-<li>2&gt; 必须已知min和max（知道范围）</li>
-<li>3&gt; 动态计算mid的值，取出mid对应的值进行比较</li>
-<li>4&gt; 如果mid对应的值大于要查找的值，那么max要变小为mid-1</li>
-<li>5&gt; 如果mid对应的值小于要查找的值，那么min要变大为mid+1</li>
-</ul>
-<p>// 已知一个有序数组, 和一个key, 要求从数组中找到key对应的索引位置</p>
-<figure class="highlight arcade"><table><tr><td class="code"><pre><span class="line">int findKey(int *arr, int <span class="built_in">length</span>, int key) &#123;</span><br><span class="line">    int <span class="built_in">min</span> = <span class="number">0</span>, <span class="built_in">max</span> = <span class="built_in">length</span> - <span class="number">1</span>, <span class="built_in">mid</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">min</span> &lt;= <span class="built_in">max</span>) &#123;</span><br><span class="line">        <span class="built_in">mid</span> = (<span class="built_in">min</span> + <span class="built_in">max</span>) / <span class="number">2</span>; <span class="comment">//计算中间值</span></span><br><span class="line">        <span class="keyword">if</span> (key &gt; arr[<span class="built_in">mid</span>]) &#123;</span><br><span class="line">            <span class="built_in">min</span> = <span class="built_in">mid</span> + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; arr[<span class="built_in">mid</span>]) &#123;</span><br><span class="line">            <span class="built_in">max</span> = <span class="built_in">mid</span> - <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">mid</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="6、集合结构-线性结构-树形结构-图形结构"><a href="#6、集合结构-线性结构-树形结构-图形结构" class="headerlink" title="6、集合结构 线性结构 树形结构 图形结构"></a>6、集合结构 线性结构 树形结构 图形结构</h2><ul>
-<li>1.1、集合结构 说白了就是一个集合，就是一个圆圈中有很多个元素，元素与元素之间没有任何关系  这个很简单</li>
-<li>1.2、线性结构 说白了就是一个条线上站着很多个人。 这条线不一定是直的。也可以是弯的。也可以是值的 相当于一条线被分成了好几段的样子 （发挥你的想象力）。 线性结构是一对一的关系</li>
-<li>1.3、树形结构 说白了  做开发的肯定或多或少的知道xml 解析  树形结构跟他非常类似。也可以想象成一个金字塔。树形结构是一对多的关系</li>
-<li>1.4、图形结构 这个就比较复杂了。他呢 无穷。无边  无向（没有方向）图形机构 你可以理解为多对多 类似于我们人的交集关系</li>
-</ul>
-<h2 id="7、数据结构的存储"><a href="#7、数据结构的存储" class="headerlink" title="7、数据结构的存储"></a>7、数据结构的存储</h2><p>数据结构的存储一般常用的有两种   顺序存储结构 和 链式存储结构</p>
-<ul>
-<li>2.1  顺序存储结构</li>
-</ul>
-<p>发挥想象力啊。 举个列子。数组。1-2-3-4-5-6-7-8-9-10。这个就是一个顺序存储结构 ，存储是按顺序的  举例说明啊。 栈。做开发的都熟悉。栈是先进后出 ，后进先出的形式 对不对 ？！他的你可以这样理解</p>
-<p>hello world 在栈里面从栈底到栈顶的逻辑依次为 h-e-l-l-o-w-o-r-l-d 这就是顺序存储 再比如 队列 ，队列是先进先出的对吧，从头到尾 h-e-l-l-o-w-o-r-l-d 就是这样排对的</p>
-<ul>
-<li>2.2 链式存储结构</li>
-</ul>
-<p>再次发挥想象力 这个稍微复杂一点 这个图片我一直弄好 ，回头找美工问问，再贴上  例如 还是一个数组</p>
-<p>1-2-3-4-5-6-7-8-9-10  链式存储就不一样了 1(地址)-2(地址)-7(地址)-4(地址)-5(地址)-9(地址)-8(地址)-3(地址)-6(地址)-10(地址)。每个数字后面跟着一个地址 而且存储形式不再是顺序 ，也就说顺序乱了，1（地址） 1后面跟着的这个地址指向的是2，2后面的地址指向的是3，3后面的地址指向是谁你应该清楚了吧。他执行的时候是 1(地址)-2(地址)-3(地址)-4(地址)-5(地址)-6(地址)-7(地址)-8(地址)-9(地址)-10(地址)，但是存储的时候就是完全随机的。明白了？！</p>
-<h2 id="8、单向链表-双向链表-循环链表"><a href="#8、单向链表-双向链表-循环链表" class="headerlink" title="8、单向链表\双向链表\循环链表"></a>8、单向链表\双向链表\循环链表</h2><p>还是举例子。理解最重要。不要去死记硬背 哪些什么。定义啊。逻辑啊。理解才是最重要滴</p>
-<ul>
-<li>3.1 单向链表</li>
-</ul>
-<p>A-&gt;B-&gt;C-&gt;D-&gt;E-&gt;F-&gt;G-&gt;H. 这就是单向链表 H 是头 A 是尾 像一个只有一个头的火车一样 只能一个头拉着跑<br><img src="https://upload-images.jianshu.io/upload_images/13252132-681296a63ca929e4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<ul>
-<li>3.2 双向链表</li>
-</ul>
-<p><img src="https://upload-images.jianshu.io/upload_images/13252132-b3d7480416c4f332.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<blockquote>
-<p>数组和链表区别：<br>数组：数组元素在内存上连续存放，可以通过下标查找元素；插入、删除需要移动大量元素，比较适用于元素很少变化的情况<br>链表：链表中的元素在内存中不是顺序存储的，查找慢，插入、删除只需要对元素指针重新赋值，效率高</p>
-</blockquote>
-<ul>
-<li>3.3 循环链表</li>
-</ul>
-<p>循环链表是与单向链表一样，是一种链式的存储结构，所不同的是，循环链表的最后一个结点的指针是指向该循环链表的第一个结点或者表头结点，从而构成一个环形的链。发挥想象力  A-&gt;B-&gt;C-&gt;D-&gt;E-&gt;F-&gt;G-&gt;H-&gt;A. 绕成一个圈。就像蛇吃自己的这就是循环  不需要去死记硬背哪些理论知识。</p>
-<h2 id="9、二叉树／平衡二叉树"><a href="#9、二叉树／平衡二叉树" class="headerlink" title="9、二叉树／平衡二叉树"></a>9、二叉树／平衡二叉树</h2><ul>
-<li>4.1 什么是二叉树</li>
-</ul>
-<p>树形结构下,两个节点以内 都称之为二叉树 不存在大于2 的节点 分为左子树 右子树 有顺序 不能颠倒 ，懵逼了吧，你肯定会想这是什么玩意，什么左子树右子树 ，都什么跟什么鬼？  现在我以普通话再讲一遍，你把二叉树看成一个人 ，人的头呢就是树的根 ，左子树就是左手，右子树就是右手，左右手可以都没有（残疾嘛，声明一下，绝非歧视残疾朋友，勿怪，勿怪就是举个例子，i am very sorry）  , 左右手呢可以有一个，就是不能颠倒。这样讲应该明白了吧</p>
-<p><strong>二叉树有五种表现形式</strong></p>
-<p>1.空的树（没有节点）可以理解为什么都没 像空气一样<br>2.只有根节点。 （理解一个人只有一个头 其他的什么都没，说的有点恐怖）<br>3.只有左子树 （一个头 一个左手 感觉越来越写不下去了）<br>4.只有右子树<br>5.左右子树都有</p>
-<p>二叉树可以转换成森林 树也可以转换成二叉树。这里就不介绍了 你做项目绝对用不到<br>数据结构大致介绍这么多吧。理解为主, 别死记，死记没什么用</p>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2>]]></content>
-      <categories>
-        <category>iOS</category>
-        <category>iOS算法</category>
-      </categories>
-      <tags>
-        <tag>iOS算法收集</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>iOS动画</title>
-    <url>/iOS/animation/index.html</url>
-    <content><![CDATA[<h2 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h2><p><code>AirBnb</code> 的 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FpcmJuYi9sb3R0aWUtaW9z">Lottie<i class="fa fa-external-link-alt"></i></span></p>
-<h2 id="Layar的认识"><a href="#Layar的认识" class="headerlink" title="Layar的认识"></a>Layar的认识</h2><p><code>layer</code> 层是涂层绘制、渲染、以及动画的完成者，它无法直接的处理触摸事件（也可以捕捉事件）<br><code>layer</code> 包含的方面非常多，常见的属性有 <code>Frame</code>、<code>Bounds</code>、<code>Position</code>、<code>AnchorPoint</code>、<code>Contents</code> 等等。<br>想详细了解 <code>CALayer</code> 以及动画的 ，可以看看这本书 - <span class="exturl" data-url="aHR0cHM6Ly9sZWdhY3kuZ2l0Ym9vay5jb20vYm9vay96c2lzbWUvaW9zLS9kZXRhaWxz">Core-Animation<i class="fa fa-external-link-alt"></i></span></p>
-]]></content>
-      <categories>
-        <category>iOS</category>
-        <category>iOS动画</category>
-      </categories>
-      <tags>
-        <tag>Objetive-C</tag>
       </tags>
   </entry>
   <entry>
@@ -4083,313 +4089,6 @@ mach_init(); // from libc.a
       </categories>
       <tags>
         <tag>Hybrid</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Mach微内核简介</title>
-    <url>/iOS/kernelarchitecture/mach.html</url>
-    <content><![CDATA[<h1 id="Mach"><a href="#Mach" class="headerlink" title="Mach"></a>Mach</h1><p>OS X内核的基本服务和基本类型都基于Mach 3.0。苹果对Mach进行了修改和扩展，以更好地满足OS X的功能和性能目标。</p>
-<p>Mach 3.0最初被认为是一个简单、可扩展的通信微内核。它能够作为一个独立的内核运行，而其他传统的操作系统服务(如I/O、文件系统和网络堆栈)作为用户模式服务器运行。</p>
-<p>然而，在OS X中，Mach与其他内核组件<code>链接到一个内核地址空间</code>中。这主要是<code>为了性能</code>;在链接组件之间进行直接调用要比在单独<code>任务之间发送消息</code>或<code>执行远程过程调用(RPC)</code>快得多。这种模块化的结构导致了一个比单一内核所允许的更健壮和可扩展的系统，而没有纯微内核的性能损失。</p>
-<p>因此，在OS X中，Mach主要不是客户机和服务器之间的通信中心。相反，它的价值由抽象、可扩展性和灵活性组成。特别地，Mach提供了</p>
-<ul>
-<li>基于对象的api，使用通信通道(例如端口)作为对象引用</li>
-<li>高度并行执行，包括预先调度的线程和对SMP的支持</li>
-<li>一个灵活的调度框架，支持实时使用</li>
-<li>一组完整的IPC原语，包括消息传递、RPC、同步和通知</li>
-<li>支持大型虚拟地址空间、共享内存区域和由持久性存储支持的内存对象</li>
-<li>经过验证的可扩展性和可移植性，例如跨指令集体系结构和分布式环境</li>
-<li>安全与资源管理作为设计的基本原则;所有资源都是虚拟化的</li>
-</ul>
-<h1 id="Mach内核抽象化"><a href="#Mach内核抽象化" class="headerlink" title="Mach内核抽象化"></a>Mach内核抽象化</h1><p>Mach提供了一组被设计成既简单又强大的抽象。这些是主要的内核抽象:</p>
-<ul>
-<li>任务(Tasks)。资源所有权单位;每个任务由一个虚拟地址空间、一个端口名称空间和一个或多个线程组成。(类似于流程。)</li>
-<li>线程(Threads)。任务中CPU执行的单位。</li>
-<li>地址空间(Address space)。与内存管理器一起，Mach实现了稀疏虚拟地址空间和共享内存的概念。</li>
-<li>内存对象(Memory objects)。内存管理的内部单元。内存对象包括命名项和区域;它们表示可能映射到地址空间的持久数据。</li>
-<li>端口(Ports)。安全、简单的通信通道，只能通过发送和接收功能(称为端口权限)访问。</li>
-<li>IPC。消息队列、远程过程调用、通知、信号量和锁集。</li>
-<li>时间(Time)。时钟、定时器和等待。</li>
-</ul>
-<p>在陷阱级别，大多数Mach抽象的接口由<code>表示这些对象的内核端口之间</code>的<code>消息</code>组成。陷阱(trap)级别的<code>接口</code>(例如mach_msg_overwrite_trap)和<code>消息格式</code>在正常使用中由Mach接口生成器(MIG)抽象出来。MIG用于编译基于消息的api的<code>过程接口</code>，基于这些api的<code>描述</code>。（MIG参看下面总结部分）</p>
-<h1 id="任务和线程"><a href="#任务和线程" class="headerlink" title="任务和线程"></a>任务和线程</h1><p>OS X进程和POSIX线程(pthreads)分别在Mach任务和线程之上实现。线程是任务中的控制流点。存在一个任务来为其包含的线程提供资源。这种分割是为了提供并行性和资源共享。</p>
-<p>一个线程</p>
-<ul>
-<li>是任务中的控制流点。</li>
-<li>可以访问包含任务的所有元素。</li>
-<li>与其他线程(可能)并行执行，甚至是同一任务中的线程。</li>
-<li>具有最小的状态信息，以降低开销。</li>
-</ul>
-<p>一个任务</p>
-<ul>
-<li>是系统资源的集合。这些资源(地址空间除外)由端口引用。如果对端口被分配了权限，那么这些资源可以与其他任务共享。</li>
-<li>提供一个大的、可能稀疏的地址空间，由虚拟地址引用。这个空间的一部分可以通过继承或外部内存管理共享。</li>
-<li>包含一些线程。</li>
-</ul>
-<p>请注意，任务没有自己的线程执行指令的生命周期。当说“task Y做X”时，真正的意思是“task Y中包含的线程做X”。</p>
-<ol>
-<li><p>任务是一个相当昂贵的实体。它的存在是资源的集合。任务中的所有线程都共享所有内容。如果没有显式的操作(尽管操作通常很简单)，两个任务就不能共享任何内容，而且一些资源(例如端口接收权限)根本不能在两个任务之间共享。</p>
-</li>
-<li><p>线程是一个相当轻量级的实体。它的创建成本相当低，操作开销也很低。这是真的，因为一个线程只有很少的状态信息(主要是它的寄存器状态)。它所拥有的任务承担着资源管理的重担。在多处理器计算机上，任务中的多个线程可以并行执行。即使并行性不是目标，多线程也有一个优势，即每个线程都可以使用同步编程风格，而不是试图使用单个线程进行异步编程来提供多个服务。</p>
-</li>
-<li><p>线程是基本的计算实体。一个线程只属于一个任务，这个任务定义了它的虚拟地址空间。影响地址空间的结构或引用任何资源以外的地址空间,线程必须执行一个<code>特殊的陷阱指令</code> 引起<code>内核代表线程</code>执行操作或<code>发送消息代理</code>代表线程。通常，这些陷阱操作与包含线程的任务相关的资源。内核可以发出请求来操作这些实体:创建它们、删除它们并影响它们的状态。</p>
-</li>
-<li><p>Mach为线程调度策略提供了一个灵活的框架。OS X的早期版本同时支持分时和固定优先级策略。提高和降低分时线程的优先级，以平衡它与其他分时线程之间的资源消耗。</p>
-</li>
-<li><p>固定优先级的线程执行一定的时间量，然后放在具有相同优先级的线程队列的末尾。将固定优先级线程的量子级别设置为无穷大，可以让线程一直运行，直到阻塞，或者直到被优先级更高的线程抢占为止。<code>高优先级实时线程</code>通常是<code>固定优先级</code>的。</p>
-</li>
-<li><p>OS X还为实时性能提供了时间约束调度。这个调度允许您指定线程必须在一定时间内获得一定的时间量。</p>
-</li>
-</ol>
-<p>Mach调度在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL3NjaGVkdWxlci9zY2hlZHVsZXIuaHRtbCMvL2FwcGxlX3JlZi9kb2MvdWlkL1RQMzAwMDA5MDUtQ0gyMTEtQkVISkRGQ0E=">Mach调度和线程接口<i class="fa fa-external-link-alt"></i></span>中有进一步的描述。</p>
-<h1 id="端口、端口权限、端口集和端口名称空间"><a href="#端口、端口权限、端口集和端口名称空间" class="headerlink" title="端口、端口权限、端口集和端口名称空间"></a>端口、端口权限、端口集和端口名称空间</h1><p>除了任务的虚拟地址空间之外，所有其他Mach资源都是通过称为端口的间接级别访问的。端口是请求服务的客户机和提供服务的服务器之间单向通信通道的端点。如果要向此类服务请求提供应答，则必须使用第二个端口。这类似于UNIX中的(单向)管道。</p>
-<p>在大多数情况下，<code>由端口访问的资源(即由端口命名的资源)被称为对象</code>。大多数由端口命名的对象都有<code>一个接收方</code>和(可能的)<code>多个发送方</code>。也就是说，对于典型对象(如消息队列)，只有一个接收端口，至少有一个发送端口。</p>
-<p>对象提供的服务由接收发送到对象的请求的管理器决定。因此，内核是与内核提供的对象关联的端口的接收方，而与任务提供的对象关联的端口的接收方是提供这些对象的任务。</p>
-<p>对于命名任务提供的对象的端口，可以将该端口的请求接收方更改为不同的任务，例如通过在消息中将该端口传递给该任务。一个任务可能有多个引用其支持的资源的端口。就此而言，任何给定的实体都可以有多个表示它的端口，每个端口表示不同的允许操作集。例如，许多对象都有一个名称端口和一个控制端口(有时称为特权端口)。对控制端口的访问允许操作对象;对name端口的访问简单地为对象命名，这样您就可以获得关于它的信息，或者对它执行其他非特权操作。</p>
-<p>任务具有以特定方式访问端口的权限(发送、接收、发送一次);这些被称为port rights。端口只能通过右值访问。端口通常用于授予客户机对Mach内对象的访问权。有权发送到对象的IPC端口表示有权以规定的方式操作对象。因此，<code>端口所有权是Mach内部的基本安全机制</code>。<code>拥有访问对象的权利</code>就是<code>拥有访问或操作该对象的能力</code>。</p>
-<p>端口权限可以通过IPC在<code>任务之间复制和移动</code>。这样做实际上是将功能传递给某个对象或服务器。</p>
-<p>一种类型的对象引用一个端口是一个端口组。顾名思义,端口设置一组端口的权利时,可以当作一个单独的单元接收消息或事件的任何成员集。港口集允许一个线程等待的消息和事件源,例如在工作循环。</p>
-<p>传统上，在Mach中，由端口表示的通信通道总是消息队列。然而，OS X支持其他类型的通信通道，这些新的IPC对象类型也由端口和端口权限表示。有关消息和其他IPC类型的详细信息，请参阅下面进程间通信(Interprocess Communication, IPC)一节。</p>
-<p>端口和端口权限没有允许直接操作任意端口或权限的系统范围名称。只有当任务在其端口名称空间中具有端口权时，才可以由任务操作端口。端口权由端口名称指定，一个整数索引进入一个32位端口名称空间。每个任务都与它关联一个端口名称空间。</p>
-<p>当另一个任务显式地将它们插入它的名称空间时，当它们在消息中接收到权限时，任务通过创建返回对象权限的对象获得端口权限，并通过Mach调用特定的特殊端口(mach_thread_self、mach_task_self和mach_reply_port)获得端口权限。</p>
-<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>与大多数现代操作系统一样，Mach提供对大型、稀疏的虚拟地址空间的寻址。运行时访问是通过虚拟地址进行的，这些虚拟地址可能与初始访问时物理内存中的位置不对应。Mach负责获取一个请求的虚拟地址，并在物理内存中为它分配一个相应的位置。它通过请求分页来实现这一点。</p>
-<p>当内存对象映射到虚拟地址空间的范围时，将用数据填充虚拟地址空间的范围。地址空间中的所有数据最终都是通过内存对象提供的。Mach在物理内存中建立页面时，向内存对象(分页器)的所有者询问页面的内容，并在回收页面之前将可能修改过的数据返回给分页器。OS X包含两个内置分页器——默认分页器和vnode分页器(default pager and the vnode pager)。</p>
-<p>默认的分页器处理非持久性内存，称为匿名内存。匿名内存是零初始化的，并且只在任务执行期间存在。vnode分页器将文件映射到内存对象。Mach向内存对象导出一个接口，允许用户模式任务提供内存对象的内容。这个接口称为外部内存管理接口(EMMI)。</p>
-<p>内存管理子系统导出称为命名项或命名内存项的虚拟内存句柄。与大多数内核资源一样，这些资源由端口表示。拥有一个命名的内存条目句柄，允许所有者映射底层虚拟内存对象，或者将映射底层对象的权利传递给其他人。在两个不同的任务中映射命名项会在两个任务之间生成共享内存窗口，从而为建立共享内存提供了一种灵活的方法。</p>
-<p>从OS X v10.1开始，EMMI系统得到了增强，以支持“无端口”EMMI。在传统的EMMI中，为每个内存区域创建两个Mach端口，同样也为每个缓存的vnode创建两个端口。在最初的实现中，无端口的EMMI用直接内存引用(基本上是指针)替换了这一点。在将来的版本中，端口将用于与内核外部的分页器通信，同时使用直接引用与驻留在内核空间中的分页器通信。这些更改的最终结果是，早期版本的无端口EMMI不支持运行在内核空间之外的分页器。这种支持有望在未来的版本中恢复。</p>
-<p>虚拟内存空间的地址范围也可以通过直接分配(使用vm_allocation)来填充。底层虚拟内存对象是匿名的，并由默认分页程序支持。地址空间的共享范围也可以通过继承设置。创建新任务时，将从父任务中克隆它们。这种克隆也属于底层内存地址空间。根据与映射相关的属性，对象的映射部分可以作为副本继承，也可以作为共享，或者根本不可以。Mach采用一种称为“写中复制”的延迟复制形式，以优化任务创建时继承副本的性能。</p>
-<p>不是直接复制范围，而是通过受保护的共享来实现写时复制优化。这两个任务共享要复制的内存，但具有只读访问。当任何一个任务试图修改范围的一部分时，该部分将被复制。这种对内存副本的延迟计算是一种重要的优化，它允许在几个方面进行简化，尤其是消息传递api。</p>
-<p>Mach还提供了另一种形式的共享，通过导出指定的区域。命名区域是命名条目的一种形式，但是它不是由虚拟内存对象支持的，而是由虚拟映射片段支持的。这个片段可能包含到许多虚拟内存对象的映射。它可以映射到其他虚拟映射，提供了一种方法，不仅可以继承一组虚拟内存对象，还可以继承它们现有的映射关系。该特性在任务设置中提供了重要的优化，例如在共享用于共享库的地址空间的复杂区域时。</p>
-<h1 id="进程间通信-IPC"><a href="#进程间通信-IPC" class="headerlink" title="进程间通信(IPC)"></a>进程间通信(IPC)</h1><p>任务之间的通信是Mach哲学的一个重要元素。Mach支持客户机/服务器系统结构，其中任务(客户机)通过通过通信通道发送的消息请求其他任务(服务器)来访问服务。</p>
-<p>Mach中这些通信通道的端点称为端口，而端口权限表示使用该通道的权限。Mach提供的IPC形式包括</p>
-<ul>
-<li>消息队列</li>
-<li>信号量</li>
-<li>通知</li>
-<li>锁集</li>
-<li>远程过程调用(rpc)</li>
-</ul>
-<p>由端口表示的IPC对象的类型决定了该端口上允许的操作，以及数据传输的方式(和是否)。</p>
-<blockquote>
-<p>重要提示:OS X中的IPC设施处于过渡状态。在系统的早期版本中，并不是所有这些IPC类型都可以实现。</p>
-</blockquote>
-<p>对于端口的原始操作，有两种基本不同的Mach api, mach_ipc家族和mach_msg家族。在合理的范围内，这两个系列都可以用于任何IPC对象;然而，在新代码中，mach_ipc调用是首选的。mach_ipc调用在适当的地方维护状态信息，以便支持事务的概念。mach_msg调用支持遗留代码，但不推荐使用;他们是无状态的。</p>
-<h2 id="IPC事务和事件调度"><a href="#IPC事务和事件调度" class="headerlink" title="IPC事务和事件调度"></a>IPC事务和事件调度</h2><p>当线程调用mach_ipc_dispatch,它反复处理事件设置的注册端口。这些事件可以从RPC参数块对象(如客户调用的结果),一个锁对象被(由于其他线程释放锁),通知或信号量被发布或消息来自一个传统的消息队列。</p>
-<p>这些事件通过mach_msg_dispatch的调用来处理。有些事件暗示调用生命周期内存在事务。在锁的情况下，状态是锁的所有权。当callout返回时，锁被释放。在远程过程调用的情况下，状态是客户机的标识、参数块和应答端口。当callout返回时，将发送应答。</p>
-<p>当callout返回时，事务(如果有的话)就完成了，线程等待下一个事件。mach_ipc_dispatch工具旨在支持工作循环。</p>
-<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><p>最初，Mach中进程间通信的唯一样式是消息队列。只有一个任务可以持有表示消息队列的端口的接收权。这个任务允许从端口队列接收(读取)消息。多个任务可以拥有向队列发送(写)消息的端口的权限。</p>
-<p>任务通过构建包含一组数据元素的数据结构与另一个任务通信，然后在其拥有发送权限的端口上执行消息发送操作。稍后，具有该端口接收权限的任务将执行消息接收操作。</p>
-<p>一条消息可包括以下部分或全部:</p>
-<ul>
-<li>纯数据</li>
-<li>存储范围的副本</li>
-<li>端口的权利</li>
-<li>内核隐式属性，如发送方的安全令牌</li>
-</ul>
-<p>消息传输是一个异步操作。消息逻辑上被复制到接收任务中，可能使用写时复制优化。接收任务中的多个线程可以尝试从给定端口接收消息，但是只有一个线程可以接收任何给定的消息。</p>
-<h2 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h2><p>信号量IPC对象支持等待、post和post所有操作。这些是计数信号量，如果在该信号量的等待队列中当前没有线程在等待，则保存(计数)post。post all操作将唤醒所有当前等待的线程。</p>
-<h2 id="通知"><a href="#通知" class="headerlink" title="通知"></a>通知</h2><p>与信号量一样，通知对象也支持post和wait操作，但添加了一个state字段。状态是一个固定大小、固定格式的字段，在创建通知对象时定义。每个post更新状态字段;每个post都覆盖一个状态。</p>
-<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><p>锁是提供对临界区互斥访问的对象。锁的主要接口是面向事务的(参见IPC事务和事件调度)。在事务期间，线程持有锁。当它从事务返回时，锁被释放。</p>
-<h2 id="远程过程调用-RPC-对象"><a href="#远程过程调用-RPC-对象" class="headerlink" title="远程过程调用(RPC)对象"></a>远程过程调用(RPC)对象</h2><p>顾名思义，RPC对象旨在促进和优化远程过程调用。RPC对象的主要接口是面向事务的(参见IPC事务和事件调度)</p>
-<p>当创建RPC对象时，定义一组参数块格式。当客户机发出RPC(对象上的发送)时，它会导致以预定义格式之一的消息创建并在对象上排队，然后最终传递给服务器(接收方)。当服务器从事务返回时，将回复返回给发送方。Mach试图通过使用客户机的资源执行服务器来优化事务;这称为<code>线程迁移</code>。</p>
-<h1 id="时间管理"><a href="#时间管理" class="headerlink" title="时间管理"></a>时间管理</h1><p>Mach中时间的传统抽象是时钟，它提供了一组基于mach_timspec_t的异步报警服务。有一个或多个时钟对象，每个对象定义一个以纳秒为单位的单调递增的时间值。实时时钟是内置的，是最重要的，但是系统中可能还有其他时钟用于其他时间概念。时钟支持获取当前时间、给定时间段的睡眠、设置闹钟(在给定时间发送的通知)等操作。</p>
-<p>mach_timespec_t API在OS x中是不推荐的。更新的、首选的API基于计时器对象，而计时器对象又使用AbsoluteTime作为基本数据类型。AbsoluteTime是一种依赖于机器的类型，通常基于平台本机时基。提供了一些例程来将绝对时间值转换为其他数据类型，或者从其他数据类型转换为绝对时间值，比如纳秒。计时器对象支持异步、无漂移通知、取消和提前警报。它们比时钟效率更高，分辨率更高。</p>
-<h1 id="我们总结一下"><a href="#我们总结一下" class="headerlink" title="我们总结一下"></a>我们总结一下</h1><h2 id="Mach-、端口、Mach消息部分"><a href="#Mach-、端口、Mach消息部分" class="headerlink" title="Mach 、端口、Mach消息部分"></a>Mach 、端口、Mach消息部分</h2><ul>
-<li>在Mach中所有东西（Task、线程、虚拟内存等）都是对象</li>
-<li>对象与对象之间通信只能(任务虚拟地址空间)通过<code>端口</code>收发(<code>一个接收方，可以多个发送方</code>)消息。</li>
-</ul>
-<p>Mach做以下几件事儿：</p>
-<ul>
-<li>“控制点”或执行单元的管理。</li>
-<li>线程或线程组（Task）的资源分配。</li>
-<li>虚拟内存的分配和管理。</li>
-<li>底层物理资源–即CPU、内存和任何物理设备的分配。</li>
-</ul>
-<h3 id="Mach消息结构体"><a href="#Mach消息结构体" class="headerlink" title="Mach消息结构体"></a>Mach消息结构体</h3><ul>
-<li>最基本的包含两部分：消息头、消息体。可选的消息尾<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span>	<span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="type">mach_msg_bits_t</span>	msgh_bits;<span class="comment">//标志位</span></span><br><span class="line">  <span class="type">mach_msg_size_t</span>	msgh_size;<span class="comment">//大小</span></span><br><span class="line">  <span class="type">mach_port_t</span>		msgh_remote_port;<span class="comment">//目标端口（发送：接受方，接收：发送方）</span></span><br><span class="line">  <span class="type">mach_port_t</span>		msgh_local_port; <span class="comment">//源端口（发送：发送方，接收：接收方）</span></span><br><span class="line">  <span class="type">mach_port_name_t</span>	msgh_voucher_port;</span><br><span class="line">  <span class="type">mach_msg_id_t</span>		msgh_id;</span><br><span class="line">&#125; <span class="type">mach_msg_header_t</span>; <span class="comment">//消息头</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">        <span class="type">mach_msg_size_t</span> msgh_descriptor_count;</span><br><span class="line">&#125; <span class="type">mach_msg_body_t</span>;<span class="comment">//消息体</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">        <span class="type">mach_msg_header_t</span>       header;</span><br><span class="line">        <span class="type">mach_msg_body_t</span>         body;</span><br><span class="line">&#125; <span class="type">mach_msg_base_t</span>; <span class="comment">//基本消息</span></span><br><span class="line"><span class="keyword">typedef</span>	<span class="type">unsigned</span> <span class="type">int</span> <span class="type">mach_msg_trailer_type_t</span>;<span class="comment">//消息尾的类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="type">mach_msg_trailer_type_t</span>	msgh_trailer_type;</span><br><span class="line">  <span class="type">mach_msg_trailer_size_t</span>	msgh_trailer_size;</span><br><span class="line">&#125; <span class="type">mach_msg_trailer_t</span>; <span class="comment">//消息尾</span></span><br></pre></td></tr></table></figure></li>
-<li>复杂一点的，将消息头的标志位mach_msg_bits_t设置为MACH_MSGH_BITS_COMPLEX，就表示复杂消息。此时消息体里面指定了描述符的个数，接下来就是一个接着一个的描述符：<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="type">uint64_t</span>			address;<span class="comment">//数据的大小</span></span><br><span class="line">  <span class="type">boolean_t</span>     		deallocate: <span class="number">8</span>;<span class="comment">//发送之后是否接触分配</span></span><br><span class="line">  <span class="type">mach_msg_copy_options_t</span>       copy: <span class="number">8</span>;<span class="comment">//复制指令</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span>     		pad1: <span class="number">8</span>;</span><br><span class="line">  <span class="type">mach_msg_descriptor_type_t</span>    type: <span class="number">8</span>;</span><br><span class="line">  <span class="type">mach_msg_size_t</span>       	size;<span class="comment">//数据的大小</span></span><br><span class="line">&#125; <span class="type">mach_msg_ool_descriptor64_t</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="消息收发"><a href="#消息收发" class="headerlink" title="消息收发"></a>消息收发</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">mach_msg_return_t</span>	<span class="title function_">mach_msg</span><span class="params">(</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_header_t</span> *msg,</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_option_t</span> option,</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_size_t</span> send_size,</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_size_t</span> rcv_size,</span></span><br><span class="line"><span class="params">					<span class="type">mach_port_name_t</span> rcv_name,</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_timeout_t</span> timeout,</span></span><br><span class="line"><span class="params">					<span class="type">mach_port_name_t</span> notify)</span>;</span><br></pre></td></tr></table></figure>
-
-<p>步骤如下：<br>发送消息：</p>
-<ul>
-<li>调用current_space()获取当前的IPC空间。</li>
-<li>调用current_map()获取虚拟空间</li>
-<li>消息大小正确性检查</li>
-<li>计算要分配的消息大小</li>
-<li>通过ipc_kmsg_alloc分配消息</li>
-<li>复制消息</li>
-<li>复制消息关联的端口权限，然后通过ipc_kmsg_copyin将所有的out-of-line数据的内存复制到当前虚拟空间。(如果不复制权限可能导致无法访问数据)</li>
-<li>调用ipc_kmsg_send()发送消息<ul>
-<li>获得msgh_remote_port引用并锁定端口</li>
-<li>调用ipc_mqueue_send()，将消息直接复制到端口的ipc_messages队列中并唤醒等待的线程。</li>
-</ul>
-</li>
-</ul>
-<p>接收消息</p>
-<ul>
-<li>调用current_space()获取当前的IPC空间。</li>
-<li>调用current_map()获取虚拟空间</li>
-<li>调用ipc_mqueue_copyin()获取IPC队列。</li>
-<li>调用ipc_mqueue_receive()从队列中取出消息</li>
-<li>执行</li>
-</ul>
-<h3 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h3><p>端口实际上就是一个整型的标识符，是如下结构（在osfmk/ipc/ipc_port.h中定义）的一个句柄：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> &#123;</span></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Initial sub-structure in common with ipc_pset</span></span><br><span class="line"><span class="comment">	 * First element is an ipc_object second is a</span></span><br><span class="line"><span class="comment">	 * message queue</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_object</span> <span class="title">ip_object</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_mqueue</span> <span class="title">ip_messages</span>;</span></span><br><span class="line">	<span class="type">natural_t</span> ip_sprequests:<span class="number">1</span>,	<span class="comment">/* send-possible requests outstanding */</span></span><br><span class="line">		  ip_spimportant:<span class="number">1</span>,	<span class="comment">/* ... at least one is importance donating */</span></span><br><span class="line">		  ip_impdonation:<span class="number">1</span>,	<span class="comment">/* port supports importance donation */</span></span><br><span class="line">		  ip_tempowner:<span class="number">1</span>,	<span class="comment">/* dont give donations to current receiver */</span></span><br><span class="line">		  ip_guarded:<span class="number">1</span>,         <span class="comment">/* port guarded (use context value as guard) */</span></span><br><span class="line">		  ip_strict_guard:<span class="number">1</span>,	<span class="comment">/* Strict guarding; Prevents user manipulation of context values directly */</span></span><br><span class="line">		  ip_reserved:<span class="number">2</span>,</span><br><span class="line">		  ip_impcount:<span class="number">24</span>;	<span class="comment">/* number of importance donations in nested queue */</span></span><br><span class="line">	<span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">ipc_space</span> *<span class="title">receiver</span>;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">destination</span>;</span></span><br><span class="line">		<span class="type">ipc_port_timestamp_t</span> timestamp;</span><br><span class="line">	&#125; data;</span><br><span class="line">	<span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">		<span class="type">ipc_kobject_t</span> kobject;</span><br><span class="line">		<span class="type">ipc_importance_task_t</span> imp_task;</span><br><span class="line">		<span class="type">uintptr_t</span> alias;</span><br><span class="line">	&#125; kdata;</span><br><span class="line">		</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">ip_nsrequest</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">ip_pdrequest</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port_request</span> *<span class="title">ip_requests</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_kmsg</span> *<span class="title">ip_premsg</span>;</span></span><br><span class="line">	<span class="type">mach_vm_address_t</span> ip_context;</span><br><span class="line">	<span class="type">mach_port_mscount_t</span> ip_mscount;</span><br><span class="line">	<span class="type">mach_port_rights_t</span> ip_srights;</span><br><span class="line">	<span class="type">mach_port_rights_t</span> ip_sorights;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span>	MACH_ASSERT</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span>	IP_NSPARES		4</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span>	IP_CALLSTACK_MAX	16</span></span><br><span class="line"><span class="comment">/*	queue_chain_t	ip_port_links;*/</span><span class="comment">/* all allocated ports */</span></span><br><span class="line">	<span class="type">thread_t</span>	ip_thread;	<span class="comment">/* who made me?  thread context */</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span>	ip_timetrack;	<span class="comment">/* give an idea of &quot;when&quot; created */</span></span><br><span class="line">	<span class="type">uintptr_t</span>	ip_callstack[IP_CALLSTACK_MAX]; <span class="comment">/* stack trace */</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span>	ip_spares[IP_NSPARES]; <span class="comment">/* for debugging */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span>	<span class="comment">/* MACH_ASSERT */</span></span></span><br><span class="line">&#125; __attribute__((__packed__));</span><br></pre></td></tr></table></figure>
-
-<h3 id="Mach接口生成器-MIG"><a href="#Mach接口生成器-MIG" class="headerlink" title="Mach接口生成器 MIG"></a>Mach接口生成器 MIG</h3><p>Mach消息传递模型是远程调用（Remote Procedure Call，RPC）的一种现实(类似Thrift)。在/usr/include/mach目录下可以看到一些.defs文件，这些文件包含了Mach子系统（一组操作）的定义。操作类型如下：</p>
-<img src="/images/iOS/mig_opt.png" class="">
-
-<h2 id="IPC"><a href="#IPC" class="headerlink" title="IPC"></a>IPC</h2><ul>
-<li>Mach的每个Task都包含一个指针，这个指针指向一个IPC命名空间，这个IPC命名空间了包含了Task的端口，当然Task还可以获取系统范围的端口，例如：主机端口、特权端口（可以重启机器等）等。</li>
-<li>在用户态下，消息传递都是通过mach_msg()函数实现的，这个函数会触发一个mach陷阱mach_msg_trap()，接下来mach_msg_trap()又会调用mach_msg_overwrite_trap()，它会通过MACH_SEND_MSG和MACH_RCV_MSG来判断是发送操作，还是接收操作。</li>
-<li>期中内核态中还可以通过mach_msg_receive()和mach_msg_send()来收发数据。</li>
-</ul>
-<h2 id="主机、时钟、处理器、处理器集"><a href="#主机、时钟、处理器、处理器集" class="headerlink" title="主机、时钟、处理器、处理器集"></a>主机、时钟、处理器、处理器集</h2><h3 id="主机对象-Host"><a href="#主机对象-Host" class="headerlink" title="主机对象 Host"></a>主机对象 Host</h3><p>主机就是一组“特殊”端口的集合，以及一组异常处理程序的集合，同时定义了一个锁用于保护异常处理的并发访问。结构如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span>	<span class="title">host</span> &#123;</span></span><br><span class="line">	decl_lck_mtx_data(,lock)		<span class="comment">/* lock to protect exceptions */</span></span><br><span class="line">	<span class="type">ipc_port_t</span> special[HOST_MAX_SPECIAL_PORT + <span class="number">1</span>];</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">exception_action</span> <span class="title">exc_actions</span>[<span class="title">EXC_TYPES_COUNT</span>];</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h3 id="时钟对象（Clock）"><a href="#时钟对象（Clock）" class="headerlink" title="时钟对象（Clock）"></a>时钟对象（Clock）</h3><p>Mach内核提供了一个简单的“时钟”对象（在osfmk/kern/clock.h中定义）的抽象，这个对象用于计时和闹铃，期中最重要的内部API是clock_deadline_for_periodic_event（），调度器通过它设置了一个重复发生的通知–从而保证了多任务引擎的运转。</p>
-<h3 id="处理器对象（Processer）"><a href="#处理器对象（Processer）" class="headerlink" title="处理器对象（Processer）"></a>处理器对象（Processer）</h3><p>在多核架构中每一个核心都可以看做是一个CPU，处理器被分配给处理器集，处理器是CPU的简单抽象，被Mach用于一些基本的操作，比如：启动和关闭一个CPU，向CPU分发要执行的线程。结构的定义（在osfmk/kern/processor.h）如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">processor</span> &#123;</span></span><br><span class="line">	<span class="type">queue_chain_t</span>		processor_queue;<span class="comment">/* idle/active queue link,</span></span><br><span class="line"><span class="comment">										 * MUST remain the first element */</span></span><br><span class="line">	<span class="type">int</span>					state;			<span class="comment">/* See below */</span></span><br><span class="line">	<span class="type">boolean_t</span>		is_SMT;</span><br><span class="line">	<span class="type">boolean_t</span>		is_recommended;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">thread</span></span></span><br><span class="line"><span class="class">						*<span class="title">active_thread</span>,	/* <span class="title">thread</span> <span class="title">running</span> <span class="title">on</span> <span class="title">processor</span> */</span></span><br><span class="line"><span class="class">						*<span class="title">next_thread</span>,	/* <span class="title">next</span> <span class="title">thread</span> <span class="title">when</span> <span class="title">dispatched</span> */</span></span><br><span class="line"><span class="class">						*<span class="title">idle_thread</span>;</span>	<span class="comment">/* this processor&#x27;s idle thread. */</span></span><br><span class="line">	<span class="type">processor_set_t</span>		processor_set;	<span class="comment">/* assigned set */</span></span><br><span class="line">	<span class="type">int</span>					current_pri;	<span class="comment">/* priority of current thread */</span></span><br><span class="line">	<span class="type">sched_mode_t</span>		current_thmode;	<span class="comment">/* sched mode of current thread */</span></span><br><span class="line">	<span class="type">sfi_class_id_t</span>		current_sfi_class;	<span class="comment">/* SFI class of current thread */</span></span><br><span class="line">	<span class="type">int</span>					cpu_id;			<span class="comment">/* platform numeric id */</span></span><br><span class="line">	<span class="type">timer_call_data_t</span>	quantum_timer;	<span class="comment">/* timer for quantum expiration */</span></span><br><span class="line">	<span class="type">uint64_t</span>			quantum_end;	<span class="comment">/* time when current quantum ends */</span></span><br><span class="line">	<span class="type">uint64_t</span>			last_dispatch;	<span class="comment">/* time of last dispatch */</span></span><br><span class="line">	<span class="type">uint64_t</span>			deadline;		<span class="comment">/* current deadline */</span></span><br><span class="line">	<span class="type">boolean_t</span>               first_timeslice;                <span class="comment">/* has the quantum expired since context switch */</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_TRADITIONAL) || defined(CONFIG_SCHED_MULTIQ)</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">run_queue</span>	<span class="title">runq</span>;</span>			<span class="comment">/* runq for this processor */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_TRADITIONAL)</span></span><br><span class="line">	<span class="type">int</span>					runq_bound_count; <span class="comment">/* # of threads bound to this processor */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_GRRR)</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">grrr_run_queue</span>	<span class="title">grrr_runq</span>;</span>      <span class="comment">/* Group Ratio Round-Robin runq */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="type">processor_t</span>			processor_primary;	<span class="comment">/* pointer to primary processor for</span></span><br><span class="line"><span class="comment">											 * secondary SMT processors, or a pointer</span></span><br><span class="line"><span class="comment">											 * to ourselves for primaries or non-SMT */</span></span><br><span class="line">	<span class="type">processor_t</span>		processor_secondary;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *	<span class="title">processor_self</span>;</span>	<span class="comment">/* port for operations */</span></span><br><span class="line">	<span class="type">processor_t</span>			processor_list;	<span class="comment">/* all existing processors */</span></span><br><span class="line">	<span class="type">processor_data_t</span>	processor_data;	<span class="comment">/* per-processor data */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>其中最重要的是runq，这是分发到这个处理器的线程队列。</p>
-<h3 id="处理器集"><a href="#处理器集" class="headerlink" title="处理器集"></a>处理器集</h3><p>处理器集就是一个或多个processor_t的分组，也被称为pset。pset通常维护三个队列：</p>
-<p>active_queue：用于保存当前正在执行线程的CPU。<br>idle_queue：用于保存当前空闲的CPU（例如：正在执行idle_thread）。<br>pset_runq：保存了在这个集合中的所有CPU上执行的线程。<br>processor_set的定义如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">processor_set</span> &#123;</span></span><br><span class="line">	<span class="type">queue_head_t</span>		active_queue;	<span class="comment">/* active processors */</span></span><br><span class="line">	<span class="type">queue_head_t</span>		idle_queue;		<span class="comment">/* idle processors */</span></span><br><span class="line">	<span class="type">queue_head_t</span>		idle_secondary_queue;		<span class="comment">/* idle secondary processors */</span></span><br><span class="line">	<span class="type">int</span>					online_processor_count;</span><br><span class="line">	<span class="type">int</span>					cpu_set_low, cpu_set_hi;</span><br><span class="line">	<span class="type">int</span>					cpu_set_count;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> __SMP__</span></span><br><span class="line">	decl_simple_lock_data(,sched_lock)	<span class="comment">/* lock for above */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_TRADITIONAL) || defined(CONFIG_SCHED_MULTIQ)</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">run_queue</span>	<span class="title">pset_runq</span>;</span>      <span class="comment">/* runq for this processor set */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_TRADITIONAL)</span></span><br><span class="line">	<span class="type">int</span>					pset_runq_bound_count;</span><br><span class="line">		<span class="comment">/* # of threads in runq bound to any processor in pset */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="comment">/* CPUs that have been sent an unacknowledged remote AST for scheduling purposes */</span></span><br><span class="line">	<span class="type">uint64_t</span>			pending_AST_cpu_mask;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_DEFERRED_AST)</span></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * A seperate mask, for ASTs that we may be able to cancel.  This is dependent on</span></span><br><span class="line"><span class="comment">	 * some level of support for requesting an AST on a processor, and then quashing</span></span><br><span class="line"><span class="comment">	 * that request later.</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * The purpose of this field (and the associated codepaths) is to infer when we</span></span><br><span class="line"><span class="comment">	 * no longer need a processor that is DISPATCHING to come up, and to prevent it</span></span><br><span class="line"><span class="comment">	 * from coming out of IDLE if possible.  This should serve to decrease the number</span></span><br><span class="line"><span class="comment">	 * of spurious ASTs in the system, and let processors spend longer periods in</span></span><br><span class="line"><span class="comment">	 * IDLE.</span></span><br><span class="line"><span class="comment">	 *\/</span></span><br><span class="line"><span class="comment">	uint64_t			pending_deferred_AST_cpu_mask;</span></span><br><span class="line"><span class="comment">#endif</span></span><br><span class="line"><span class="comment">	struct ipc_port	*	pset_self;		/* port for operations */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *	<span class="title">pset_name_self</span>;</span>	<span class="comment">/* port for information */</span></span><br><span class="line">	<span class="type">processor_set_t</span>		pset_list;		<span class="comment">/* chain of associated psets */</span></span><br><span class="line">	<span class="type">pset_node_t</span>			node;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>iOS</category>
-        <category>Mach内核</category>
-      </categories>
-      <tags>
-        <tag>操作系统</tag>
-        <tag>系统架构</tag>
-        <tag>Mach内核</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>苹果内核架构</title>
-    <url>/iOS/kernelarchitecture/overview.html</url>
-    <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL0FyY2hpdGVjdHVyZS9BcmNoaXRlY3R1cmUuaHRtbA==">官方文档地址<i class="fa fa-external-link-alt"></i></span> </p>
-<h1 id="OS-X简介"><a href="#OS-X简介" class="headerlink" title="OS X简介"></a>OS X简介</h1><p>OS X为Macintosh用户和开发人员社区提供了许多好处。这些优点包括改进的可靠性和性能、增强的网络特性、基于对象的系统编程接口以及对行业标准的更多支持。</p>
-<p>在创建OS X的过程中，苹果彻底改造了Mac OS核心操作系统。形成OS X的基础是内核。下图说明了OS X体系结构。</p>
-<img src="/images/iOS/osxlayers.png" class="" title="osxlayers">
-
-<p>内核为OS x提供了许多增强功能，包括抢占、内存保护、增强的性能、改进的网络设施、对Macintosh(扩展版和标准版)和非Macintosh (UFS、ISO 9660等等)文件系统的支持、面向对象的api等等。其中两个特性，抢占和内存保护，导致了更健壮的环境。</p>
-<p>在Mac OS 9中，应用程序协作共享处理器时间。类似地，所有应用程序之间共享计算机的内存。Mac OS 9是一个协作的多任务环境。如果一个应用程序不合作，那么所有进程的响应性都会受到影响。另一方面，实时应用程序(如多媒体)需要保证具有可预测的、时间关键的行为。</p>
-<p>相比之下，OS X是一个先发制人的多任务环境。在OS X中，内核提供了强制合作，调度进程来共享时间(抢占)。这支持需要实时行为的应用程序。</p>
-<p>在OS X中，进程通常不共享内存。相反，内核为每个进程分配自己的地址空间，控制对这些地址空间的访问。此控件确保任何应用程序都不能无意中访问或修改另一个应用程序的内存(保护)。规模不是问题;由于OS X包含了虚拟内存系统，每个应用程序都可以访问自己的4 GB地址空间。</p>
-<p>从整体上看，所有应用程序都在用户空间中运行，但这并不意味着它们共享内存。用户空间只是所有用户级应用程序的组合地址空间的术语。内核本身有它自己的地址空间，称为内核空间。在OS X中，没有应用程序可以直接修改系统软件(内核)的内存。</p>
-<p>虽然默认情况下用户进程不像Mac OS 9那样共享内存，但应用程序之间的通信(甚至内存共享)仍然是可能的。例如，内核提供了一组丰富的原语，允许进程之间共享一些信息。这些基本类型包括共享库、框架和POSIX共享内存。<code>Mach消息传递提供了另一种方法，将内存从一个进程传递到另一个进程。</code>然而，与Mac OS 9不同的是，如果没有程序员的显式操作，内存共享就无法实现。</p>
-<h1 id="达尔文操作系统"><a href="#达尔文操作系统" class="headerlink" title="达尔文操作系统"></a>达尔文操作系统</h1><p><code>OS X内核是一个开源项目</code>。内核以及OS X的其他核心部分<code>统称为Darwin</code>。Darwin是一个完整的操作系统，基于与OS x相同的许多技术。但是，Darwin不包括Apple专有的图形或应用程序层，比如Quartz、QuickTime、Cocoa、Carbon或OpenGL。</p>
-<p>下图显示了Darwin和OS X之间的关系，它们都构建在相同的内核之上，但是OS X添加了核心服务、应用程序服务和QuickTime，以及经典的Carbon、Cocoa和Java (JDK)应用程序环境。Darwin和OS X都包含BSD命令行应用程序环境;然而，在OS X中，不需要使用环境，因此它对用户是隐藏的，除非用户选择访问它。</p>
-<img src="/images/iOS/darwinlayers.png" class="" title="darwinlayers">
-
-<p>Darwin技术基于BSD、Mach 3.0和苹果技术。最重要的是，<code>Darwin技术是开源技术</code>，这意味着开发人员可以完全访问源代码。实际上，OS X第三方开发人员可以成为Darwin核心系统软件开发团队的一部分。开发人员还可以看到苹果在核心操作系统中是如何工作的，并在自己的产品中采用(或调整)代码。有关详细信息，请参阅Apple公共源许可证(APSL)。</p>
-<p>因为相同的软件构成了OS X和Darwin的核心，所以开发人员可以创建在OS X和Darwin上运行的底层软件，而<code>几乎不需要进行任何更改</code>。唯一的区别可能是软件与应用程序环境的交互方式。</p>
-<p>达尔文是基于许多来源的成熟技术。这项技术的很大一部分来自FreeBSD，这是4.4BSD的一个版本，提供了先进的网络、性能、安全和兼容性特性。该系统软件的其他部分，如Mach，基于苹果MkLinux项目、OS X服务器以及NeXT收购的技术。大部分代码与平台无关。所有核心操作系统代码都以源代码的形式提供。</p>
-<p>选择核心技术有几个原因。<code>Mach提供了一组干净的抽象，用于处理内存管理、进程间(和处理器间)通信(IPC)和其他低级操作系统功能。</code>在当今快速变化的硬件环境中，这在操作系统和底层硬件之间提供了一个有用的隔离层。</p>
-<p>BSD是一个精心设计的成熟操作系统，具有许多功能。事实上，当今大多数商业UNIX和类UNIX操作系统都包含大量BSD代码。BSD还提供了一组行业标准api。</p>
-<p>新技术，如I/O工具包和网络内核扩展(NKEs)，都是由苹果公司设计和设计的，以利用先进的功能，如面向对象编程模型提供的功能。OS X将这些新技术与经过时间检验的行业标准结合起来，创建了一个稳定、可靠、灵活和可扩展的操作系统。</p>
-<h1 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h1><p>Darwin和OS X的基础层由几个体系结构组件组成，如下图所示。这些组件合在一起构成内核环境。</p>
-<img src="/images/iOS/osxarchitecture.png" class="" title="osxarchitecture">
-<blockquote>
-<p>重要提示:注意OS X使用术语内核的方式与您可能期望的有所不同。</p>
-</blockquote>
-<p>在传统的操作系统术语中，内核是一个很小的软件核心，它只提供实现附加操作系统服务所需的最小设施。——摘自《4.4 BSD操作系统的设计与实现》，McKusick, Bostic, Karels和Quarterman, 1996。</p>
-<p>类似地，在传统的基于Mach的操作系统中，内核指的是Mach微内核，忽略了额外的底层代码，没有这些底层代码，Mach几乎做不了什么。</p>
-<p>然而，在OS X中，内核环境包含的内容比Mach内核本身多得多。<code>OS X内核环境包括Mach内核、BSD、I/O工具包、文件系统和网络组件。这些通常统称为内核</code>。下面几节将简要描述这些组件。有关进一步的详细信息，请参阅具体的组成部分章节或参考书目中列出的参考资料。</p>
-<p>因为OS X包含三个基本组件(<code>Mach、BSD和I/O工具包</code>)，所以对于某些关键操作，常常有多达三个api。一般来说，所选择的API应该与正在使用它的内核部分匹配，而内核部分又由您的代码试图执行的操作决定。本章的其余部分将介绍Mach、BSD和I/O工具包，并概述这些组件提供的功能。</p>
-<h2 id="Mach"><a href="#Mach" class="headerlink" title="Mach"></a>Mach</h2><p>Mach管理CPU使用情况和内存等处理器资源，处理调度，提供内存保护，并为其他操作系统层提供以消息为中心的基础设施。</p>
-<p>参看我的另外一篇<a href="./iOS/kernelarchitecture/mach.html">Mach概览一章</a></p>
-<p>Mach组件提供</p>
-<ul>
-<li>无类型进程间通信(IPC)</li>
-<li>远程过程调用(RPC)</li>
-<li>对称多处理(SMP)的调度程序支持</li>
-<li>对实时服务的支持</li>
-<li>虚拟内存支持</li>
-<li>支持寻呼机</li>
-<li>模块化的体系结构</li>
-</ul>
-<p>有关Mach的一般信息可以在<a href="./iOS/kernelarchitecture/mach.html">Mach概览一章</a>中找到。有关调度的信息可以在<code>Mach调度和线程接口</code>一章中找到。有关VM系统的信息可以在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL3ZtL3ZtLmh0bWwjLy9hcHBsZV9yZWYvZG9jL3VpZC9UUDMwMDAwOTA1LUNIMjEwLUJFSEpERkNB">内存和虚拟内存<i class="fa fa-external-link-alt"></i></span>中找到。</p>
-<h2 id="BSD"><a href="#BSD" class="headerlink" title="BSD"></a>BSD</h2><p>在Mach层之上，BSD层提供“OS personality”api和服务。BSD层基于BSD内核，主要是FreeBSD。BSD组件提供</p>
-<ul>
-<li>文件系统</li>
-<li>联网(硬件设备级除外)</li>
-<li>UNIX的安全模型</li>
-<li>系统调用的支持</li>
-<li>BSD过程模型，包括过程id和信号</li>
-<li>FreeBSD内核api</li>
-<li>许多POSIX api</li>
-<li>对pthreads (POSIX线程)的内核支持</li>
-</ul>
-<p>BSD组件在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL0JTRC9CU0QuaHRtbCMvL2FwcGxlX3JlZi9kb2MvdWlkL1RQMzAwMDA5MDUtQ0gyMTQtVFBYUkVGMTAx">BSD概述一章<i class="fa fa-external-link-alt"></i></span>中有更详细的描述。</p>
-<h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><p>OS X网络利用BSD的高级网络功能来提供对现代特性的支持，比如网络地址转换(NAT)和防火墙。网络组件提供</p>
-<ul>
-<li>4.4BSD TCP/IP栈和套接字api</li>
-<li>同时支持IP和DDP (AppleTalk传输)</li>
-<li>multihoming</li>
-<li>路由</li>
-<li>多播支持</li>
-<li>服务器调优</li>
-<li>信息包过滤</li>
-<li>Mac OS经典支持(通过过滤器)</li>
-</ul>
-<p>有关网络的更多信息可以在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL05ldHdvcmtpbmcvTmV0d29ya2luZy5odG1sIy8vYXBwbGVfcmVmL2RvYy91aWQvVFAzMDAwMDkwNS1DSDIxNi1CQUJIQ0hGQw==">网络体系结构一章<i class="fa fa-external-link-alt"></i></span>中找到。</p>
-<h2 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h2><p>OS X支持多种类型的文件系统，包括HFS、HFS+、UFS、NFS、ISO 9660等。默认的文件系统类型是HFS+;OS X引导(和“根”)来自HFS+、UFS、ISO、NFS和UDF。OS X文件系统的高级功能包括一个增强的虚拟文件系统(VFS)设计。VFS提供了分层的体系结构(文件系统是可堆叠的)。文件系统组件提供</p>
-<ul>
-<li>utf - 8 (Unicode)支持</li>
-<li>与以前版本的Mac OS相比，性能有所提高。</li>
-</ul>
-<p>更多信息可以在章节<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL0ZpbGVzeXN0ZW0vRmlsZXN5c3RlbS5odG1sIy8vYXBwbGVfcmVmL2RvYy91aWQvVFAzMDAwMDkwNS1DSDIxNS1CQUJFRUhGRg==">文件系统概述<i class="fa fa-external-link-alt"></i></span>中找到。</p>
-<h2 id="I-O设备"><a href="#I-O设备" class="headerlink" title="I / O设备"></a>I / O设备</h2><p>I/O工具包为简化驱动程序开发提供了一个框架，支持多种类型的设备。I/O工具包提供了一个面向对象的I/O体系结构，该体系结构在c++的一个受限子集中实现。I/O工具包框架是模块化和可扩展的。I/O工具包组件提供</p>
-<ul>
-<li>真正的即插即用</li>
-<li>动态设备管理</li>
-<li>动态(按需)加载驱动程序</li>
-<li>桌面系统和便携式设备的电源管理</li>
-<li>多处理器能力</li>
-</ul>
-<p>I/O工具包在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL0lPS2l0L0lPS2l0Lmh0bWwjLy9hcHBsZV9yZWYvZG9jL3VpZC9UUDMwMDAwOTA1LUNIMjEzLUJFSEpERkNB">I/O工具包概述一章<i class="fa fa-external-link-alt"></i></span>中有更详细的描述。</p>
-<h1 id="内核扩展"><a href="#内核扩展" class="headerlink" title="内核扩展"></a>内核扩展</h1><p>OS X提供了一种内核扩展机制，作为一种允许将代码片段动态加载到内核空间的方法，而不需要重新编译。这些代码通常称为插件<code>plug-ins</code>，或者在OS X内核环境中称为<code>kernel extensions</code>或<code>KEXTs</code>。</p>
-<p>因为<code>KEXTs</code>同时提供模块化和动态可加载性，所以对于需要访问不导出到用户空间的接口的任何相对自包含的服务，KEXTs都是一个自然的选择。内核环境的许多组件都支持这种扩展机制，尽管它们以不同的方式支持。</p>
-<p>例如，一些新的网络特性涉及到使用网络内核扩展(NKEs)。这些将在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL05ldHdvcmtpbmcvTmV0d29ya2luZy5odG1sIy8vYXBwbGVfcmVmL2RvYy91aWQvVFAzMDAwMDkwNS1DSDIxNi1CQUJIQ0hGQw==">网络体系结构一章<i class="fa fa-external-link-alt"></i></span>讨论。</p>
-<p>动态添加新文件系统实现的能力基于VFS KEXTs, I/O工具包中的设备驱动程序和设备族使用KEXTs实现。对于编写驱动程序或编写代码以支持新的卷格式或网络协议的开发人员来说，KEXTs使开发变得更加容易。在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL0V4dGVuZC9FeHRlbmQuaHRtbCMvL2FwcGxlX3JlZi9kb2MvdWlkL1RQMzAwMDA5MDUtQ0gyMjAtQkVCREdGSEk=">内核扩展概述一章<i class="fa fa-external-link-alt"></i></span>中将更详细地讨论KEXTs。</p>
-]]></content>
-      <categories>
-        <category>iOS</category>
-        <category>苹果内核架构</category>
-      </categories>
-      <tags>
-        <tag>系统架构</tag>
-        <tag>苹果内核架构</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Mach微内核简介</title>
-    <url>/iOS/kernelarchitecture/xnu.html</url>
-    <content><![CDATA[<h1 id="XNU-怎么加载-App"><a href="#XNU-怎么加载-App" class="headerlink" title="XNU 怎么加载 App?"></a>XNU 怎么加载 App?</h1><p>iOS 的可执行文件和动态库都是 Mach-O 格式，所以加载 APP 实际上就是加载 Mach-O 文件。<br>Mach-O header 信息结构代码如下:</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> mach_header_64 &#123;</span><br><span class="line">    uint32_t        magic;          <span class="comment">//64位还是32位</span></span><br><span class="line">    cpu_type_t      cputype;        <span class="comment">//CPU 类型，比如 arm 或 X86</span></span><br><span class="line">    cpu_subtype_t   cpusubtype;     <span class="comment">//CPU 子类型，比如 armv8</span></span><br><span class="line">    uint32_t        filetype;       <span class="comment">// 文件类型</span></span><br><span class="line">    uint32_t        ncmds;          <span class="comment">// load commands 的数量</span></span><br><span class="line">    uint32_t        sizeofcmds;     <span class="comment">// load commands 大小</span></span><br><span class="line">    uint32_t        flags;          <span class="comment">// 标签</span></span><br><span class="line">    uint32_t        reserved;       <span class="comment">// 保留字段</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中，文件类型 filetype 表示了当前 Mach-O 属于哪种类型。Mach-O 包括以下几种类型。</p>
-<ul>
-<li>OBJECT，指的是 .o 文件或者 .a 文件;</li>
-<li>EXECUTE，指的是IPA 拆包后的文件;</li>
-<li>DYLIB，指的是 .dylib 或 .framework 文件; </li>
-<li>DYLINKER，指的是动态链接器; </li>
-<li>DSYM，指的是保存有符号信息用于分析闪退信息的文件。</li>
-</ul>
-<p>加载 Mach-O 文件，内核会 fork 进程，并对进程进行一些基本设置，比如为进程分配虚拟内存、为进程创 建主线程、代码签名等。用户态 dyld 会对 Mach-O 文件做库加载和符号解析。</p>
-]]></content>
-      <categories>
-        <category>iOS</category>
-        <category>XNU:App如何加载</category>
-      </categories>
-      <tags>
-        <tag>操作系统</tag>
-        <tag>系统架构</tag>
-        <tag>XNU:App如何加载</tag>
       </tags>
   </entry>
   <entry>
@@ -5517,6 +5216,313 @@ mach_init(); // from libc.a
       </tags>
   </entry>
   <entry>
+    <title>Mach微内核简介</title>
+    <url>/iOS/kernelarchitecture/mach.html</url>
+    <content><![CDATA[<h1 id="Mach"><a href="#Mach" class="headerlink" title="Mach"></a>Mach</h1><p>OS X内核的基本服务和基本类型都基于Mach 3.0。苹果对Mach进行了修改和扩展，以更好地满足OS X的功能和性能目标。</p>
+<p>Mach 3.0最初被认为是一个简单、可扩展的通信微内核。它能够作为一个独立的内核运行，而其他传统的操作系统服务(如I/O、文件系统和网络堆栈)作为用户模式服务器运行。</p>
+<p>然而，在OS X中，Mach与其他内核组件<code>链接到一个内核地址空间</code>中。这主要是<code>为了性能</code>;在链接组件之间进行直接调用要比在单独<code>任务之间发送消息</code>或<code>执行远程过程调用(RPC)</code>快得多。这种模块化的结构导致了一个比单一内核所允许的更健壮和可扩展的系统，而没有纯微内核的性能损失。</p>
+<p>因此，在OS X中，Mach主要不是客户机和服务器之间的通信中心。相反，它的价值由抽象、可扩展性和灵活性组成。特别地，Mach提供了</p>
+<ul>
+<li>基于对象的api，使用通信通道(例如端口)作为对象引用</li>
+<li>高度并行执行，包括预先调度的线程和对SMP的支持</li>
+<li>一个灵活的调度框架，支持实时使用</li>
+<li>一组完整的IPC原语，包括消息传递、RPC、同步和通知</li>
+<li>支持大型虚拟地址空间、共享内存区域和由持久性存储支持的内存对象</li>
+<li>经过验证的可扩展性和可移植性，例如跨指令集体系结构和分布式环境</li>
+<li>安全与资源管理作为设计的基本原则;所有资源都是虚拟化的</li>
+</ul>
+<h1 id="Mach内核抽象化"><a href="#Mach内核抽象化" class="headerlink" title="Mach内核抽象化"></a>Mach内核抽象化</h1><p>Mach提供了一组被设计成既简单又强大的抽象。这些是主要的内核抽象:</p>
+<ul>
+<li>任务(Tasks)。资源所有权单位;每个任务由一个虚拟地址空间、一个端口名称空间和一个或多个线程组成。(类似于流程。)</li>
+<li>线程(Threads)。任务中CPU执行的单位。</li>
+<li>地址空间(Address space)。与内存管理器一起，Mach实现了稀疏虚拟地址空间和共享内存的概念。</li>
+<li>内存对象(Memory objects)。内存管理的内部单元。内存对象包括命名项和区域;它们表示可能映射到地址空间的持久数据。</li>
+<li>端口(Ports)。安全、简单的通信通道，只能通过发送和接收功能(称为端口权限)访问。</li>
+<li>IPC。消息队列、远程过程调用、通知、信号量和锁集。</li>
+<li>时间(Time)。时钟、定时器和等待。</li>
+</ul>
+<p>在陷阱级别，大多数Mach抽象的接口由<code>表示这些对象的内核端口之间</code>的<code>消息</code>组成。陷阱(trap)级别的<code>接口</code>(例如mach_msg_overwrite_trap)和<code>消息格式</code>在正常使用中由Mach接口生成器(MIG)抽象出来。MIG用于编译基于消息的api的<code>过程接口</code>，基于这些api的<code>描述</code>。（MIG参看下面总结部分）</p>
+<h1 id="任务和线程"><a href="#任务和线程" class="headerlink" title="任务和线程"></a>任务和线程</h1><p>OS X进程和POSIX线程(pthreads)分别在Mach任务和线程之上实现。线程是任务中的控制流点。存在一个任务来为其包含的线程提供资源。这种分割是为了提供并行性和资源共享。</p>
+<p>一个线程</p>
+<ul>
+<li>是任务中的控制流点。</li>
+<li>可以访问包含任务的所有元素。</li>
+<li>与其他线程(可能)并行执行，甚至是同一任务中的线程。</li>
+<li>具有最小的状态信息，以降低开销。</li>
+</ul>
+<p>一个任务</p>
+<ul>
+<li>是系统资源的集合。这些资源(地址空间除外)由端口引用。如果对端口被分配了权限，那么这些资源可以与其他任务共享。</li>
+<li>提供一个大的、可能稀疏的地址空间，由虚拟地址引用。这个空间的一部分可以通过继承或外部内存管理共享。</li>
+<li>包含一些线程。</li>
+</ul>
+<p>请注意，任务没有自己的线程执行指令的生命周期。当说“task Y做X”时，真正的意思是“task Y中包含的线程做X”。</p>
+<ol>
+<li><p>任务是一个相当昂贵的实体。它的存在是资源的集合。任务中的所有线程都共享所有内容。如果没有显式的操作(尽管操作通常很简单)，两个任务就不能共享任何内容，而且一些资源(例如端口接收权限)根本不能在两个任务之间共享。</p>
+</li>
+<li><p>线程是一个相当轻量级的实体。它的创建成本相当低，操作开销也很低。这是真的，因为一个线程只有很少的状态信息(主要是它的寄存器状态)。它所拥有的任务承担着资源管理的重担。在多处理器计算机上，任务中的多个线程可以并行执行。即使并行性不是目标，多线程也有一个优势，即每个线程都可以使用同步编程风格，而不是试图使用单个线程进行异步编程来提供多个服务。</p>
+</li>
+<li><p>线程是基本的计算实体。一个线程只属于一个任务，这个任务定义了它的虚拟地址空间。影响地址空间的结构或引用任何资源以外的地址空间,线程必须执行一个<code>特殊的陷阱指令</code> 引起<code>内核代表线程</code>执行操作或<code>发送消息代理</code>代表线程。通常，这些陷阱操作与包含线程的任务相关的资源。内核可以发出请求来操作这些实体:创建它们、删除它们并影响它们的状态。</p>
+</li>
+<li><p>Mach为线程调度策略提供了一个灵活的框架。OS X的早期版本同时支持分时和固定优先级策略。提高和降低分时线程的优先级，以平衡它与其他分时线程之间的资源消耗。</p>
+</li>
+<li><p>固定优先级的线程执行一定的时间量，然后放在具有相同优先级的线程队列的末尾。将固定优先级线程的量子级别设置为无穷大，可以让线程一直运行，直到阻塞，或者直到被优先级更高的线程抢占为止。<code>高优先级实时线程</code>通常是<code>固定优先级</code>的。</p>
+</li>
+<li><p>OS X还为实时性能提供了时间约束调度。这个调度允许您指定线程必须在一定时间内获得一定的时间量。</p>
+</li>
+</ol>
+<p>Mach调度在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL3NjaGVkdWxlci9zY2hlZHVsZXIuaHRtbCMvL2FwcGxlX3JlZi9kb2MvdWlkL1RQMzAwMDA5MDUtQ0gyMTEtQkVISkRGQ0E=">Mach调度和线程接口<i class="fa fa-external-link-alt"></i></span>中有进一步的描述。</p>
+<h1 id="端口、端口权限、端口集和端口名称空间"><a href="#端口、端口权限、端口集和端口名称空间" class="headerlink" title="端口、端口权限、端口集和端口名称空间"></a>端口、端口权限、端口集和端口名称空间</h1><p>除了任务的虚拟地址空间之外，所有其他Mach资源都是通过称为端口的间接级别访问的。端口是请求服务的客户机和提供服务的服务器之间单向通信通道的端点。如果要向此类服务请求提供应答，则必须使用第二个端口。这类似于UNIX中的(单向)管道。</p>
+<p>在大多数情况下，<code>由端口访问的资源(即由端口命名的资源)被称为对象</code>。大多数由端口命名的对象都有<code>一个接收方</code>和(可能的)<code>多个发送方</code>。也就是说，对于典型对象(如消息队列)，只有一个接收端口，至少有一个发送端口。</p>
+<p>对象提供的服务由接收发送到对象的请求的管理器决定。因此，内核是与内核提供的对象关联的端口的接收方，而与任务提供的对象关联的端口的接收方是提供这些对象的任务。</p>
+<p>对于命名任务提供的对象的端口，可以将该端口的请求接收方更改为不同的任务，例如通过在消息中将该端口传递给该任务。一个任务可能有多个引用其支持的资源的端口。就此而言，任何给定的实体都可以有多个表示它的端口，每个端口表示不同的允许操作集。例如，许多对象都有一个名称端口和一个控制端口(有时称为特权端口)。对控制端口的访问允许操作对象;对name端口的访问简单地为对象命名，这样您就可以获得关于它的信息，或者对它执行其他非特权操作。</p>
+<p>任务具有以特定方式访问端口的权限(发送、接收、发送一次);这些被称为port rights。端口只能通过右值访问。端口通常用于授予客户机对Mach内对象的访问权。有权发送到对象的IPC端口表示有权以规定的方式操作对象。因此，<code>端口所有权是Mach内部的基本安全机制</code>。<code>拥有访问对象的权利</code>就是<code>拥有访问或操作该对象的能力</code>。</p>
+<p>端口权限可以通过IPC在<code>任务之间复制和移动</code>。这样做实际上是将功能传递给某个对象或服务器。</p>
+<p>一种类型的对象引用一个端口是一个端口组。顾名思义,端口设置一组端口的权利时,可以当作一个单独的单元接收消息或事件的任何成员集。港口集允许一个线程等待的消息和事件源,例如在工作循环。</p>
+<p>传统上，在Mach中，由端口表示的通信通道总是消息队列。然而，OS X支持其他类型的通信通道，这些新的IPC对象类型也由端口和端口权限表示。有关消息和其他IPC类型的详细信息，请参阅下面进程间通信(Interprocess Communication, IPC)一节。</p>
+<p>端口和端口权限没有允许直接操作任意端口或权限的系统范围名称。只有当任务在其端口名称空间中具有端口权时，才可以由任务操作端口。端口权由端口名称指定，一个整数索引进入一个32位端口名称空间。每个任务都与它关联一个端口名称空间。</p>
+<p>当另一个任务显式地将它们插入它的名称空间时，当它们在消息中接收到权限时，任务通过创建返回对象权限的对象获得端口权限，并通过Mach调用特定的特殊端口(mach_thread_self、mach_task_self和mach_reply_port)获得端口权限。</p>
+<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>与大多数现代操作系统一样，Mach提供对大型、稀疏的虚拟地址空间的寻址。运行时访问是通过虚拟地址进行的，这些虚拟地址可能与初始访问时物理内存中的位置不对应。Mach负责获取一个请求的虚拟地址，并在物理内存中为它分配一个相应的位置。它通过请求分页来实现这一点。</p>
+<p>当内存对象映射到虚拟地址空间的范围时，将用数据填充虚拟地址空间的范围。地址空间中的所有数据最终都是通过内存对象提供的。Mach在物理内存中建立页面时，向内存对象(分页器)的所有者询问页面的内容，并在回收页面之前将可能修改过的数据返回给分页器。OS X包含两个内置分页器——默认分页器和vnode分页器(default pager and the vnode pager)。</p>
+<p>默认的分页器处理非持久性内存，称为匿名内存。匿名内存是零初始化的，并且只在任务执行期间存在。vnode分页器将文件映射到内存对象。Mach向内存对象导出一个接口，允许用户模式任务提供内存对象的内容。这个接口称为外部内存管理接口(EMMI)。</p>
+<p>内存管理子系统导出称为命名项或命名内存项的虚拟内存句柄。与大多数内核资源一样，这些资源由端口表示。拥有一个命名的内存条目句柄，允许所有者映射底层虚拟内存对象，或者将映射底层对象的权利传递给其他人。在两个不同的任务中映射命名项会在两个任务之间生成共享内存窗口，从而为建立共享内存提供了一种灵活的方法。</p>
+<p>从OS X v10.1开始，EMMI系统得到了增强，以支持“无端口”EMMI。在传统的EMMI中，为每个内存区域创建两个Mach端口，同样也为每个缓存的vnode创建两个端口。在最初的实现中，无端口的EMMI用直接内存引用(基本上是指针)替换了这一点。在将来的版本中，端口将用于与内核外部的分页器通信，同时使用直接引用与驻留在内核空间中的分页器通信。这些更改的最终结果是，早期版本的无端口EMMI不支持运行在内核空间之外的分页器。这种支持有望在未来的版本中恢复。</p>
+<p>虚拟内存空间的地址范围也可以通过直接分配(使用vm_allocation)来填充。底层虚拟内存对象是匿名的，并由默认分页程序支持。地址空间的共享范围也可以通过继承设置。创建新任务时，将从父任务中克隆它们。这种克隆也属于底层内存地址空间。根据与映射相关的属性，对象的映射部分可以作为副本继承，也可以作为共享，或者根本不可以。Mach采用一种称为“写中复制”的延迟复制形式，以优化任务创建时继承副本的性能。</p>
+<p>不是直接复制范围，而是通过受保护的共享来实现写时复制优化。这两个任务共享要复制的内存，但具有只读访问。当任何一个任务试图修改范围的一部分时，该部分将被复制。这种对内存副本的延迟计算是一种重要的优化，它允许在几个方面进行简化，尤其是消息传递api。</p>
+<p>Mach还提供了另一种形式的共享，通过导出指定的区域。命名区域是命名条目的一种形式，但是它不是由虚拟内存对象支持的，而是由虚拟映射片段支持的。这个片段可能包含到许多虚拟内存对象的映射。它可以映射到其他虚拟映射，提供了一种方法，不仅可以继承一组虚拟内存对象，还可以继承它们现有的映射关系。该特性在任务设置中提供了重要的优化，例如在共享用于共享库的地址空间的复杂区域时。</p>
+<h1 id="进程间通信-IPC"><a href="#进程间通信-IPC" class="headerlink" title="进程间通信(IPC)"></a>进程间通信(IPC)</h1><p>任务之间的通信是Mach哲学的一个重要元素。Mach支持客户机/服务器系统结构，其中任务(客户机)通过通过通信通道发送的消息请求其他任务(服务器)来访问服务。</p>
+<p>Mach中这些通信通道的端点称为端口，而端口权限表示使用该通道的权限。Mach提供的IPC形式包括</p>
+<ul>
+<li>消息队列</li>
+<li>信号量</li>
+<li>通知</li>
+<li>锁集</li>
+<li>远程过程调用(rpc)</li>
+</ul>
+<p>由端口表示的IPC对象的类型决定了该端口上允许的操作，以及数据传输的方式(和是否)。</p>
+<blockquote>
+<p>重要提示:OS X中的IPC设施处于过渡状态。在系统的早期版本中，并不是所有这些IPC类型都可以实现。</p>
+</blockquote>
+<p>对于端口的原始操作，有两种基本不同的Mach api, mach_ipc家族和mach_msg家族。在合理的范围内，这两个系列都可以用于任何IPC对象;然而，在新代码中，mach_ipc调用是首选的。mach_ipc调用在适当的地方维护状态信息，以便支持事务的概念。mach_msg调用支持遗留代码，但不推荐使用;他们是无状态的。</p>
+<h2 id="IPC事务和事件调度"><a href="#IPC事务和事件调度" class="headerlink" title="IPC事务和事件调度"></a>IPC事务和事件调度</h2><p>当线程调用mach_ipc_dispatch,它反复处理事件设置的注册端口。这些事件可以从RPC参数块对象(如客户调用的结果),一个锁对象被(由于其他线程释放锁),通知或信号量被发布或消息来自一个传统的消息队列。</p>
+<p>这些事件通过mach_msg_dispatch的调用来处理。有些事件暗示调用生命周期内存在事务。在锁的情况下，状态是锁的所有权。当callout返回时，锁被释放。在远程过程调用的情况下，状态是客户机的标识、参数块和应答端口。当callout返回时，将发送应答。</p>
+<p>当callout返回时，事务(如果有的话)就完成了，线程等待下一个事件。mach_ipc_dispatch工具旨在支持工作循环。</p>
+<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><p>最初，Mach中进程间通信的唯一样式是消息队列。只有一个任务可以持有表示消息队列的端口的接收权。这个任务允许从端口队列接收(读取)消息。多个任务可以拥有向队列发送(写)消息的端口的权限。</p>
+<p>任务通过构建包含一组数据元素的数据结构与另一个任务通信，然后在其拥有发送权限的端口上执行消息发送操作。稍后，具有该端口接收权限的任务将执行消息接收操作。</p>
+<p>一条消息可包括以下部分或全部:</p>
+<ul>
+<li>纯数据</li>
+<li>存储范围的副本</li>
+<li>端口的权利</li>
+<li>内核隐式属性，如发送方的安全令牌</li>
+</ul>
+<p>消息传输是一个异步操作。消息逻辑上被复制到接收任务中，可能使用写时复制优化。接收任务中的多个线程可以尝试从给定端口接收消息，但是只有一个线程可以接收任何给定的消息。</p>
+<h2 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h2><p>信号量IPC对象支持等待、post和post所有操作。这些是计数信号量，如果在该信号量的等待队列中当前没有线程在等待，则保存(计数)post。post all操作将唤醒所有当前等待的线程。</p>
+<h2 id="通知"><a href="#通知" class="headerlink" title="通知"></a>通知</h2><p>与信号量一样，通知对象也支持post和wait操作，但添加了一个state字段。状态是一个固定大小、固定格式的字段，在创建通知对象时定义。每个post更新状态字段;每个post都覆盖一个状态。</p>
+<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><p>锁是提供对临界区互斥访问的对象。锁的主要接口是面向事务的(参见IPC事务和事件调度)。在事务期间，线程持有锁。当它从事务返回时，锁被释放。</p>
+<h2 id="远程过程调用-RPC-对象"><a href="#远程过程调用-RPC-对象" class="headerlink" title="远程过程调用(RPC)对象"></a>远程过程调用(RPC)对象</h2><p>顾名思义，RPC对象旨在促进和优化远程过程调用。RPC对象的主要接口是面向事务的(参见IPC事务和事件调度)</p>
+<p>当创建RPC对象时，定义一组参数块格式。当客户机发出RPC(对象上的发送)时，它会导致以预定义格式之一的消息创建并在对象上排队，然后最终传递给服务器(接收方)。当服务器从事务返回时，将回复返回给发送方。Mach试图通过使用客户机的资源执行服务器来优化事务;这称为<code>线程迁移</code>。</p>
+<h1 id="时间管理"><a href="#时间管理" class="headerlink" title="时间管理"></a>时间管理</h1><p>Mach中时间的传统抽象是时钟，它提供了一组基于mach_timspec_t的异步报警服务。有一个或多个时钟对象，每个对象定义一个以纳秒为单位的单调递增的时间值。实时时钟是内置的，是最重要的，但是系统中可能还有其他时钟用于其他时间概念。时钟支持获取当前时间、给定时间段的睡眠、设置闹钟(在给定时间发送的通知)等操作。</p>
+<p>mach_timespec_t API在OS x中是不推荐的。更新的、首选的API基于计时器对象，而计时器对象又使用AbsoluteTime作为基本数据类型。AbsoluteTime是一种依赖于机器的类型，通常基于平台本机时基。提供了一些例程来将绝对时间值转换为其他数据类型，或者从其他数据类型转换为绝对时间值，比如纳秒。计时器对象支持异步、无漂移通知、取消和提前警报。它们比时钟效率更高，分辨率更高。</p>
+<h1 id="我们总结一下"><a href="#我们总结一下" class="headerlink" title="我们总结一下"></a>我们总结一下</h1><h2 id="Mach-、端口、Mach消息部分"><a href="#Mach-、端口、Mach消息部分" class="headerlink" title="Mach 、端口、Mach消息部分"></a>Mach 、端口、Mach消息部分</h2><ul>
+<li>在Mach中所有东西（Task、线程、虚拟内存等）都是对象</li>
+<li>对象与对象之间通信只能(任务虚拟地址空间)通过<code>端口</code>收发(<code>一个接收方，可以多个发送方</code>)消息。</li>
+</ul>
+<p>Mach做以下几件事儿：</p>
+<ul>
+<li>“控制点”或执行单元的管理。</li>
+<li>线程或线程组（Task）的资源分配。</li>
+<li>虚拟内存的分配和管理。</li>
+<li>底层物理资源–即CPU、内存和任何物理设备的分配。</li>
+</ul>
+<h3 id="Mach消息结构体"><a href="#Mach消息结构体" class="headerlink" title="Mach消息结构体"></a>Mach消息结构体</h3><ul>
+<li>最基本的包含两部分：消息头、消息体。可选的消息尾<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span>	<span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="type">mach_msg_bits_t</span>	msgh_bits;<span class="comment">//标志位</span></span><br><span class="line">  <span class="type">mach_msg_size_t</span>	msgh_size;<span class="comment">//大小</span></span><br><span class="line">  <span class="type">mach_port_t</span>		msgh_remote_port;<span class="comment">//目标端口（发送：接受方，接收：发送方）</span></span><br><span class="line">  <span class="type">mach_port_t</span>		msgh_local_port; <span class="comment">//源端口（发送：发送方，接收：接收方）</span></span><br><span class="line">  <span class="type">mach_port_name_t</span>	msgh_voucher_port;</span><br><span class="line">  <span class="type">mach_msg_id_t</span>		msgh_id;</span><br><span class="line">&#125; <span class="type">mach_msg_header_t</span>; <span class="comment">//消息头</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">        <span class="type">mach_msg_size_t</span> msgh_descriptor_count;</span><br><span class="line">&#125; <span class="type">mach_msg_body_t</span>;<span class="comment">//消息体</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">        <span class="type">mach_msg_header_t</span>       header;</span><br><span class="line">        <span class="type">mach_msg_body_t</span>         body;</span><br><span class="line">&#125; <span class="type">mach_msg_base_t</span>; <span class="comment">//基本消息</span></span><br><span class="line"><span class="keyword">typedef</span>	<span class="type">unsigned</span> <span class="type">int</span> <span class="type">mach_msg_trailer_type_t</span>;<span class="comment">//消息尾的类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="type">mach_msg_trailer_type_t</span>	msgh_trailer_type;</span><br><span class="line">  <span class="type">mach_msg_trailer_size_t</span>	msgh_trailer_size;</span><br><span class="line">&#125; <span class="type">mach_msg_trailer_t</span>; <span class="comment">//消息尾</span></span><br></pre></td></tr></table></figure></li>
+<li>复杂一点的，将消息头的标志位mach_msg_bits_t设置为MACH_MSGH_BITS_COMPLEX，就表示复杂消息。此时消息体里面指定了描述符的个数，接下来就是一个接着一个的描述符：<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="type">uint64_t</span>			address;<span class="comment">//数据的大小</span></span><br><span class="line">  <span class="type">boolean_t</span>     		deallocate: <span class="number">8</span>;<span class="comment">//发送之后是否接触分配</span></span><br><span class="line">  <span class="type">mach_msg_copy_options_t</span>       copy: <span class="number">8</span>;<span class="comment">//复制指令</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span>     		pad1: <span class="number">8</span>;</span><br><span class="line">  <span class="type">mach_msg_descriptor_type_t</span>    type: <span class="number">8</span>;</span><br><span class="line">  <span class="type">mach_msg_size_t</span>       	size;<span class="comment">//数据的大小</span></span><br><span class="line">&#125; <span class="type">mach_msg_ool_descriptor64_t</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="消息收发"><a href="#消息收发" class="headerlink" title="消息收发"></a>消息收发</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">mach_msg_return_t</span>	<span class="title function_">mach_msg</span><span class="params">(</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_header_t</span> *msg,</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_option_t</span> option,</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_size_t</span> send_size,</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_size_t</span> rcv_size,</span></span><br><span class="line"><span class="params">					<span class="type">mach_port_name_t</span> rcv_name,</span></span><br><span class="line"><span class="params">					<span class="type">mach_msg_timeout_t</span> timeout,</span></span><br><span class="line"><span class="params">					<span class="type">mach_port_name_t</span> notify)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>步骤如下：<br>发送消息：</p>
+<ul>
+<li>调用current_space()获取当前的IPC空间。</li>
+<li>调用current_map()获取虚拟空间</li>
+<li>消息大小正确性检查</li>
+<li>计算要分配的消息大小</li>
+<li>通过ipc_kmsg_alloc分配消息</li>
+<li>复制消息</li>
+<li>复制消息关联的端口权限，然后通过ipc_kmsg_copyin将所有的out-of-line数据的内存复制到当前虚拟空间。(如果不复制权限可能导致无法访问数据)</li>
+<li>调用ipc_kmsg_send()发送消息<ul>
+<li>获得msgh_remote_port引用并锁定端口</li>
+<li>调用ipc_mqueue_send()，将消息直接复制到端口的ipc_messages队列中并唤醒等待的线程。</li>
+</ul>
+</li>
+</ul>
+<p>接收消息</p>
+<ul>
+<li>调用current_space()获取当前的IPC空间。</li>
+<li>调用current_map()获取虚拟空间</li>
+<li>调用ipc_mqueue_copyin()获取IPC队列。</li>
+<li>调用ipc_mqueue_receive()从队列中取出消息</li>
+<li>执行</li>
+</ul>
+<h3 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h3><p>端口实际上就是一个整型的标识符，是如下结构（在osfmk/ipc/ipc_port.h中定义）的一个句柄：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> &#123;</span></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Initial sub-structure in common with ipc_pset</span></span><br><span class="line"><span class="comment">	 * First element is an ipc_object second is a</span></span><br><span class="line"><span class="comment">	 * message queue</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_object</span> <span class="title">ip_object</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_mqueue</span> <span class="title">ip_messages</span>;</span></span><br><span class="line">	<span class="type">natural_t</span> ip_sprequests:<span class="number">1</span>,	<span class="comment">/* send-possible requests outstanding */</span></span><br><span class="line">		  ip_spimportant:<span class="number">1</span>,	<span class="comment">/* ... at least one is importance donating */</span></span><br><span class="line">		  ip_impdonation:<span class="number">1</span>,	<span class="comment">/* port supports importance donation */</span></span><br><span class="line">		  ip_tempowner:<span class="number">1</span>,	<span class="comment">/* dont give donations to current receiver */</span></span><br><span class="line">		  ip_guarded:<span class="number">1</span>,         <span class="comment">/* port guarded (use context value as guard) */</span></span><br><span class="line">		  ip_strict_guard:<span class="number">1</span>,	<span class="comment">/* Strict guarding; Prevents user manipulation of context values directly */</span></span><br><span class="line">		  ip_reserved:<span class="number">2</span>,</span><br><span class="line">		  ip_impcount:<span class="number">24</span>;	<span class="comment">/* number of importance donations in nested queue */</span></span><br><span class="line">	<span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">ipc_space</span> *<span class="title">receiver</span>;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">destination</span>;</span></span><br><span class="line">		<span class="type">ipc_port_timestamp_t</span> timestamp;</span><br><span class="line">	&#125; data;</span><br><span class="line">	<span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">		<span class="type">ipc_kobject_t</span> kobject;</span><br><span class="line">		<span class="type">ipc_importance_task_t</span> imp_task;</span><br><span class="line">		<span class="type">uintptr_t</span> alias;</span><br><span class="line">	&#125; kdata;</span><br><span class="line">		</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">ip_nsrequest</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">ip_pdrequest</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port_request</span> *<span class="title">ip_requests</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_kmsg</span> *<span class="title">ip_premsg</span>;</span></span><br><span class="line">	<span class="type">mach_vm_address_t</span> ip_context;</span><br><span class="line">	<span class="type">mach_port_mscount_t</span> ip_mscount;</span><br><span class="line">	<span class="type">mach_port_rights_t</span> ip_srights;</span><br><span class="line">	<span class="type">mach_port_rights_t</span> ip_sorights;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span>	MACH_ASSERT</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span>	IP_NSPARES		4</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span>	IP_CALLSTACK_MAX	16</span></span><br><span class="line"><span class="comment">/*	queue_chain_t	ip_port_links;*/</span><span class="comment">/* all allocated ports */</span></span><br><span class="line">	<span class="type">thread_t</span>	ip_thread;	<span class="comment">/* who made me?  thread context */</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span>	ip_timetrack;	<span class="comment">/* give an idea of &quot;when&quot; created */</span></span><br><span class="line">	<span class="type">uintptr_t</span>	ip_callstack[IP_CALLSTACK_MAX]; <span class="comment">/* stack trace */</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span>	ip_spares[IP_NSPARES]; <span class="comment">/* for debugging */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span>	<span class="comment">/* MACH_ASSERT */</span></span></span><br><span class="line">&#125; __attribute__((__packed__));</span><br></pre></td></tr></table></figure>
+
+<h3 id="Mach接口生成器-MIG"><a href="#Mach接口生成器-MIG" class="headerlink" title="Mach接口生成器 MIG"></a>Mach接口生成器 MIG</h3><p>Mach消息传递模型是远程调用（Remote Procedure Call，RPC）的一种现实(类似Thrift)。在/usr/include/mach目录下可以看到一些.defs文件，这些文件包含了Mach子系统（一组操作）的定义。操作类型如下：</p>
+<img src="/images/iOS/mig_opt.png" class="">
+
+<h2 id="IPC"><a href="#IPC" class="headerlink" title="IPC"></a>IPC</h2><ul>
+<li>Mach的每个Task都包含一个指针，这个指针指向一个IPC命名空间，这个IPC命名空间了包含了Task的端口，当然Task还可以获取系统范围的端口，例如：主机端口、特权端口（可以重启机器等）等。</li>
+<li>在用户态下，消息传递都是通过mach_msg()函数实现的，这个函数会触发一个mach陷阱mach_msg_trap()，接下来mach_msg_trap()又会调用mach_msg_overwrite_trap()，它会通过MACH_SEND_MSG和MACH_RCV_MSG来判断是发送操作，还是接收操作。</li>
+<li>期中内核态中还可以通过mach_msg_receive()和mach_msg_send()来收发数据。</li>
+</ul>
+<h2 id="主机、时钟、处理器、处理器集"><a href="#主机、时钟、处理器、处理器集" class="headerlink" title="主机、时钟、处理器、处理器集"></a>主机、时钟、处理器、处理器集</h2><h3 id="主机对象-Host"><a href="#主机对象-Host" class="headerlink" title="主机对象 Host"></a>主机对象 Host</h3><p>主机就是一组“特殊”端口的集合，以及一组异常处理程序的集合，同时定义了一个锁用于保护异常处理的并发访问。结构如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span>	<span class="title">host</span> &#123;</span></span><br><span class="line">	decl_lck_mtx_data(,lock)		<span class="comment">/* lock to protect exceptions */</span></span><br><span class="line">	<span class="type">ipc_port_t</span> special[HOST_MAX_SPECIAL_PORT + <span class="number">1</span>];</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">exception_action</span> <span class="title">exc_actions</span>[<span class="title">EXC_TYPES_COUNT</span>];</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="时钟对象（Clock）"><a href="#时钟对象（Clock）" class="headerlink" title="时钟对象（Clock）"></a>时钟对象（Clock）</h3><p>Mach内核提供了一个简单的“时钟”对象（在osfmk/kern/clock.h中定义）的抽象，这个对象用于计时和闹铃，期中最重要的内部API是clock_deadline_for_periodic_event（），调度器通过它设置了一个重复发生的通知–从而保证了多任务引擎的运转。</p>
+<h3 id="处理器对象（Processer）"><a href="#处理器对象（Processer）" class="headerlink" title="处理器对象（Processer）"></a>处理器对象（Processer）</h3><p>在多核架构中每一个核心都可以看做是一个CPU，处理器被分配给处理器集，处理器是CPU的简单抽象，被Mach用于一些基本的操作，比如：启动和关闭一个CPU，向CPU分发要执行的线程。结构的定义（在osfmk/kern/processor.h）如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">processor</span> &#123;</span></span><br><span class="line">	<span class="type">queue_chain_t</span>		processor_queue;<span class="comment">/* idle/active queue link,</span></span><br><span class="line"><span class="comment">										 * MUST remain the first element */</span></span><br><span class="line">	<span class="type">int</span>					state;			<span class="comment">/* See below */</span></span><br><span class="line">	<span class="type">boolean_t</span>		is_SMT;</span><br><span class="line">	<span class="type">boolean_t</span>		is_recommended;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">thread</span></span></span><br><span class="line"><span class="class">						*<span class="title">active_thread</span>,	/* <span class="title">thread</span> <span class="title">running</span> <span class="title">on</span> <span class="title">processor</span> */</span></span><br><span class="line"><span class="class">						*<span class="title">next_thread</span>,	/* <span class="title">next</span> <span class="title">thread</span> <span class="title">when</span> <span class="title">dispatched</span> */</span></span><br><span class="line"><span class="class">						*<span class="title">idle_thread</span>;</span>	<span class="comment">/* this processor&#x27;s idle thread. */</span></span><br><span class="line">	<span class="type">processor_set_t</span>		processor_set;	<span class="comment">/* assigned set */</span></span><br><span class="line">	<span class="type">int</span>					current_pri;	<span class="comment">/* priority of current thread */</span></span><br><span class="line">	<span class="type">sched_mode_t</span>		current_thmode;	<span class="comment">/* sched mode of current thread */</span></span><br><span class="line">	<span class="type">sfi_class_id_t</span>		current_sfi_class;	<span class="comment">/* SFI class of current thread */</span></span><br><span class="line">	<span class="type">int</span>					cpu_id;			<span class="comment">/* platform numeric id */</span></span><br><span class="line">	<span class="type">timer_call_data_t</span>	quantum_timer;	<span class="comment">/* timer for quantum expiration */</span></span><br><span class="line">	<span class="type">uint64_t</span>			quantum_end;	<span class="comment">/* time when current quantum ends */</span></span><br><span class="line">	<span class="type">uint64_t</span>			last_dispatch;	<span class="comment">/* time of last dispatch */</span></span><br><span class="line">	<span class="type">uint64_t</span>			deadline;		<span class="comment">/* current deadline */</span></span><br><span class="line">	<span class="type">boolean_t</span>               first_timeslice;                <span class="comment">/* has the quantum expired since context switch */</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_TRADITIONAL) || defined(CONFIG_SCHED_MULTIQ)</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">run_queue</span>	<span class="title">runq</span>;</span>			<span class="comment">/* runq for this processor */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_TRADITIONAL)</span></span><br><span class="line">	<span class="type">int</span>					runq_bound_count; <span class="comment">/* # of threads bound to this processor */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_GRRR)</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">grrr_run_queue</span>	<span class="title">grrr_runq</span>;</span>      <span class="comment">/* Group Ratio Round-Robin runq */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="type">processor_t</span>			processor_primary;	<span class="comment">/* pointer to primary processor for</span></span><br><span class="line"><span class="comment">											 * secondary SMT processors, or a pointer</span></span><br><span class="line"><span class="comment">											 * to ourselves for primaries or non-SMT */</span></span><br><span class="line">	<span class="type">processor_t</span>		processor_secondary;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *	<span class="title">processor_self</span>;</span>	<span class="comment">/* port for operations */</span></span><br><span class="line">	<span class="type">processor_t</span>			processor_list;	<span class="comment">/* all existing processors */</span></span><br><span class="line">	<span class="type">processor_data_t</span>	processor_data;	<span class="comment">/* per-processor data */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中最重要的是runq，这是分发到这个处理器的线程队列。</p>
+<h3 id="处理器集"><a href="#处理器集" class="headerlink" title="处理器集"></a>处理器集</h3><p>处理器集就是一个或多个processor_t的分组，也被称为pset。pset通常维护三个队列：</p>
+<p>active_queue：用于保存当前正在执行线程的CPU。<br>idle_queue：用于保存当前空闲的CPU（例如：正在执行idle_thread）。<br>pset_runq：保存了在这个集合中的所有CPU上执行的线程。<br>processor_set的定义如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">processor_set</span> &#123;</span></span><br><span class="line">	<span class="type">queue_head_t</span>		active_queue;	<span class="comment">/* active processors */</span></span><br><span class="line">	<span class="type">queue_head_t</span>		idle_queue;		<span class="comment">/* idle processors */</span></span><br><span class="line">	<span class="type">queue_head_t</span>		idle_secondary_queue;		<span class="comment">/* idle secondary processors */</span></span><br><span class="line">	<span class="type">int</span>					online_processor_count;</span><br><span class="line">	<span class="type">int</span>					cpu_set_low, cpu_set_hi;</span><br><span class="line">	<span class="type">int</span>					cpu_set_count;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> __SMP__</span></span><br><span class="line">	decl_simple_lock_data(,sched_lock)	<span class="comment">/* lock for above */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_TRADITIONAL) || defined(CONFIG_SCHED_MULTIQ)</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">run_queue</span>	<span class="title">pset_runq</span>;</span>      <span class="comment">/* runq for this processor set */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_TRADITIONAL)</span></span><br><span class="line">	<span class="type">int</span>					pset_runq_bound_count;</span><br><span class="line">		<span class="comment">/* # of threads in runq bound to any processor in pset */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="comment">/* CPUs that have been sent an unacknowledged remote AST for scheduling purposes */</span></span><br><span class="line">	<span class="type">uint64_t</span>			pending_AST_cpu_mask;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_SCHED_DEFERRED_AST)</span></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * A seperate mask, for ASTs that we may be able to cancel.  This is dependent on</span></span><br><span class="line"><span class="comment">	 * some level of support for requesting an AST on a processor, and then quashing</span></span><br><span class="line"><span class="comment">	 * that request later.</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * The purpose of this field (and the associated codepaths) is to infer when we</span></span><br><span class="line"><span class="comment">	 * no longer need a processor that is DISPATCHING to come up, and to prevent it</span></span><br><span class="line"><span class="comment">	 * from coming out of IDLE if possible.  This should serve to decrease the number</span></span><br><span class="line"><span class="comment">	 * of spurious ASTs in the system, and let processors spend longer periods in</span></span><br><span class="line"><span class="comment">	 * IDLE.</span></span><br><span class="line"><span class="comment">	 *\/</span></span><br><span class="line"><span class="comment">	uint64_t			pending_deferred_AST_cpu_mask;</span></span><br><span class="line"><span class="comment">#endif</span></span><br><span class="line"><span class="comment">	struct ipc_port	*	pset_self;		/* port for operations */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *	<span class="title">pset_name_self</span>;</span>	<span class="comment">/* port for information */</span></span><br><span class="line">	<span class="type">processor_set_t</span>		pset_list;		<span class="comment">/* chain of associated psets */</span></span><br><span class="line">	<span class="type">pset_node_t</span>			node;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>iOS</category>
+        <category>Mach内核</category>
+      </categories>
+      <tags>
+        <tag>操作系统</tag>
+        <tag>系统架构</tag>
+        <tag>Mach内核</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>苹果内核架构</title>
+    <url>/iOS/kernelarchitecture/overview.html</url>
+    <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL0FyY2hpdGVjdHVyZS9BcmNoaXRlY3R1cmUuaHRtbA==">官方文档地址<i class="fa fa-external-link-alt"></i></span> </p>
+<h1 id="OS-X简介"><a href="#OS-X简介" class="headerlink" title="OS X简介"></a>OS X简介</h1><p>OS X为Macintosh用户和开发人员社区提供了许多好处。这些优点包括改进的可靠性和性能、增强的网络特性、基于对象的系统编程接口以及对行业标准的更多支持。</p>
+<p>在创建OS X的过程中，苹果彻底改造了Mac OS核心操作系统。形成OS X的基础是内核。下图说明了OS X体系结构。</p>
+<img src="/images/iOS/osxlayers.png" class="" title="osxlayers">
+
+<p>内核为OS x提供了许多增强功能，包括抢占、内存保护、增强的性能、改进的网络设施、对Macintosh(扩展版和标准版)和非Macintosh (UFS、ISO 9660等等)文件系统的支持、面向对象的api等等。其中两个特性，抢占和内存保护，导致了更健壮的环境。</p>
+<p>在Mac OS 9中，应用程序协作共享处理器时间。类似地，所有应用程序之间共享计算机的内存。Mac OS 9是一个协作的多任务环境。如果一个应用程序不合作，那么所有进程的响应性都会受到影响。另一方面，实时应用程序(如多媒体)需要保证具有可预测的、时间关键的行为。</p>
+<p>相比之下，OS X是一个先发制人的多任务环境。在OS X中，内核提供了强制合作，调度进程来共享时间(抢占)。这支持需要实时行为的应用程序。</p>
+<p>在OS X中，进程通常不共享内存。相反，内核为每个进程分配自己的地址空间，控制对这些地址空间的访问。此控件确保任何应用程序都不能无意中访问或修改另一个应用程序的内存(保护)。规模不是问题;由于OS X包含了虚拟内存系统，每个应用程序都可以访问自己的4 GB地址空间。</p>
+<p>从整体上看，所有应用程序都在用户空间中运行，但这并不意味着它们共享内存。用户空间只是所有用户级应用程序的组合地址空间的术语。内核本身有它自己的地址空间，称为内核空间。在OS X中，没有应用程序可以直接修改系统软件(内核)的内存。</p>
+<p>虽然默认情况下用户进程不像Mac OS 9那样共享内存，但应用程序之间的通信(甚至内存共享)仍然是可能的。例如，内核提供了一组丰富的原语，允许进程之间共享一些信息。这些基本类型包括共享库、框架和POSIX共享内存。<code>Mach消息传递提供了另一种方法，将内存从一个进程传递到另一个进程。</code>然而，与Mac OS 9不同的是，如果没有程序员的显式操作，内存共享就无法实现。</p>
+<h1 id="达尔文操作系统"><a href="#达尔文操作系统" class="headerlink" title="达尔文操作系统"></a>达尔文操作系统</h1><p><code>OS X内核是一个开源项目</code>。内核以及OS X的其他核心部分<code>统称为Darwin</code>。Darwin是一个完整的操作系统，基于与OS x相同的许多技术。但是，Darwin不包括Apple专有的图形或应用程序层，比如Quartz、QuickTime、Cocoa、Carbon或OpenGL。</p>
+<p>下图显示了Darwin和OS X之间的关系，它们都构建在相同的内核之上，但是OS X添加了核心服务、应用程序服务和QuickTime，以及经典的Carbon、Cocoa和Java (JDK)应用程序环境。Darwin和OS X都包含BSD命令行应用程序环境;然而，在OS X中，不需要使用环境，因此它对用户是隐藏的，除非用户选择访问它。</p>
+<img src="/images/iOS/darwinlayers.png" class="" title="darwinlayers">
+
+<p>Darwin技术基于BSD、Mach 3.0和苹果技术。最重要的是，<code>Darwin技术是开源技术</code>，这意味着开发人员可以完全访问源代码。实际上，OS X第三方开发人员可以成为Darwin核心系统软件开发团队的一部分。开发人员还可以看到苹果在核心操作系统中是如何工作的，并在自己的产品中采用(或调整)代码。有关详细信息，请参阅Apple公共源许可证(APSL)。</p>
+<p>因为相同的软件构成了OS X和Darwin的核心，所以开发人员可以创建在OS X和Darwin上运行的底层软件，而<code>几乎不需要进行任何更改</code>。唯一的区别可能是软件与应用程序环境的交互方式。</p>
+<p>达尔文是基于许多来源的成熟技术。这项技术的很大一部分来自FreeBSD，这是4.4BSD的一个版本，提供了先进的网络、性能、安全和兼容性特性。该系统软件的其他部分，如Mach，基于苹果MkLinux项目、OS X服务器以及NeXT收购的技术。大部分代码与平台无关。所有核心操作系统代码都以源代码的形式提供。</p>
+<p>选择核心技术有几个原因。<code>Mach提供了一组干净的抽象，用于处理内存管理、进程间(和处理器间)通信(IPC)和其他低级操作系统功能。</code>在当今快速变化的硬件环境中，这在操作系统和底层硬件之间提供了一个有用的隔离层。</p>
+<p>BSD是一个精心设计的成熟操作系统，具有许多功能。事实上，当今大多数商业UNIX和类UNIX操作系统都包含大量BSD代码。BSD还提供了一组行业标准api。</p>
+<p>新技术，如I/O工具包和网络内核扩展(NKEs)，都是由苹果公司设计和设计的，以利用先进的功能，如面向对象编程模型提供的功能。OS X将这些新技术与经过时间检验的行业标准结合起来，创建了一个稳定、可靠、灵活和可扩展的操作系统。</p>
+<h1 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h1><p>Darwin和OS X的基础层由几个体系结构组件组成，如下图所示。这些组件合在一起构成内核环境。</p>
+<img src="/images/iOS/osxarchitecture.png" class="" title="osxarchitecture">
+<blockquote>
+<p>重要提示:注意OS X使用术语内核的方式与您可能期望的有所不同。</p>
+</blockquote>
+<p>在传统的操作系统术语中，内核是一个很小的软件核心，它只提供实现附加操作系统服务所需的最小设施。——摘自《4.4 BSD操作系统的设计与实现》，McKusick, Bostic, Karels和Quarterman, 1996。</p>
+<p>类似地，在传统的基于Mach的操作系统中，内核指的是Mach微内核，忽略了额外的底层代码，没有这些底层代码，Mach几乎做不了什么。</p>
+<p>然而，在OS X中，内核环境包含的内容比Mach内核本身多得多。<code>OS X内核环境包括Mach内核、BSD、I/O工具包、文件系统和网络组件。这些通常统称为内核</code>。下面几节将简要描述这些组件。有关进一步的详细信息，请参阅具体的组成部分章节或参考书目中列出的参考资料。</p>
+<p>因为OS X包含三个基本组件(<code>Mach、BSD和I/O工具包</code>)，所以对于某些关键操作，常常有多达三个api。一般来说，所选择的API应该与正在使用它的内核部分匹配，而内核部分又由您的代码试图执行的操作决定。本章的其余部分将介绍Mach、BSD和I/O工具包，并概述这些组件提供的功能。</p>
+<h2 id="Mach"><a href="#Mach" class="headerlink" title="Mach"></a>Mach</h2><p>Mach管理CPU使用情况和内存等处理器资源，处理调度，提供内存保护，并为其他操作系统层提供以消息为中心的基础设施。</p>
+<p>参看我的另外一篇<a href="./iOS/kernelarchitecture/mach.html">Mach概览一章</a></p>
+<p>Mach组件提供</p>
+<ul>
+<li>无类型进程间通信(IPC)</li>
+<li>远程过程调用(RPC)</li>
+<li>对称多处理(SMP)的调度程序支持</li>
+<li>对实时服务的支持</li>
+<li>虚拟内存支持</li>
+<li>支持寻呼机</li>
+<li>模块化的体系结构</li>
+</ul>
+<p>有关Mach的一般信息可以在<a href="./iOS/kernelarchitecture/mach.html">Mach概览一章</a>中找到。有关调度的信息可以在<code>Mach调度和线程接口</code>一章中找到。有关VM系统的信息可以在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL3ZtL3ZtLmh0bWwjLy9hcHBsZV9yZWYvZG9jL3VpZC9UUDMwMDAwOTA1LUNIMjEwLUJFSEpERkNB">内存和虚拟内存<i class="fa fa-external-link-alt"></i></span>中找到。</p>
+<h2 id="BSD"><a href="#BSD" class="headerlink" title="BSD"></a>BSD</h2><p>在Mach层之上，BSD层提供“OS personality”api和服务。BSD层基于BSD内核，主要是FreeBSD。BSD组件提供</p>
+<ul>
+<li>文件系统</li>
+<li>联网(硬件设备级除外)</li>
+<li>UNIX的安全模型</li>
+<li>系统调用的支持</li>
+<li>BSD过程模型，包括过程id和信号</li>
+<li>FreeBSD内核api</li>
+<li>许多POSIX api</li>
+<li>对pthreads (POSIX线程)的内核支持</li>
+</ul>
+<p>BSD组件在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL0JTRC9CU0QuaHRtbCMvL2FwcGxlX3JlZi9kb2MvdWlkL1RQMzAwMDA5MDUtQ0gyMTQtVFBYUkVGMTAx">BSD概述一章<i class="fa fa-external-link-alt"></i></span>中有更详细的描述。</p>
+<h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><p>OS X网络利用BSD的高级网络功能来提供对现代特性的支持，比如网络地址转换(NAT)和防火墙。网络组件提供</p>
+<ul>
+<li>4.4BSD TCP/IP栈和套接字api</li>
+<li>同时支持IP和DDP (AppleTalk传输)</li>
+<li>multihoming</li>
+<li>路由</li>
+<li>多播支持</li>
+<li>服务器调优</li>
+<li>信息包过滤</li>
+<li>Mac OS经典支持(通过过滤器)</li>
+</ul>
+<p>有关网络的更多信息可以在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL05ldHdvcmtpbmcvTmV0d29ya2luZy5odG1sIy8vYXBwbGVfcmVmL2RvYy91aWQvVFAzMDAwMDkwNS1DSDIxNi1CQUJIQ0hGQw==">网络体系结构一章<i class="fa fa-external-link-alt"></i></span>中找到。</p>
+<h2 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h2><p>OS X支持多种类型的文件系统，包括HFS、HFS+、UFS、NFS、ISO 9660等。默认的文件系统类型是HFS+;OS X引导(和“根”)来自HFS+、UFS、ISO、NFS和UDF。OS X文件系统的高级功能包括一个增强的虚拟文件系统(VFS)设计。VFS提供了分层的体系结构(文件系统是可堆叠的)。文件系统组件提供</p>
+<ul>
+<li>utf - 8 (Unicode)支持</li>
+<li>与以前版本的Mac OS相比，性能有所提高。</li>
+</ul>
+<p>更多信息可以在章节<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL0ZpbGVzeXN0ZW0vRmlsZXN5c3RlbS5odG1sIy8vYXBwbGVfcmVmL2RvYy91aWQvVFAzMDAwMDkwNS1DSDIxNS1CQUJFRUhGRg==">文件系统概述<i class="fa fa-external-link-alt"></i></span>中找到。</p>
+<h2 id="I-O设备"><a href="#I-O设备" class="headerlink" title="I / O设备"></a>I / O设备</h2><p>I/O工具包为简化驱动程序开发提供了一个框架，支持多种类型的设备。I/O工具包提供了一个面向对象的I/O体系结构，该体系结构在c++的一个受限子集中实现。I/O工具包框架是模块化和可扩展的。I/O工具包组件提供</p>
+<ul>
+<li>真正的即插即用</li>
+<li>动态设备管理</li>
+<li>动态(按需)加载驱动程序</li>
+<li>桌面系统和便携式设备的电源管理</li>
+<li>多处理器能力</li>
+</ul>
+<p>I/O工具包在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL0lPS2l0L0lPS2l0Lmh0bWwjLy9hcHBsZV9yZWYvZG9jL3VpZC9UUDMwMDAwOTA1LUNIMjEzLUJFSEpERkNB">I/O工具包概述一章<i class="fa fa-external-link-alt"></i></span>中有更详细的描述。</p>
+<h1 id="内核扩展"><a href="#内核扩展" class="headerlink" title="内核扩展"></a>内核扩展</h1><p>OS X提供了一种内核扩展机制，作为一种允许将代码片段动态加载到内核空间的方法，而不需要重新编译。这些代码通常称为插件<code>plug-ins</code>，或者在OS X内核环境中称为<code>kernel extensions</code>或<code>KEXTs</code>。</p>
+<p>因为<code>KEXTs</code>同时提供模块化和动态可加载性，所以对于需要访问不导出到用户空间的接口的任何相对自包含的服务，KEXTs都是一个自然的选择。内核环境的许多组件都支持这种扩展机制，尽管它们以不同的方式支持。</p>
+<p>例如，一些新的网络特性涉及到使用网络内核扩展(NKEs)。这些将在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL05ldHdvcmtpbmcvTmV0d29ya2luZy5odG1sIy8vYXBwbGVfcmVmL2RvYy91aWQvVFAzMDAwMDkwNS1DSDIxNi1CQUJIQ0hGQw==">网络体系结构一章<i class="fa fa-external-link-alt"></i></span>讨论。</p>
+<p>动态添加新文件系统实现的能力基于VFS KEXTs, I/O工具包中的设备驱动程序和设备族使用KEXTs实现。对于编写驱动程序或编写代码以支持新的卷格式或网络协议的开发人员来说，KEXTs使开发变得更加容易。在<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9kb2N1bWVudGF0aW9uL0Rhcndpbi9Db25jZXB0dWFsL0tlcm5lbFByb2dyYW1taW5nL0V4dGVuZC9FeHRlbmQuaHRtbCMvL2FwcGxlX3JlZi9kb2MvdWlkL1RQMzAwMDA5MDUtQ0gyMjAtQkVCREdGSEk=">内核扩展概述一章<i class="fa fa-external-link-alt"></i></span>中将更详细地讨论KEXTs。</p>
+]]></content>
+      <categories>
+        <category>iOS</category>
+        <category>苹果内核架构</category>
+      </categories>
+      <tags>
+        <tag>系统架构</tag>
+        <tag>苹果内核架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mach微内核简介</title>
+    <url>/iOS/kernelarchitecture/xnu.html</url>
+    <content><![CDATA[<h1 id="XNU-怎么加载-App"><a href="#XNU-怎么加载-App" class="headerlink" title="XNU 怎么加载 App?"></a>XNU 怎么加载 App?</h1><p>iOS 的可执行文件和动态库都是 Mach-O 格式，所以加载 APP 实际上就是加载 Mach-O 文件。<br>Mach-O header 信息结构代码如下:</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> mach_header_64 &#123;</span><br><span class="line">    uint32_t        magic;          <span class="comment">//64位还是32位</span></span><br><span class="line">    cpu_type_t      cputype;        <span class="comment">//CPU 类型，比如 arm 或 X86</span></span><br><span class="line">    cpu_subtype_t   cpusubtype;     <span class="comment">//CPU 子类型，比如 armv8</span></span><br><span class="line">    uint32_t        filetype;       <span class="comment">// 文件类型</span></span><br><span class="line">    uint32_t        ncmds;          <span class="comment">// load commands 的数量</span></span><br><span class="line">    uint32_t        sizeofcmds;     <span class="comment">// load commands 大小</span></span><br><span class="line">    uint32_t        flags;          <span class="comment">// 标签</span></span><br><span class="line">    uint32_t        reserved;       <span class="comment">// 保留字段</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中，文件类型 filetype 表示了当前 Mach-O 属于哪种类型。Mach-O 包括以下几种类型。</p>
+<ul>
+<li>OBJECT，指的是 .o 文件或者 .a 文件;</li>
+<li>EXECUTE，指的是IPA 拆包后的文件;</li>
+<li>DYLIB，指的是 .dylib 或 .framework 文件; </li>
+<li>DYLINKER，指的是动态链接器; </li>
+<li>DSYM，指的是保存有符号信息用于分析闪退信息的文件。</li>
+</ul>
+<p>加载 Mach-O 文件，内核会 fork 进程，并对进程进行一些基本设置，比如为进程分配虚拟内存、为进程创 建主线程、代码签名等。用户态 dyld 会对 Mach-O 文件做库加载和符号解析。</p>
+]]></content>
+      <categories>
+        <category>iOS</category>
+        <category>XNU:App如何加载</category>
+      </categories>
+      <tags>
+        <tag>操作系统</tag>
+        <tag>系统架构</tag>
+        <tag>XNU:App如何加载</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>内存管理</title>
     <url>/iOS/memorymanagerment/memory.html</url>
     <content><![CDATA[<h2 id="autoReleasePool-什么时候释放"><a href="#autoReleasePool-什么时候释放" class="headerlink" title="autoReleasePool 什么时候释放?"></a><code>autoReleasePool</code> 什么时候释放?</h2><p><code>App</code>启动后，苹果在主线程 <code>RunLoop</code> 里注册了两个 <code>Observer</code>，其回调都是 <code>_wrapRunLoopWithAutoreleasePoolHandler()</code>。</p>
@@ -5550,163 +5556,6 @@ mach_init(); // from libc.a
         <tag>iOS</tag>
         <tag>Objective-C</tag>
         <tag>iOS内存管理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>网络</title>
-    <url>/iOS/network/index.html</url>
-    <content><![CDATA[<h2 id="Http-和-Https-的区别？为什么更加安全？"><a href="#Http-和-Https-的区别？为什么更加安全？" class="headerlink" title="Http 和 Https 的区别？为什么更加安全？"></a><code>Http</code> 和 <code>Https</code> 的区别？为什么更加安全？</h2><h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><ul>
-<li>1.<code>HTTPS</code> 需要向机构申请 <code>CA</code> 证书，极少免费。</li>
-<li>2.<code>HTTP</code> 属于明文传输，<code>HTTPS</code>基于 <code>SSL</code> 进行加密传输。</li>
-<li>3.<code>HTTP</code> 端口号为 <code>80</code>，<code>HTTPS</code> 端口号为 <code>443</code> 。</li>
-<li>4.<code>HTTPS</code> 是加密传输，有身份验证的环节，更加安全。</li>
-</ul>
-<h3 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h3><p><strong>SSL(安全套接层)</strong><br><strong>TLS(传输层安全)</strong></p>
-<p>以上两者在传输层之上，对网络连接进行加密处理，保障数据的完整性，更加的安全。</p>
-<h2 id="TCP-IP-五层模型的协议"><a href="#TCP-IP-五层模型的协议" class="headerlink" title="TCP/IP 五层模型的协议?"></a><code>TCP/IP</code> 五层模型的协议?</h2><ul>
-<li>应用层</li>
-<li>传输层</li>
-<li>网路层 </li>
-<li>数据链路层</li>
-<li>物理层</li>
-</ul>
-<h2 id="OSI-七层模型的协议"><a href="#OSI-七层模型的协议" class="headerlink" title="OSI 七层模型的协议?"></a><code>OSI</code> 七层模型的协议?</h2><ul>
-<li>应用层 文件传输，电子邮件，文件服务，虚拟终端 TFTP，HTTP，SNMP，FTP，SMTP，DNS，Telnet</li>
-<li>表示层 数据格式化，代码转换，数据加密 没有协议</li>
-<li>会话层 解除或建立与别的接点的联系 没有协议</li>
-<li>传输层 提供端对端的接口 TCP，UDP</li>
-<li>网络层 为数据包选择路由 IP，ICMP，RIP，OSPF，BGP，IGMP</li>
-<li>数据链路层 传输有地址的帧以及错误检测功能 SLIP，CSLIP，PPP，ARP，RARP，MTU</li>
-<li>物理层 以二进制数据形式在物理媒体上传输数据 ISO2110，IEEE802，IEEE802.2</li>
-</ul>
-<h2 id="断点续传-功能该怎么实现？"><a href="#断点续传-功能该怎么实现？" class="headerlink" title="断点续传 功能该怎么实现？"></a><code>断点续传</code> 功能该怎么实现？</h2><ul>
-<li>1.利用 <code>http</code> 的头部字段 ，设置 <code>http</code> 的 <code>Range</code> 属性</li>
-<li>2.检测下载进度，并且判断是否需要重新创建下载文件</li>
-</ul>
-<h2 id="DNS-的解析过程？网络的-DNS-优化。"><a href="#DNS-的解析过程？网络的-DNS-优化。" class="headerlink" title="DNS 的解析过程？网络的 DNS 优化。"></a><code>DNS</code> 的解析过程？网络的 <code>DNS</code> 优化。</h2><blockquote>
-<p><code>DNS</code> 是域名到 <code>IP</code> 地址的映射，<code>DNS</code> 解析使用 <code>UDP</code> 数据报，端口号53，并且采用明文传输的方式</p>
-</blockquote>
-<p>客户端在向服务端发送请求时，会先将 <code>域名</code> 到 <code>DNS</code> 服务器映射出 <code>IP</code> 地址，然后再访问。</p>
-<h3 id="DNS-解析的两种方式"><a href="#DNS-解析的两种方式" class="headerlink" title="DNS 解析的两种方式"></a><code>DNS</code> 解析的两种方式</h3><h4 id="递归查询"><a href="#递归查询" class="headerlink" title="递归查询"></a>递归查询</h4><p>不断地自下而上遍历解析，“我去给你问一下”的方式</p>
-<h4 id="迭代查询"><a href="#迭代查询" class="headerlink" title="迭代查询"></a>迭代查询</h4><p>迭代查询 是 “我告诉你谁可能知道”的方式</p>
-<h3 id="DNS-解析存在的问题"><a href="#DNS-解析存在的问题" class="headerlink" title="DNS 解析存在的问题"></a><code>DNS</code> 解析存在的问题</h3><h4 id="DNS-劫持"><a href="#DNS-劫持" class="headerlink" title="DNS 劫持"></a><code>DNS</code> 劫持</h4><p>被钓鱼网站劫持，有可能返回错误的 <code>IP</code>，浏览的不是目标浏览器</p>
-<h4 id="DNS-解析转发"><a href="#DNS-解析转发" class="headerlink" title="DNS 解析转发"></a><code>DNS</code> 解析转发</h4><p>晓得运营商可能将 <code>DNS</code> 解析请求转发，解析的比较慢，效率低</p>
-<h3 id="DNS-劫持解决办法"><a href="#DNS-劫持解决办法" class="headerlink" title="DNS 劫持解决办法"></a><code>DNS</code> 劫持解决办法</h3><h4 id="httpDNS"><a href="#httpDNS" class="headerlink" title="httpDNS"></a>httpDNS</h4><p>使用 <code>http</code> 协议向 <code>DNS</code> 服务器 80 端口进行请求</p>
-<h4 id="长连接"><a href="#长连接" class="headerlink" title="长连接"></a>长连接</h4><p>找一个中间的长连 <code>server</code> ,在内网专线进行 <code>Http</code> 请求。客户端和这个长连 <code>server</code>通信即可。</p>
-<h2 id="Post请求体有哪些格式？"><a href="#Post请求体有哪些格式？" class="headerlink" title="Post请求体有哪些格式？"></a><code>Post</code>请求体有哪些格式？</h2><h3 id="application-x-www-form-urlencoded"><a href="#application-x-www-form-urlencoded" class="headerlink" title="application/x-www-form-urlencoded"></a>application/x-www-form-urlencoded</h3><p>这应该是最常见的 <code>POST</code> 提交数据的方式了。浏览器的原生 <code>form</code> 表单，如果不设置 <code>enctype</code> 属性，那么最终就会以 <code>application/x-www-form-urlencoded</code> 方式提交数据</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">POST  HTTP/1.1</span><br><span class="line">Host: www.demo.com</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Postman-Token: 81d7b315-d4be-8ee8-1237-04f3976de032</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">key=value&amp;testKey=testValue</span><br></pre></td></tr></table></figure>
-
-<h3 id="multipart-form-data"><a href="#multipart-form-data" class="headerlink" title="multipart/form-data"></a>multipart/form-data</h3><figure class="highlight html"><table><tr><td class="code"><pre><span class="line">POST  HTTP/1.1</span><br><span class="line">Host: www.demo.com</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Postman-Token: 679d816d-8757-14fd-57f2-fbc2518dddd9</span><br><span class="line">Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundary7MA4YWxkTrZu0gW</span><br><span class="line">Content-Disposition: form-data; name=&quot;key&quot;</span><br><span class="line"></span><br><span class="line">value</span><br><span class="line">------WebKitFormBoundary7MA4YWxkTrZu0gW</span><br><span class="line">Content-Disposition: form-data; name=&quot;testKey&quot;</span><br><span class="line"></span><br><span class="line">testValue</span><br><span class="line">------WebKitFormBoundary7MA4YWxkTrZu0gW</span><br><span class="line">Content-Disposition: form-data; name=&quot;imgFile&quot;; filename=&quot;no-file&quot;</span><br><span class="line">Content-Type: application/octet-stream</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">data</span> <span class="attr">in</span> <span class="attr">here</span>&gt;</span></span><br><span class="line">------WebKitFormBoundary7MA4YWxkTrZu0gW--</span><br></pre></td></tr></table></figure>
-<h3 id="application-json"><a href="#application-json" class="headerlink" title="application/json"></a>application/json</h3><h3 id="text-xml"><a href="#text-xml" class="headerlink" title="text/xml"></a>text/xml</h3><h2 id="什么是-Mimetype"><a href="#什么是-Mimetype" class="headerlink" title="什么是 Mimetype ?"></a>什么是 <code>Mimetype</code> ?</h2><p>在浏览器中显示的内容有 <code>HTML</code>、有 <code>XML</code>、有 <code>GIF</code>、还有 <code>Flash</code> ……那么，浏览器是如何区分它们，决定什么内容用什么形式来显示呢？答案是 <code>MIME Type</code>，也就是该资源的媒体类型。</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="comment">//向该文件发送请求,根据请求头拿到该文件的MIMEType</span></span><br><span class="line">-(<span class="built_in">NSString</span> *)getMIMETypeURLRequestAtPath:(<span class="built_in">NSString</span>*)path</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//1.确定请求路径</span></span><br><span class="line">    <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> fileURLWithPath:path];</span><br><span class="line">     </span><br><span class="line">    <span class="comment">//2.创建可变的请求对象</span></span><br><span class="line">    <span class="built_in">NSMutableURLRequest</span> *request = [<span class="built_in">NSMutableURLRequest</span> requestWithURL:url];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//3.发送请求</span></span><br><span class="line">    <span class="built_in">NSHTTPURLResponse</span> *response = <span class="literal">nil</span>;</span><br><span class="line">    [<span class="built_in">NSURLConnection</span> sendSynchronousRequest:request returningResponse:&amp;response error:<span class="literal">nil</span>];</span><br><span class="line">   </span><br><span class="line">    <span class="built_in">NSString</span> *mimeType = response.MIMEType;</span><br><span class="line">    <span class="keyword">return</span> mimeType;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="网络请求的状态码都大致代表什么意思？"><a href="#网络请求的状态码都大致代表什么意思？" class="headerlink" title="网络请求的状态码都大致代表什么意思？"></a>网络请求的状态码都大致代表什么意思？</h2><h3 id="1-1xx"><a href="#1-1xx" class="headerlink" title="1.1xx"></a>1.1xx</h3><blockquote>
-<p>1xx 代表临时响应，需要请求者继续执行操作的状态代码。</p>
-</blockquote>
-<h3 id="2-2xx"><a href="#2-2xx" class="headerlink" title="2.2xx"></a>2.2xx</h3><blockquote>
-<p>2xx 代表的多是操作成功。</p>
-</blockquote>
-<h3 id="3-3xx"><a href="#3-3xx" class="headerlink" title="3.3xx"></a>3.3xx</h3><blockquote>
-<p>3xx 代表重定向，表示要完成请求，需要进一步操作</p>
-</blockquote>
-<h3 id="4-4xx"><a href="#4-4xx" class="headerlink" title="4.4xx"></a>4.4xx</h3><blockquote>
-<p>4xx 代表请求错误，表示请求可能出错，妨碍了服务器的处理。</p>
-</blockquote>
-<h3 id="5-5xx"><a href="#5-5xx" class="headerlink" title="5.5xx"></a>5.5xx</h3><blockquote>
-<p>5xx 代表服务器错误，表示服务器在尝试处理请求时发生内部错误。 这些错误可能是服务器本身的错误，而不是请求出错</p>
-</blockquote>
-<h2 id="如何判断一个请求是否结束？"><a href="#如何判断一个请求是否结束？" class="headerlink" title="如何判断一个请求是否结束？"></a>如何判断一个请求是否结束？</h2><ul>
-<li>1.查看 <code>Content-Length</code> 是否达到 1024 字节。</li>
-<li>2.通过 <code>Post</code> 发送请求时，消息一般都是一段一段返回的，看最后的一个 <code>chunked</code> 是否为空?</li>
-</ul>
-<h2 id="SSL-传输协议？说一下-SSL-验证过程？"><a href="#SSL-传输协议？说一下-SSL-验证过程？" class="headerlink" title="SSL 传输协议？说一下 SSL 验证过程？"></a>SSL 传输协议？说一下 SSL 验证过程？</h2><ul>
-<li>1.配备了 <code>身份证书</code>，防止被冒充。</li>
-<li>2.有 <code>校验机制</code>，一旦被篡改，双方都会知道。</li>
-<li>3.通过 <code>加密</code> 进行传播。</li>
-</ul>
-<h3 id="连接过程如下："><a href="#连接过程如下：" class="headerlink" title="连接过程如下："></a>连接过程如下：</h3><ul>
-<li>①：客户端向服务端发消息，包括客户端支持的 <code>加密算法</code> 以及 <code>随机数1</code> 、<code>TLS</code> 版本号。</li>
-<li>②：服务端向客户端返回信息，包括双方已经匹配好的 <code>加密算法</code> 以及 <code>随机数2</code>、<code>Server证书</code> 。</li>
-<li>③：服务端向客户端返回 <code>验证证书</code>。</li>
-<li>④：客户端进行证书验证，首先要评估信任证书<ul>
-<li>1.服务端向客户端返回证书的 <code>数字摘要</code> 与服务端证书返回客户端，解密后的是否一致，防止被篡改。</li>
-<li>2.验证证书链：逐级验证服务端证书是否在可信任证书列表。</li>
-<li>3.验证通过后：<ul>
-<li>①：将 <code>随机数1</code>、<code>随机数2</code>、服务器端返回 <code>证书公钥</code> 加密过后的 <code>预主秘钥</code> 三者组合成 <code>会话密钥</code>。</li>
-<li>②：服务端拿到 <code>会话秘钥</code>  后，会用服务端证书 <code>私钥</code>进行解密，得到 <code>预主秘钥</code>。</li>
-<li>③：服务端将 <code>随机数1</code>、<code>随机数2</code>、服务器端证书私钥解密得到的 <code>预主秘钥</code> 三者组合成 <code>会话密钥</code>。此时客户端的 <code>会话秘钥</code> 和 服务端的 <code>会话秘钥</code> 应该是一致的。</li>
-<li>④：接下来会经行验证：<pre><code>- 1.客户端通过 `会话秘钥`，加密信息发给服务端，看服务端能否成功接收。
-- 2.服务端通过 `会话秘钥`，加密信息返给客户端，看客户端能否成功解析。
-</code></pre>
-</li>
-</ul>
-</li>
-<li>4.以上步骤都通过了，此时 <code>SSL</code> 验证连接。</li>
-</ul>
-</li>
-</ul>
-<h2 id="解释一下-三次握手-和-四次挥手？"><a href="#解释一下-三次握手-和-四次挥手？" class="headerlink" title="解释一下 三次握手 和 四次挥手？"></a>解释一下 <code>三次握手</code> 和 <code>四次挥手</code>？</h2><h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><ul>
-<li>1.由客户端向服务端发送 <code>SYN</code> 同步报文。</li>
-<li>2.当服务端收到 <code>SYN</code> 同步报文之后，会返回给客户端 <code>SYN</code> 同步报文和 <code>ACK</code> 确认报文。</li>
-<li>3.客户端会向服务端发送 <code>ACK</code> 确认报文，此时客户端和服务端的连接正式建立。</li>
-</ul>
-<h3 id="建立连接"><a href="#建立连接" class="headerlink" title="建立连接"></a>建立连接</h3><ul>
-<li>1.这个时候客户端就可以通过 <code>Http</code> 请求报文，向服务端发送请求</li>
-<li>2.服务端接收到客户端的请求之后，向客户端回复 <code>Http</code> 响应报文。</li>
-</ul>
-<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><strong>当客户端和服务端的连接想要断开的时候，要经历四次挥手的过程，步骤如下：</strong></p>
-<ul>
-<li>1.先由客户端向服务端发送 <code>FIN</code> 结束报文。</li>
-<li>2.服务端会返回给客户端 <code>ACK</code> 确认报文 。此时，由客户端发起的断开连接已经完成。</li>
-<li>3.服务端会发送给客户端 <code>FIN</code> 结束报文 和 <code>ACK</code> 确认报文。</li>
-<li>4.客户端会返回 <code>ACK</code> 确认报文到服务端，至此，由服务端方向的断开连接已经完成。</li>
-</ul>
-<h3 id="解释一下为什么是”三次握手”"><a href="#解释一下为什么是”三次握手”" class="headerlink" title="解释一下为什么是”三次握手”"></a>解释一下为什么是”三次握手”</h3><blockquote>
-<p>客户端在与服务端建立连接的过程中，客户端向服务端发送连接请求，如果因为网络的原因，导致它超时触发了重传机制，那么客户端会重新向服务端发送一次连接请求，那有可能第二次发送的连接请求，服务端收到之后，直接返回给客户端确认连接的报文。</p>
-</blockquote>
-<blockquote>
-<p>如果只需要两次就可以建立连接，假如说第一次建立连接的请求终于被服务端接收到了，那服务端收到之后，会以为客户端想新建另外一个链接，这样的话就会建立两个连接。</p>
-</blockquote>
-<blockquote>
-<p>而采取三次握手，在客户端收到服务端的确认报文之后，客户端再向服务端发送一个确认报文，这时才正式建立连接。那么第一次因为超时而迟迟没有收到的建立连接的请求，这时在收到之后，服务端依然会向客户端返回一个确认报文，但是服务端现在已经与客户端建立的连接，所以客户端就不会再向服务端发送确认报文，服务端迟迟没有收到确认报文，那么也就不会真正的建立再一次连接。</p>
-</blockquote>
-<h3 id="又为什么是”四次挥手”？"><a href="#又为什么是”四次挥手”？" class="headerlink" title="又为什么是”四次挥手”？"></a>又为什么是”四次挥手”？</h3><blockquote>
-</blockquote>
-<p>建立的时候是双方面的建立，而释放的时候，也必然是客户端和服务端双方面的断开连接。</p>
-<blockquote>
-<p>客户端与服务端建立的连接是双通的，这也就意味着客户端可以向服务端发送请求，服务端向客户端返回响应，同样的也可以从服务端向客户端发送，然后由客户端向服务端返回，如果你只关闭了客户端，向服务端通道，这只叫半关闭状态，并没有完全的切断客户端与服务端的关联。</p>
-</blockquote>
-<h2 id="谈一谈网络中的-session-和-cookie"><a href="#谈一谈网络中的-session-和-cookie" class="headerlink" title="谈一谈网络中的 session 和 cookie?"></a>谈一谈网络中的 <code>session</code> 和 <code>cookie</code>?</h2><p>因为 <code>Http</code> 无状态的特性，如果需要判断是哪个用户，这时就需要 <code>Cookie</code> 和 <code>Session</code>。</p>
-<p><code>Cookie</code> 存储在客户端，用来记录用户状态，区分用户。一般都是服务端把生成的 <code>Cookie</code> 通过响应返回给客户端，客户端保存。</p>
-<p><code>Session</code> 存储在网络端，需要依赖 <code>Cookie</code> 机制。服务端生成了 <code>Session</code> 后，返回给客户端，客户端 <code>setCookie:sessionID</code>，所以下次请求的时候，客户端把 <code>Cookie</code> 发送给服务端，服务端解析出 <code>SessionID</code>，在服务端根据 <code>SessionID</code> 判断当前的用户。</p>
-<h3 id="如何修改-Cookie"><a href="#如何修改-Cookie" class="headerlink" title="如何修改 Cookie?"></a>如何修改 <code>Cookie</code>?</h3><ul>
-<li><p>相同 <code>Key</code> 值得新的 <code>Cookie</code> 会覆盖旧的 <code>Cookie</code>.</p>
-</li>
-<li><p>覆盖规则是 name path 和 domain 等需要与原有的一致</p>
-</li>
-</ul>
-<h3 id="如何删除-Cookie"><a href="#如何删除-Cookie" class="headerlink" title="如何删除 Cookie?"></a>如何删除 <code>Cookie</code>?</h3><ul>
-<li><p>相同 <code>Key</code> 值得新的 <code>Cookie</code> 会覆盖旧的 <code>Cookie</code>.</p>
-</li>
-<li><p>覆盖规则是 name path 和 domain 等需要与原有的一致</p>
-</li>
-<li><p>设置 <code>Cookie</code> 的 <code>expires</code> 为过去的一个时间点，或者 <code>maxAge = 0</code></p>
-</li>
-</ul>
-<h3 id="如何保证-Cookie-的安全？"><a href="#如何保证-Cookie-的安全？" class="headerlink" title="如何保证 Cookie 的安全？"></a>如何保证 <code>Cookie</code> 的安全？</h3><ul>
-<li>对 <code>Cookie</code> 进行加密处理</li>
-<li>只在 <code>Https</code> 上携带 <code>Cookie</code>。 </li>
-<li>设置 <code>Cookie</code> 为 <code>httpOnly</code>，防止跨站脚本攻击。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>iOS</category>
-        <category>网络</category>
-      </categories>
-      <tags>
-        <tag>网络</tag>
       </tags>
   </entry>
   <entry>
@@ -5892,6 +5741,163 @@ mach_init(); // from libc.a
       </categories>
       <tags>
         <tag>多线程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>网络</title>
+    <url>/iOS/network/index.html</url>
+    <content><![CDATA[<h2 id="Http-和-Https-的区别？为什么更加安全？"><a href="#Http-和-Https-的区别？为什么更加安全？" class="headerlink" title="Http 和 Https 的区别？为什么更加安全？"></a><code>Http</code> 和 <code>Https</code> 的区别？为什么更加安全？</h2><h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><ul>
+<li>1.<code>HTTPS</code> 需要向机构申请 <code>CA</code> 证书，极少免费。</li>
+<li>2.<code>HTTP</code> 属于明文传输，<code>HTTPS</code>基于 <code>SSL</code> 进行加密传输。</li>
+<li>3.<code>HTTP</code> 端口号为 <code>80</code>，<code>HTTPS</code> 端口号为 <code>443</code> 。</li>
+<li>4.<code>HTTPS</code> 是加密传输，有身份验证的环节，更加安全。</li>
+</ul>
+<h3 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h3><p><strong>SSL(安全套接层)</strong><br><strong>TLS(传输层安全)</strong></p>
+<p>以上两者在传输层之上，对网络连接进行加密处理，保障数据的完整性，更加的安全。</p>
+<h2 id="TCP-IP-五层模型的协议"><a href="#TCP-IP-五层模型的协议" class="headerlink" title="TCP/IP 五层模型的协议?"></a><code>TCP/IP</code> 五层模型的协议?</h2><ul>
+<li>应用层</li>
+<li>传输层</li>
+<li>网路层 </li>
+<li>数据链路层</li>
+<li>物理层</li>
+</ul>
+<h2 id="OSI-七层模型的协议"><a href="#OSI-七层模型的协议" class="headerlink" title="OSI 七层模型的协议?"></a><code>OSI</code> 七层模型的协议?</h2><ul>
+<li>应用层 文件传输，电子邮件，文件服务，虚拟终端 TFTP，HTTP，SNMP，FTP，SMTP，DNS，Telnet</li>
+<li>表示层 数据格式化，代码转换，数据加密 没有协议</li>
+<li>会话层 解除或建立与别的接点的联系 没有协议</li>
+<li>传输层 提供端对端的接口 TCP，UDP</li>
+<li>网络层 为数据包选择路由 IP，ICMP，RIP，OSPF，BGP，IGMP</li>
+<li>数据链路层 传输有地址的帧以及错误检测功能 SLIP，CSLIP，PPP，ARP，RARP，MTU</li>
+<li>物理层 以二进制数据形式在物理媒体上传输数据 ISO2110，IEEE802，IEEE802.2</li>
+</ul>
+<h2 id="断点续传-功能该怎么实现？"><a href="#断点续传-功能该怎么实现？" class="headerlink" title="断点续传 功能该怎么实现？"></a><code>断点续传</code> 功能该怎么实现？</h2><ul>
+<li>1.利用 <code>http</code> 的头部字段 ，设置 <code>http</code> 的 <code>Range</code> 属性</li>
+<li>2.检测下载进度，并且判断是否需要重新创建下载文件</li>
+</ul>
+<h2 id="DNS-的解析过程？网络的-DNS-优化。"><a href="#DNS-的解析过程？网络的-DNS-优化。" class="headerlink" title="DNS 的解析过程？网络的 DNS 优化。"></a><code>DNS</code> 的解析过程？网络的 <code>DNS</code> 优化。</h2><blockquote>
+<p><code>DNS</code> 是域名到 <code>IP</code> 地址的映射，<code>DNS</code> 解析使用 <code>UDP</code> 数据报，端口号53，并且采用明文传输的方式</p>
+</blockquote>
+<p>客户端在向服务端发送请求时，会先将 <code>域名</code> 到 <code>DNS</code> 服务器映射出 <code>IP</code> 地址，然后再访问。</p>
+<h3 id="DNS-解析的两种方式"><a href="#DNS-解析的两种方式" class="headerlink" title="DNS 解析的两种方式"></a><code>DNS</code> 解析的两种方式</h3><h4 id="递归查询"><a href="#递归查询" class="headerlink" title="递归查询"></a>递归查询</h4><p>不断地自下而上遍历解析，“我去给你问一下”的方式</p>
+<h4 id="迭代查询"><a href="#迭代查询" class="headerlink" title="迭代查询"></a>迭代查询</h4><p>迭代查询 是 “我告诉你谁可能知道”的方式</p>
+<h3 id="DNS-解析存在的问题"><a href="#DNS-解析存在的问题" class="headerlink" title="DNS 解析存在的问题"></a><code>DNS</code> 解析存在的问题</h3><h4 id="DNS-劫持"><a href="#DNS-劫持" class="headerlink" title="DNS 劫持"></a><code>DNS</code> 劫持</h4><p>被钓鱼网站劫持，有可能返回错误的 <code>IP</code>，浏览的不是目标浏览器</p>
+<h4 id="DNS-解析转发"><a href="#DNS-解析转发" class="headerlink" title="DNS 解析转发"></a><code>DNS</code> 解析转发</h4><p>晓得运营商可能将 <code>DNS</code> 解析请求转发，解析的比较慢，效率低</p>
+<h3 id="DNS-劫持解决办法"><a href="#DNS-劫持解决办法" class="headerlink" title="DNS 劫持解决办法"></a><code>DNS</code> 劫持解决办法</h3><h4 id="httpDNS"><a href="#httpDNS" class="headerlink" title="httpDNS"></a>httpDNS</h4><p>使用 <code>http</code> 协议向 <code>DNS</code> 服务器 80 端口进行请求</p>
+<h4 id="长连接"><a href="#长连接" class="headerlink" title="长连接"></a>长连接</h4><p>找一个中间的长连 <code>server</code> ,在内网专线进行 <code>Http</code> 请求。客户端和这个长连 <code>server</code>通信即可。</p>
+<h2 id="Post请求体有哪些格式？"><a href="#Post请求体有哪些格式？" class="headerlink" title="Post请求体有哪些格式？"></a><code>Post</code>请求体有哪些格式？</h2><h3 id="application-x-www-form-urlencoded"><a href="#application-x-www-form-urlencoded" class="headerlink" title="application/x-www-form-urlencoded"></a>application/x-www-form-urlencoded</h3><p>这应该是最常见的 <code>POST</code> 提交数据的方式了。浏览器的原生 <code>form</code> 表单，如果不设置 <code>enctype</code> 属性，那么最终就会以 <code>application/x-www-form-urlencoded</code> 方式提交数据</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">POST  HTTP/1.1</span><br><span class="line">Host: www.demo.com</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Postman-Token: 81d7b315-d4be-8ee8-1237-04f3976de032</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">key=value&amp;testKey=testValue</span><br></pre></td></tr></table></figure>
+
+<h3 id="multipart-form-data"><a href="#multipart-form-data" class="headerlink" title="multipart/form-data"></a>multipart/form-data</h3><figure class="highlight html"><table><tr><td class="code"><pre><span class="line">POST  HTTP/1.1</span><br><span class="line">Host: www.demo.com</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Postman-Token: 679d816d-8757-14fd-57f2-fbc2518dddd9</span><br><span class="line">Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundary7MA4YWxkTrZu0gW</span><br><span class="line">Content-Disposition: form-data; name=&quot;key&quot;</span><br><span class="line"></span><br><span class="line">value</span><br><span class="line">------WebKitFormBoundary7MA4YWxkTrZu0gW</span><br><span class="line">Content-Disposition: form-data; name=&quot;testKey&quot;</span><br><span class="line"></span><br><span class="line">testValue</span><br><span class="line">------WebKitFormBoundary7MA4YWxkTrZu0gW</span><br><span class="line">Content-Disposition: form-data; name=&quot;imgFile&quot;; filename=&quot;no-file&quot;</span><br><span class="line">Content-Type: application/octet-stream</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">data</span> <span class="attr">in</span> <span class="attr">here</span>&gt;</span></span><br><span class="line">------WebKitFormBoundary7MA4YWxkTrZu0gW--</span><br></pre></td></tr></table></figure>
+<h3 id="application-json"><a href="#application-json" class="headerlink" title="application/json"></a>application/json</h3><h3 id="text-xml"><a href="#text-xml" class="headerlink" title="text/xml"></a>text/xml</h3><h2 id="什么是-Mimetype"><a href="#什么是-Mimetype" class="headerlink" title="什么是 Mimetype ?"></a>什么是 <code>Mimetype</code> ?</h2><p>在浏览器中显示的内容有 <code>HTML</code>、有 <code>XML</code>、有 <code>GIF</code>、还有 <code>Flash</code> ……那么，浏览器是如何区分它们，决定什么内容用什么形式来显示呢？答案是 <code>MIME Type</code>，也就是该资源的媒体类型。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="comment">//向该文件发送请求,根据请求头拿到该文件的MIMEType</span></span><br><span class="line">-(<span class="built_in">NSString</span> *)getMIMETypeURLRequestAtPath:(<span class="built_in">NSString</span>*)path</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//1.确定请求路径</span></span><br><span class="line">    <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> fileURLWithPath:path];</span><br><span class="line">     </span><br><span class="line">    <span class="comment">//2.创建可变的请求对象</span></span><br><span class="line">    <span class="built_in">NSMutableURLRequest</span> *request = [<span class="built_in">NSMutableURLRequest</span> requestWithURL:url];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//3.发送请求</span></span><br><span class="line">    <span class="built_in">NSHTTPURLResponse</span> *response = <span class="literal">nil</span>;</span><br><span class="line">    [<span class="built_in">NSURLConnection</span> sendSynchronousRequest:request returningResponse:&amp;response error:<span class="literal">nil</span>];</span><br><span class="line">   </span><br><span class="line">    <span class="built_in">NSString</span> *mimeType = response.MIMEType;</span><br><span class="line">    <span class="keyword">return</span> mimeType;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="网络请求的状态码都大致代表什么意思？"><a href="#网络请求的状态码都大致代表什么意思？" class="headerlink" title="网络请求的状态码都大致代表什么意思？"></a>网络请求的状态码都大致代表什么意思？</h2><h3 id="1-1xx"><a href="#1-1xx" class="headerlink" title="1.1xx"></a>1.1xx</h3><blockquote>
+<p>1xx 代表临时响应，需要请求者继续执行操作的状态代码。</p>
+</blockquote>
+<h3 id="2-2xx"><a href="#2-2xx" class="headerlink" title="2.2xx"></a>2.2xx</h3><blockquote>
+<p>2xx 代表的多是操作成功。</p>
+</blockquote>
+<h3 id="3-3xx"><a href="#3-3xx" class="headerlink" title="3.3xx"></a>3.3xx</h3><blockquote>
+<p>3xx 代表重定向，表示要完成请求，需要进一步操作</p>
+</blockquote>
+<h3 id="4-4xx"><a href="#4-4xx" class="headerlink" title="4.4xx"></a>4.4xx</h3><blockquote>
+<p>4xx 代表请求错误，表示请求可能出错，妨碍了服务器的处理。</p>
+</blockquote>
+<h3 id="5-5xx"><a href="#5-5xx" class="headerlink" title="5.5xx"></a>5.5xx</h3><blockquote>
+<p>5xx 代表服务器错误，表示服务器在尝试处理请求时发生内部错误。 这些错误可能是服务器本身的错误，而不是请求出错</p>
+</blockquote>
+<h2 id="如何判断一个请求是否结束？"><a href="#如何判断一个请求是否结束？" class="headerlink" title="如何判断一个请求是否结束？"></a>如何判断一个请求是否结束？</h2><ul>
+<li>1.查看 <code>Content-Length</code> 是否达到 1024 字节。</li>
+<li>2.通过 <code>Post</code> 发送请求时，消息一般都是一段一段返回的，看最后的一个 <code>chunked</code> 是否为空?</li>
+</ul>
+<h2 id="SSL-传输协议？说一下-SSL-验证过程？"><a href="#SSL-传输协议？说一下-SSL-验证过程？" class="headerlink" title="SSL 传输协议？说一下 SSL 验证过程？"></a>SSL 传输协议？说一下 SSL 验证过程？</h2><ul>
+<li>1.配备了 <code>身份证书</code>，防止被冒充。</li>
+<li>2.有 <code>校验机制</code>，一旦被篡改，双方都会知道。</li>
+<li>3.通过 <code>加密</code> 进行传播。</li>
+</ul>
+<h3 id="连接过程如下："><a href="#连接过程如下：" class="headerlink" title="连接过程如下："></a>连接过程如下：</h3><ul>
+<li>①：客户端向服务端发消息，包括客户端支持的 <code>加密算法</code> 以及 <code>随机数1</code> 、<code>TLS</code> 版本号。</li>
+<li>②：服务端向客户端返回信息，包括双方已经匹配好的 <code>加密算法</code> 以及 <code>随机数2</code>、<code>Server证书</code> 。</li>
+<li>③：服务端向客户端返回 <code>验证证书</code>。</li>
+<li>④：客户端进行证书验证，首先要评估信任证书<ul>
+<li>1.服务端向客户端返回证书的 <code>数字摘要</code> 与服务端证书返回客户端，解密后的是否一致，防止被篡改。</li>
+<li>2.验证证书链：逐级验证服务端证书是否在可信任证书列表。</li>
+<li>3.验证通过后：<ul>
+<li>①：将 <code>随机数1</code>、<code>随机数2</code>、服务器端返回 <code>证书公钥</code> 加密过后的 <code>预主秘钥</code> 三者组合成 <code>会话密钥</code>。</li>
+<li>②：服务端拿到 <code>会话秘钥</code>  后，会用服务端证书 <code>私钥</code>进行解密，得到 <code>预主秘钥</code>。</li>
+<li>③：服务端将 <code>随机数1</code>、<code>随机数2</code>、服务器端证书私钥解密得到的 <code>预主秘钥</code> 三者组合成 <code>会话密钥</code>。此时客户端的 <code>会话秘钥</code> 和 服务端的 <code>会话秘钥</code> 应该是一致的。</li>
+<li>④：接下来会经行验证：<pre><code>- 1.客户端通过 `会话秘钥`，加密信息发给服务端，看服务端能否成功接收。
+- 2.服务端通过 `会话秘钥`，加密信息返给客户端，看客户端能否成功解析。
+</code></pre>
+</li>
+</ul>
+</li>
+<li>4.以上步骤都通过了，此时 <code>SSL</code> 验证连接。</li>
+</ul>
+</li>
+</ul>
+<h2 id="解释一下-三次握手-和-四次挥手？"><a href="#解释一下-三次握手-和-四次挥手？" class="headerlink" title="解释一下 三次握手 和 四次挥手？"></a>解释一下 <code>三次握手</code> 和 <code>四次挥手</code>？</h2><h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><ul>
+<li>1.由客户端向服务端发送 <code>SYN</code> 同步报文。</li>
+<li>2.当服务端收到 <code>SYN</code> 同步报文之后，会返回给客户端 <code>SYN</code> 同步报文和 <code>ACK</code> 确认报文。</li>
+<li>3.客户端会向服务端发送 <code>ACK</code> 确认报文，此时客户端和服务端的连接正式建立。</li>
+</ul>
+<h3 id="建立连接"><a href="#建立连接" class="headerlink" title="建立连接"></a>建立连接</h3><ul>
+<li>1.这个时候客户端就可以通过 <code>Http</code> 请求报文，向服务端发送请求</li>
+<li>2.服务端接收到客户端的请求之后，向客户端回复 <code>Http</code> 响应报文。</li>
+</ul>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><strong>当客户端和服务端的连接想要断开的时候，要经历四次挥手的过程，步骤如下：</strong></p>
+<ul>
+<li>1.先由客户端向服务端发送 <code>FIN</code> 结束报文。</li>
+<li>2.服务端会返回给客户端 <code>ACK</code> 确认报文 。此时，由客户端发起的断开连接已经完成。</li>
+<li>3.服务端会发送给客户端 <code>FIN</code> 结束报文 和 <code>ACK</code> 确认报文。</li>
+<li>4.客户端会返回 <code>ACK</code> 确认报文到服务端，至此，由服务端方向的断开连接已经完成。</li>
+</ul>
+<h3 id="解释一下为什么是”三次握手”"><a href="#解释一下为什么是”三次握手”" class="headerlink" title="解释一下为什么是”三次握手”"></a>解释一下为什么是”三次握手”</h3><blockquote>
+<p>客户端在与服务端建立连接的过程中，客户端向服务端发送连接请求，如果因为网络的原因，导致它超时触发了重传机制，那么客户端会重新向服务端发送一次连接请求，那有可能第二次发送的连接请求，服务端收到之后，直接返回给客户端确认连接的报文。</p>
+</blockquote>
+<blockquote>
+<p>如果只需要两次就可以建立连接，假如说第一次建立连接的请求终于被服务端接收到了，那服务端收到之后，会以为客户端想新建另外一个链接，这样的话就会建立两个连接。</p>
+</blockquote>
+<blockquote>
+<p>而采取三次握手，在客户端收到服务端的确认报文之后，客户端再向服务端发送一个确认报文，这时才正式建立连接。那么第一次因为超时而迟迟没有收到的建立连接的请求，这时在收到之后，服务端依然会向客户端返回一个确认报文，但是服务端现在已经与客户端建立的连接，所以客户端就不会再向服务端发送确认报文，服务端迟迟没有收到确认报文，那么也就不会真正的建立再一次连接。</p>
+</blockquote>
+<h3 id="又为什么是”四次挥手”？"><a href="#又为什么是”四次挥手”？" class="headerlink" title="又为什么是”四次挥手”？"></a>又为什么是”四次挥手”？</h3><blockquote>
+</blockquote>
+<p>建立的时候是双方面的建立，而释放的时候，也必然是客户端和服务端双方面的断开连接。</p>
+<blockquote>
+<p>客户端与服务端建立的连接是双通的，这也就意味着客户端可以向服务端发送请求，服务端向客户端返回响应，同样的也可以从服务端向客户端发送，然后由客户端向服务端返回，如果你只关闭了客户端，向服务端通道，这只叫半关闭状态，并没有完全的切断客户端与服务端的关联。</p>
+</blockquote>
+<h2 id="谈一谈网络中的-session-和-cookie"><a href="#谈一谈网络中的-session-和-cookie" class="headerlink" title="谈一谈网络中的 session 和 cookie?"></a>谈一谈网络中的 <code>session</code> 和 <code>cookie</code>?</h2><p>因为 <code>Http</code> 无状态的特性，如果需要判断是哪个用户，这时就需要 <code>Cookie</code> 和 <code>Session</code>。</p>
+<p><code>Cookie</code> 存储在客户端，用来记录用户状态，区分用户。一般都是服务端把生成的 <code>Cookie</code> 通过响应返回给客户端，客户端保存。</p>
+<p><code>Session</code> 存储在网络端，需要依赖 <code>Cookie</code> 机制。服务端生成了 <code>Session</code> 后，返回给客户端，客户端 <code>setCookie:sessionID</code>，所以下次请求的时候，客户端把 <code>Cookie</code> 发送给服务端，服务端解析出 <code>SessionID</code>，在服务端根据 <code>SessionID</code> 判断当前的用户。</p>
+<h3 id="如何修改-Cookie"><a href="#如何修改-Cookie" class="headerlink" title="如何修改 Cookie?"></a>如何修改 <code>Cookie</code>?</h3><ul>
+<li><p>相同 <code>Key</code> 值得新的 <code>Cookie</code> 会覆盖旧的 <code>Cookie</code>.</p>
+</li>
+<li><p>覆盖规则是 name path 和 domain 等需要与原有的一致</p>
+</li>
+</ul>
+<h3 id="如何删除-Cookie"><a href="#如何删除-Cookie" class="headerlink" title="如何删除 Cookie?"></a>如何删除 <code>Cookie</code>?</h3><ul>
+<li><p>相同 <code>Key</code> 值得新的 <code>Cookie</code> 会覆盖旧的 <code>Cookie</code>.</p>
+</li>
+<li><p>覆盖规则是 name path 和 domain 等需要与原有的一致</p>
+</li>
+<li><p>设置 <code>Cookie</code> 的 <code>expires</code> 为过去的一个时间点，或者 <code>maxAge = 0</code></p>
+</li>
+</ul>
+<h3 id="如何保证-Cookie-的安全？"><a href="#如何保证-Cookie-的安全？" class="headerlink" title="如何保证 Cookie 的安全？"></a>如何保证 <code>Cookie</code> 的安全？</h3><ul>
+<li>对 <code>Cookie</code> 进行加密处理</li>
+<li>只在 <code>Https</code> 上携带 <code>Cookie</code>。 </li>
+<li>设置 <code>Cookie</code> 为 <code>httpOnly</code>，防止跨站脚本攻击。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>iOS</category>
+        <category>网络</category>
+      </categories>
+      <tags>
+        <tag>网络</tag>
       </tags>
   </entry>
   <entry>
