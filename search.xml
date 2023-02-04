@@ -28,6 +28,7 @@
 <li><a href="./computer/string">字符串匹配算法</a></li>
 <li><a href="./iOS/performance/wildpoint">野指针-未完</a></li>
 <li><a href="">oom-卡顿等-未开始</a></li>
+<li><a href="./luafile/">Lua相关</a></li>
 </ul>
 <h2 id="不忘初心"><a href="#不忘初心" class="headerlink" title="不忘初心"></a>不忘初心</h2><ul>
 <li><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL2xpYnJhcnkvYXJjaGl2ZS9uYXZpZ2F0aW9uLw==">Apple官方文档<i class="fa fa-external-link-alt"></i></span></li>
@@ -38,7 +39,8 @@
 <li><span class="exturl" data-url="aHR0cHM6Ly9vcGVuc291cmNlLmFwcGxlLmNvbS90YXJiYWxscw==">苹果源码库<i class="fa fa-external-link-alt"></i></span></li>
 </ul>
 <h2 id="面试快餐"><a href="#面试快餐" class="headerlink" title="面试快餐"></a>面试快餐</h2><ul>
-<li>SideTable相关<br>  定义在objc-private文件下。  由<code>static objc::ExplicitInit&lt;StripedMap&lt;SideTable&gt;&gt; SideTablesMap;</code> 全局静态变量<br>  类型为StripedMap，iOS有8张SideTable表，mac有64张， 重载了[]方法，可以通过对象指针分配其中一张表Sidetable，<ul>
+<li><span class="exturl" data-url="aHR0cHM6Ly9tcC53ZWl4aW4ucXEuY29tL3MvNmNrUm55QUFMYkNzWGZadTU2a1REdw==">离屏渲染等原理<i class="fa fa-external-link-alt"></i></span></li>
+<li>SideTable相关（主要用来引用计数和weak表）<br>  定义在objc-private文件下。  由<code>static objc::ExplicitInit&lt;StripedMap&lt;SideTable&gt;&gt; SideTablesMap;</code> 全局静态变量<br>  类型为StripedMap，iOS有8张SideTable表，mac有64张， 重载了[]方法，可以通过对象指针分配其中一张表Sidetable，<ul>
 <li><span class="exturl" data-url="aHR0cHM6Ly93d3cuamlhbnNodS5jb20vcC8xM2M0ZmIxY2VkZWE=">https://www.jianshu.com/p/13c4fb1cedea<i class="fa fa-external-link-alt"></i></span></li>
 <li><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0xHQmFtYm9vL2lPUy1hcnRpY2xlLjAyL2Jsb2IvbWFpbi8lRTklOTglQkYlRTklODclOEMlRTMlODAlODElRTUlQUQlOTclRTglOEElODJpT1MlRTklOUQlQTIlRTglQUYlOTUlRTklQTIlOTglRTQlQjklOEJSdW50aW1lJUU3JTlCJUI4JUU1JTg1JUIzJUU5JTk3JUFFJUU5JUEyJTk4MiVFRiVCQyU4OCVFOSU5OSU4NCVFNyVBRCU5NCVFNiVBMSU4OCVFRiVCQyU4OS5tZA==">gihub面试大全<i class="fa fa-external-link-alt"></i></span></li>
 </ul>
@@ -58,7 +60,6 @@
 </li>
 <li><a href="./vue/qa.html">Vue</a></li>
 <li><a href="./linux/home.html">Linux相关知识点</a></li>
-<li><a href="./luafile/">Lua相关</a></li>
 <li>Swift</li>
 <li>Flutter</li>
 </ul>
@@ -277,40 +278,6 @@ dskjdhjksgdhjs -->
       </tags>
   </entry>
   <entry>
-    <title>Flutter</title>
-    <url>/flutter/index.html</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Flutter已经面世这么长时间了，不抽空学习一下，实在是对不起自己。也是由于前天面试被问到Flutter的一些东西，一脸懵逼，真不是一个合格的iOS开发猿！！！</p>
-<p>分享一下学习经验和心得，纪录一下学习过程的疑问。</p>
-<p>官网学习，手敲练习<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0phY2stVmluZy9mbHV0dGVyLXN0dWR5">demo源码<i class="fa fa-external-link-alt"></i></span></p>
-<h2 id="学习之前我有几个问题问自己"><a href="#学习之前我有几个问题问自己" class="headerlink" title="学习之前我有几个问题问自己"></a>学习之前我有几个问题问自己</h2><ul>
-<li>为什么大家都说Flutter比RN和Weex流畅？ </li>
-<li>和RN、Weex实现原理对比, Flutter的实现原理是什么？</li>
-<li>怎么和Native通讯？</li>
-</ul>
-<span id="more"></span>
-<h1 id="初见"><a href="#初见" class="headerlink" title="初见"></a>初见</h1><p>clone flutter到本地，配置环境变量，略…</p>
-<p>入口函数 lib/main.dart. 中 void main(), 启动一个app，就是 runApp(<Widget>);</p>
-<p>对于Flutter来说，万物皆<Widget>, 主App窗口也是一个Widget。</p>
-<p>然后就是Widget内部再嵌套子视图Widget，一个套一个，我们可以称之为树节点</p>
-<h2 id="有状态和无状态的Widget"><a href="#有状态和无状态的Widget" class="headerlink" title="有状态和无状态的Widget"></a>有状态和无状态的Widget</h2><p>有状态的StatefulWidget,就是在setState()的时候，会重新绘制 Widget树，从而达到了更新状态的目的。 并且 State和Widget是分离的，也就保证了Widget树(界面)重新绘制的时候，数据不会丢失。</p>
-<h2 id="布局"><a href="#布局" class="headerlink" title="布局"></a>布局</h2><ul>
-<li>竖向排列，也就是Column</li>
-<li>横向排列，也就是Row</li>
-</ul>
-<p>好好运用 <code>Expanded</code>,<code>Container</code>等, </p>
-<blockquote>
-<p>注意：如果要添加<code>填充</code>，<code>边距</code>，<code>边框</code>或<code>背景色</code>，请使用<code>Container</code>来设置<code>!!!</code></p>
-</blockquote>
-<p>暂停。。。有些事情耽搁，后续继续写<br><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vZW50cnkvNWFmYTk3Njk1MTg4MjU0Mjg2MzBhNjFj">看完删除<i class="fa fa-external-link-alt"></i></span></p>
-]]></content>
-      <categories>
-        <category>flutter</category>
-      </categories>
-      <tags>
-        <tag>flutter</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>https</title>
     <url>/computer/https.html</url>
     <content><![CDATA[<h1 id="https"><a href="#https" class="headerlink" title="https"></a>https</h1><p>SSL 的握手协议非常有效的让客户和服务器之间完成相互之间的身份认证，其主要过程如下：</p>
@@ -471,560 +438,48 @@ dskjdhjksgdhjs -->
       </tags>
   </entry>
   <entry>
+    <title>Flutter</title>
+    <url>/flutter/index.html</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Flutter已经面世这么长时间了，不抽空学习一下，实在是对不起自己。也是由于前天面试被问到Flutter的一些东西，一脸懵逼，真不是一个合格的iOS开发猿！！！</p>
+<p>分享一下学习经验和心得，纪录一下学习过程的疑问。</p>
+<p>官网学习，手敲练习<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0phY2stVmluZy9mbHV0dGVyLXN0dWR5">demo源码<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="学习之前我有几个问题问自己"><a href="#学习之前我有几个问题问自己" class="headerlink" title="学习之前我有几个问题问自己"></a>学习之前我有几个问题问自己</h2><ul>
+<li>为什么大家都说Flutter比RN和Weex流畅？ </li>
+<li>和RN、Weex实现原理对比, Flutter的实现原理是什么？</li>
+<li>怎么和Native通讯？</li>
+</ul>
+<span id="more"></span>
+<h1 id="初见"><a href="#初见" class="headerlink" title="初见"></a>初见</h1><p>clone flutter到本地，配置环境变量，略…</p>
+<p>入口函数 lib/main.dart. 中 void main(), 启动一个app，就是 runApp(<Widget>);</p>
+<p>对于Flutter来说，万物皆<Widget>, 主App窗口也是一个Widget。</p>
+<p>然后就是Widget内部再嵌套子视图Widget，一个套一个，我们可以称之为树节点</p>
+<h2 id="有状态和无状态的Widget"><a href="#有状态和无状态的Widget" class="headerlink" title="有状态和无状态的Widget"></a>有状态和无状态的Widget</h2><p>有状态的StatefulWidget,就是在setState()的时候，会重新绘制 Widget树，从而达到了更新状态的目的。 并且 State和Widget是分离的，也就保证了Widget树(界面)重新绘制的时候，数据不会丢失。</p>
+<h2 id="布局"><a href="#布局" class="headerlink" title="布局"></a>布局</h2><ul>
+<li>竖向排列，也就是Column</li>
+<li>横向排列，也就是Row</li>
+</ul>
+<p>好好运用 <code>Expanded</code>,<code>Container</code>等, </p>
+<blockquote>
+<p>注意：如果要添加<code>填充</code>，<code>边距</code>，<code>边框</code>或<code>背景色</code>，请使用<code>Container</code>来设置<code>!!!</code></p>
+</blockquote>
+<p>暂停。。。有些事情耽搁，后续继续写<br><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vZW50cnkvNWFmYTk3Njk1MTg4MjU0Mjg2MzBhNjFj">看完删除<i class="fa fa-external-link-alt"></i></span></p>
+]]></content>
+      <categories>
+        <category>flutter</category>
+      </categories>
+      <tags>
+        <tag>flutter</tag>
+      </tags>
+  </entry>
+  <entry>
     <title></title>
     <url>/future/index.html</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Linux</title>
-    <url>/linux/home.html</url>
-    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Linux内核官网<a href="www.kernel.org">www.kernel.org</a></p>
-<ul>
-<li>内核版本2.6.18  3.16等等</li>
-<li>发行版本 redhat==conterOS ubuntu debian等等</li>
-</ul>
-<ul>
-<li>使用的自由<ul>
-<li>绝大多数开源软件免费</li>
-</ul>
-</li>
-<li>研究的自由<ul>
-<li>可以获得软件源代码</li>
-</ul>
-</li>
-<li>散步及改良的自由<ul>
-<li>可以自由传播、改良甚至销售</li>
-</ul>
-</li>
-</ul>
-<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><ul>
-<li>基于Linux服务器</li>
-<li>嵌入式应用 手机，接顶盒等等</li>
-</ul>
-<h2 id="Linux和Windows的不同"><a href="#Linux和Windows的不同" class="headerlink" title="Linux和Windows的不同"></a>Linux和Windows的不同</h2><ul>
-<li>Linux严格区分大小写</li>
-<li>Linux中所有内容以文件形式保存，包括硬件</li>
-<li>以前内容皆文件</li>
-<li>Linux不靠扩展名区分文件类型  (-&gt;权限)<ul>
-<li>压缩包 .gz .bz2 .tar.bz2  .tgz登</li>
-<li>二进制软件包：.rpm</li>
-<li>网页文件： *.html  .php</li>
-<li>脚本文件： *.sh</li>
-<li>配置文件： *.conf</li>
-</ul>
-</li>
-</ul>
-<h2 id="字符界面"><a href="#字符界面" class="headerlink" title="字符界面"></a>字符界面</h2><ul>
-<li>占用系统资源更少</li>
-<li>减少出错、被攻击的可能性越少</li>
-</ul>
-<h2 id="挂载-给每个分区分配挂载点"><a href="#挂载-给每个分区分配挂载点" class="headerlink" title="挂载 给每个分区分配挂载点"></a>挂载 给每个分区分配挂载点</h2><h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><ul>
-<li>服务器最小化安装</li>
-</ul>
-<h2 id="安装日志"><a href="#安装日志" class="headerlink" title="安装日志"></a>安装日志</h2><ul>
-<li>/root/install.log: 储存了安装在系统中的软件包及其版本信息</li>
-<li>/root/install.log.syslog: 储存了安装过程中留下的事件记录</li>
-<li>/root/anaconda-ks.cfg: 以Kickstart配置文件的格式记录安装过程中设置的选项信息</li>
-</ul>
-<h1 id="常用的目录的作用"><a href="#常用的目录的作用" class="headerlink" title="常用的目录的作用"></a>常用的目录的作用</h1><ul>
-<li>/根目录</li>
-<li>/bin 命令保存目录（普通用户就可以读取的命令）</li>
-<li>/sbin 超级权限才能读取的命令</li>
-<li>/boot 启动目录，启动相关文件</li>
-<li>/dev 设备文件保存目录</li>
-<li>/etc 配置文件</li>
-<li>/home 普通用户家目录</li>
-<li>/lib 系统库保存目录</li>
-<li>/mnt 系统挂载目录</li>
-<li>/media 挂载目录</li>
-<li>/proc和/sys 目录不能直接操作，保存的是内存的过载点</li>
-<li>/usr 系统软件资源目录<ul>
-<li>/usr/bin/ 系统命令（普通用户）</li>
-<li>/usr/sbin/ 系统命令（超级用户）</li>
-</ul>
-</li>
-<li>/var 系统相关文档内容</li>
-</ul>
-<h1 id="常用命令-文件处理命令"><a href="#常用命令-文件处理命令" class="headerlink" title="常用命令(文件处理命令)"></a>常用命令(文件处理命令)</h1><h2 id="命令的基本格式"><a href="#命令的基本格式" class="headerlink" title="命令的基本格式"></a>命令的基本格式</h2><ul>
-<li>~代表当前所在位置 家目录,初始目录</li>
-<li>#代表超级用户</li>
-<li>$代表普通用户</li>
-</ul>
-<ul>
-<li><code>命令 [选项] [参数]</code>  -a  -all简化</li>
-</ul>
-<h2 id="文件格式"><a href="#文件格式" class="headerlink" title="文件格式"></a>文件格式</h2><ul>
-<li>rw- r– r– 分为三组，三组的权限</li>
-<li>-文件类型(- 文件， d 目录， | 软连接文件)</li>
-<li>rw-   r–   r–</li>
-<li>所有者 g所属着 o其他人</li>
-<li>r读 w写 x执行</li>
-<li>.文件为隐藏文件</li>
-</ul>
-<h2 id="pwd-显示当前所在路径-print-working-dictionary"><a href="#pwd-显示当前所在路径-print-working-dictionary" class="headerlink" title="pwd 显示当前所在路径 print working dictionary"></a>pwd 显示当前所在路径 print working dictionary</h2><h2 id="mkdir-p-目录名"><a href="#mkdir-p-目录名" class="headerlink" title="mkdir -p [目录名]"></a>mkdir -p [目录名]</h2><ul>
-<li>-p 递归创建  /s/p 这样的</li>
-</ul>
-<h2 id="cd-进入目录"><a href="#cd-进入目录" class="headerlink" title="cd 进入目录"></a>cd 进入目录</h2><ul>
-<li>~进入当前用户目录，家目录</li>
-<li>..上一级目录</li>
-<li>.当前目录</li>
-</ul>
-<h2 id="rmdir-目录-remove-empty-dir"><a href="#rmdir-目录-remove-empty-dir" class="headerlink" title="rmdir [目录] remove empty dir"></a>rmdir [目录] remove empty dir</h2><ul>
-<li>只能删除空白目录</li>
-</ul>
-<h2 id="rm-rf-不询问是否删除"><a href="#rm-rf-不询问是否删除" class="headerlink" title="rm -rf 不询问是否删除"></a>rm -rf 不询问是否删除</h2><ul>
-<li>-r 删除目录</li>
-<li>-f 强制</li>
-</ul>
-<h2 id="cp-选项-源文件-目标目录"><a href="#cp-选项-源文件-目标目录" class="headerlink" title="cp [选项] [源文件] [目标目录]"></a>cp [选项] [源文件] [目标目录]</h2><ul>
-<li>-r 复制目录</li>
-<li>-p 连带文件属性复制</li>
-<li>-d 若源文件是链接文件，则复制链接属性</li>
-<li>-a 相当于 -pdr</li>
-</ul>
-<h2 id="mv-剪切或者改名命令"><a href="#mv-剪切或者改名命令" class="headerlink" title="mv 剪切或者改名命令"></a>mv 剪切或者改名命令</h2><ul>
-<li>源文件或者目录和目标文件目录  在一起，就是改名</li>
-</ul>
-<h2 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h2><ul>
-<li>ln -s [源文件] [目标文件]</li>
-<li>命令英文愿意： link</li>
-<li>功能描述：生成链接文件<ul>
-<li>选项： -s 创建软链接</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>硬链接特征 (i 文件索引点)<ol>
-<li>拥有相同的i节点和储存block块，可以看作是同一个文件</li>
-<li>可通过i节点识别</li>
-<li>不能跨分区</li>
-<li>不能准对目录使用</li>
-<li>引用计数加1，同一个文件</li>
-</ol>
-</li>
-<li>软链接特征<ul>
-<li>类似于windows快捷方式</li>
-<li>拥有自己的i节点和block块，但是数据块中只保存源文件的文件名和i节点号，并没有实际的文件数据</li>
-<li>Irwxrwxrwx I 软连接<ul>
-<li>软连接文件的权限都为rwxrwxrwx</li>
-</ul>
-</li>
-<li>修改任意文件，另一个都改变</li>
-<li>删除源文件，软连接不能使用</li>
-</ul>
-</li>
-</ul>
-<h1 id="文件搜索命令"><a href="#文件搜索命令" class="headerlink" title="文件搜索命令"></a>文件搜索命令</h1><ul>
-<li>文件搜索命令locate</li>
-<li>命令搜索命令whereis与which</li>
-<li>文件搜索命令find</li>
-<li>字符串搜索命令grep</li>
-<li>find命令与grep命令的区别</li>
-</ul>
-<h2 id="locate-速度相对较快"><a href="#locate-速度相对较快" class="headerlink" title="locate (速度相对较快)"></a>locate (速度相对较快)</h2><ul>
-<li>locate 文件名。 在后台数据库中按照文件名搜索，搜索速度更快</li>
-<li>/var/lib/mlocate  #locate命令所搜索的后台数据库</li>
-<li>updatedb 更新数据库, 可能是一天更新一次,开机更新一次</li>
-</ul>
-<h2 id="whereis与which-搜索命令的命令"><a href="#whereis与which-搜索命令的命令" class="headerlink" title="whereis与which 搜索命令的命令"></a>whereis与which 搜索命令的命令</h2><ul>
-<li>where 只能搜索<code>系统的命令</code><ul>
-<li>-b 只查看命令所在位置</li>
-<li>-m 只差看帮助文档</li>
-</ul>
-</li>
-<li>which 只能搜索<code>系统的命令</code><ul>
-<li>看命令所在位置,还能查到看别名</li>
-</ul>
-</li>
-</ul>
-<h2 id="find命令"><a href="#find命令" class="headerlink" title="find命令"></a>find命令</h2><ul>
-<li><p>find [搜索范围] [搜索条件]</p>
-</li>
-<li><p>find / -name install.log</p>
-<ul>
-<li>避免大范围搜索，会非常耗费系统资源</li>
-<li>find是在系统当中搜索符合条件的文件名。如果需要匹配，通常使用通配符匹配，<code>通配符</code>是完全匹配</li>
-</ul>
-</li>
-<li><p><code>*</code> 匹配任意字符</p>
-</li>
-<li><p><code>?</code> 匹配任意一个字符</p>
-</li>
-<li><p><code>[]</code> 匹配任意一个中括号内的字符 find -name ab[cd]</p>
-</li>
-<li><p>find /root -inname install.log  就不区分大小写了</p>
-</li>
-<li><p>find /root -user root 按照所有者搜索</p>
-</li>
-<li><p>find /root -nouser 查找没有所有者的文件</p>
-</li>
-<li><p>find /var/log/ -mtime +10 <code>查找10天前修改的文件</code></p>
-<ul>
-<li>-10 10天内修改的文件</li>
-<li>10 10天当天修改的文件</li>
-<li>+10 10天前修改的文件</li>
-<li>atime 文件访问时间</li>
-<li>ctime 改变文件属性</li>
-<li>mtime 修改文件内容</li>
-</ul>
-</li>
-<li><p>find . -size 25k <code>查找文件大小是25k的文件</code></p>
-<ul>
-<li>-25k 小于25KB的文件  注意是小写的<code>k</code>，兆字节用大写的<code>M</code></li>
-<li>25k 等于25KB的文件</li>
-<li>+25k 大于25KB的文件 </li>
-<li>find . -size 25 不加单位就是扇区搜索</li>
-</ul>
-</li>
-<li><p>find /root -inum 262422 <code>查找i节点是262422</code>的文件</p>
-</li>
-<li><p>find /etc -size +20k -a -size -50k</p>
-<ul>
-<li><code>查找/etc/目录下，大于20kb小于50kb的文件</code></li>
-<li>-a and 逻辑与，两个条件都满足</li>
-<li>-0 or  逻辑或，两个条件满足一个即可</li>
-</ul>
-</li>
-<li><p>find /etc -size +20k -a -size -50k -exec ls -lh {} ;</p>
-<ul>
-<li><code>查找/etc/目录下，大于20KB并且小于50KB的文件，并显示详细信息</code></li>
-<li><code>-exec/-ok 命令&#123;&#125; \; 对搜索结果执行操作,&quot;&#123;&#125; \;&quot;为标准格式，只要有-exec就要写它</code></li>
-</ul>
-</li>
-</ul>
-<h2 id="grep命令"><a href="#grep命令" class="headerlink" title="grep命令"></a>grep命令</h2><ul>
-<li>grep [选项] 字符串 文件名<ul>
-<li>在文件档中匹配符合条件的字符串</li>
-<li>-i 忽略大小写</li>
-<li>-v 排除指定字符串</li>
-</ul>
-</li>
-</ul>
-<h2 id="find-与-grep区别"><a href="#find-与-grep区别" class="headerlink" title="find 与 grep区别"></a>find 与 grep区别</h2><ul>
-<li>find命令，在当前系统中搜索符合条件的文件名，如果需要匹配。使用通配符匹配，通配符是完全匹配</li>
-<li>grep命令：在文件当中搜索符合条件的字符串，如果需要匹配，使用正则表达式进行匹配，正则表达式是包含匹配</li>
-</ul>
-<h1 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h1><ul>
-<li><p>man帮助等级</p>
-<ol>
-<li>查看命令的帮助</li>
-<li>查看可被内核调用的函数的帮助</li>
-<li>查看函数和函数库的帮助</li>
-<li>查看特殊文件的帮助（主要是/dev目录下的文件）</li>
-<li>查看配置文件的帮助</li>
-<li>查看游戏的帮助</li>
-<li>查看其他杂项的帮助</li>
-<li>查看系统管理员可用命令的帮助</li>
-<li>查看和内核相关文件的帮助</li>
-</ol>
-</li>
-<li><p>man 命令 -&gt; 获取指定命令的帮助  man ls</p>
-</li>
-<li><p>man -f 相当于 whatis 命令</p>
-</li>
-<li><p>man -k 相当于 apropos命令 eg: apropos passwd</p>
-</li>
-<li><p>shell内部命令帮助</p>
-<ul>
-<li>help 只能获取shell内部命令的帮助 eg： whereis cd. help cd</li>
-<li>是安装的软件，就有路径，比如 /bin/ls ,如果 没有比如cd 就是shell内部命令。『whereis cd』</li>
-</ul>
-</li>
-<li><p>info 命令</p>
-<ul>
-<li>回车  进入子帮助页面 (带有*号标记)</li>
-<li>u 上层</li>
-<li>n 下一帮助小节</li>
-<li>p 上一帮助小节</li>
-<li>q 退出</li>
-</ul>
-</li>
-</ul>
-<h1 id="压缩与解压缩命令"><a href="#压缩与解压缩命令" class="headerlink" title="压缩与解压缩命令"></a>压缩与解压缩命令</h1><blockquote>
-<p><code>.zip</code> .7z .rar <code>.gz</code> <code>.bz2</code> .tar.gz .tar.bz2等等</p>
-</blockquote>
-<h2 id="zip格式"><a href="#zip格式" class="headerlink" title=".zip格式"></a>.zip格式</h2><ul>
-<li>zip 压缩文件名  源文件名  eg: <code>zip xxx.zip xxx</code></li>
-<li>zip -r 压缩目录 源文件</li>
-<li>unzip 解压缩文件</li>
-</ul>
-<h2 id="gz格式"><a href="#gz格式" class="headerlink" title=".gz格式"></a>.gz格式</h2><ul>
-<li>gzip 源文件 <code>压缩为.gz格式的压缩文件，源文件会消失</code></li>
-<li>gzip -c 源文件 &gt; 压缩文件  <ul>
-<li>压缩为.gz 格式，源文件保留</li>
-<li>eg： gzip -c cangls &gt; cangls.gz</li>
-</ul>
-</li>
-<li>gzip -r 目录<ul>
-<li><code>压缩目录下所有的子文件，但是不能压缩目录</code></li>
-</ul>
-</li>
-<li>gzip -d 解压缩</li>
-<li>gunzip 解压缩</li>
-</ul>
-<h2 id="bz2格式"><a href="#bz2格式" class="headerlink" title=".bz2格式"></a>.bz2格式</h2><ul>
-<li>bzip2 源文件 不保留源文件</li>
-<li>bzip2 -k 源文件<ul>
-<li>压缩之后保留源文件<blockquote>
-<p><code>注意：bzip2命令不能压缩目录</code></p>
-</blockquote>
-</li>
-</ul>
-</li>
-<li>bzip2 -d 解压缩  <code>-k保留源文件</code></li>
-<li>bunzip2  <code>-k保留源文件</code></li>
-</ul>
-<h2 id="tar-gz-tar-bz2"><a href="#tar-gz-tar-bz2" class="headerlink" title=".tar.gz  .tar.bz2"></a>.tar.gz  .tar.bz2</h2><p>先压缩成.tar 再压缩成.gz / .bz2</p>
-<h3 id="tar-cvf-打包文件名-源文件"><a href="#tar-cvf-打包文件名-源文件" class="headerlink" title="tar -cvf 打包文件名 源文件"></a>tar -cvf 打包文件名 源文件</h3><ul>
-<li><p>-c 打包</p>
-</li>
-<li><p>-v 显示过程</p>
-</li>
-<li><p>-f 指定打包后的文件名</p>
-</li>
-<li><p>-x 解压缩 eg -xvf</p>
-</li>
-<li><p>-t 只查看</p>
-</li>
-<li><p>.tar.gz （z)</p>
-<ul>
-<li><code>-z 压缩为.tar.gz格式</code>  tar -zcvf xx.tar.gz 源文件</li>
-<li><code>-x 解压缩为.tar.gz格式</code> tar -zxvf xx.tar.gz </li>
-</ul>
-</li>
-<li><p>.tar.bz2 (j)</p>
-<ul>
-<li><code>-j 压缩为.tar.bz2格式</code>   tar -jcvf xx.tar.bz2 源文件</li>
-<li><code>-x 解压缩为.tar.bz2格式</code>  tar -jxvf xx.tar.bz2 </li>
-</ul>
-</li>
-<li><p>-C 位置</p>
-</li>
-</ul>
-<h1 id="关机和重启命令"><a href="#关机和重启命令" class="headerlink" title="关机和重启命令"></a>关机和重启命令</h1><h2 id="shutdown-选项-时间"><a href="#shutdown-选项-时间" class="headerlink" title="shutdown [选项] 时间"></a>shutdown [选项] 时间</h2><ul>
-<li>-c 取消前一个关机命令</li>
-<li>-h 关机</li>
-<li>-r 重启</li>
-</ul>
-<h2 id="其他关机命令-非安全，建议shutdown"><a href="#其他关机命令-非安全，建议shutdown" class="headerlink" title="其他关机命令 (非安全，建议shutdown)"></a>其他关机命令 (非安全，建议shutdown)</h2><ul>
-<li>halt  (非安全，建议shutdown)</li>
-<li>poweroff (非安全，建议shutdown)</li>
-<li>init 0 (非安全，建议shutdown)</li>
-</ul>
-<h2 id="其他重启命令"><a href="#其他重启命令" class="headerlink" title="其他重启命令"></a>其他重启命令</h2><ul>
-<li>reboot 相对安全</li>
-<li>init 6 非安全</li>
-</ul>
-<h2 id="系统运行级别"><a href="#系统运行级别" class="headerlink" title="系统运行级别"></a>系统运行级别</h2><blockquote>
-<p>查看系统运行级别<br>cat /etc/inittab 默认级别<br>runlevel</p>
-</blockquote>
-<ul>
-<li>0 关机</li>
-<li>1 单用户</li>
-<li>2 不完全多用户，不包含NFS服务</li>
-<li>3 完全多用户</li>
-<li>4 未分配</li>
-<li>5 图形界面</li>
-<li>6 重启</li>
-</ul>
-<h1 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h1><h2 id="挂载命令"><a href="#挂载命令" class="headerlink" title="挂载命令"></a>挂载命令</h2><blockquote>
-<p>用户登录查看和用户交互命令</p>
-</blockquote>
-<ul>
-<li>mount 查询系统中已经挂载的设备</li>
-<li>mount -a 依据配置文件/etc/fstab的内容，自动挂载</li>
-</ul>
-<h2 id="挂载命令格式"><a href="#挂载命令格式" class="headerlink" title="挂载命令格式"></a>挂载命令格式</h2><p><code>mount [-t 文件系统] [-o 特殊选项] 设备文件名 挂载点</code></p>
-<ul>
-<li>-t 文件系统：加入文件系统类型来指定挂载的类型，可以ext3、ext4、iso9660等文件系统</li>
-<li>-0 特殊选项：可以指定挂载的额外选项</li>
-<li>#!/bin/bash  最好必须写</li>
-<li>默认是可执行 exec.  </li>
-<li>mount -0 remount, noexec /home  重新挂载/boot分区， 并使用noexec权限</li>
-<li>remount 重新挂载已经挂载的文件系统，一般用于指定修改特殊权限</li>
-</ul>
-<h3 id="挂载光盘"><a href="#挂载光盘" class="headerlink" title="挂载光盘"></a>挂载光盘</h3><ul>
-<li>mkdir /mnt/cdrom/  建立挂载点</li>
-<li>mount -t iso9660 /dev/cdrom /mnt/cdrom 挂载光盘</li>
-<li>mount /dev/sr0 /mnt/cdrom</li>
-<li>umount /mnt/cdrom 必须卸载</li>
-</ul>
-<h3 id="挂载U盘"><a href="#挂载U盘" class="headerlink" title="挂载U盘"></a>挂载U盘</h3><ul>
-<li>fdisk -i 查看U盘设备文件</li>
-<li>mount -t vfat /dev/sdb1 /mnt/usb/  </li>
-<li><code>注意：Linux默认不支持NTFS文件系统</code></li>
-</ul>
-<h2 id="用户登录查看命令"><a href="#用户登录查看命令" class="headerlink" title="用户登录查看命令"></a>用户登录查看命令</h2><ul>
-<li>w 用户名 命令输出如下<ul>
-<li>USER: 登录的用户名</li>
-<li>TTY:  登录终端</li>
-<li>FROM： 从哪个IP地址登录</li>
-<li>LOGIN@: 登录时间</li>
-<li>IDLE： 用户闲置时间</li>
-<li>JCPU: 指的是和该终端廉洁的所有进程占用的时间。这个时间里并不包括过去的后台作业时间，但却包括当前正在运行的后台作业所占用的时间</li>
-<li>PCUP：是指当前进程所占用的时间</li>
-<li>WHAT: 当前正在运行的命令</li>
-</ul>
-</li>
-<li>who 用户名</li>
-<li>last 默认是读取 /var/log/wtmp文件数据，输出如下<ul>
-<li>用户名</li>
-<li>登录终端</li>
-<li>登录IP</li>
-<li>登录时间</li>
-<li>退出时间（在线时间）</li>
-</ul>
-</li>
-<li>lastlog 默认是读取/var/log/lastlog文件内容<ul>
-<li>用户名</li>
-<li>登录终端</li>
-<li>登录ip</li>
-<li>最后一次登录时间</li>
-</ul>
-</li>
-</ul>
-<h1 id="Shell部分"><a href="#Shell部分" class="headerlink" title="Shell部分"></a>Shell部分</h1><h2 id="Shell概况"><a href="#Shell概况" class="headerlink" title="Shell概况"></a>Shell概况</h2><ul>
-<li>命令行解释器，计算机可不认识命令，只认识0101. 为用户提供了一个向Linux内核发送请求以便运行程序的界面系统级程序，用户可以用Shell来启东、挂起、挺直甚至是编写一个程序</li>
-<li>SHell还是一个功能相当强大的编译语言，易变写，易调试，灵活性较强。Shell是解释执行的脚本语言，在Sjell中可以直接调用Linux系统命令</li>
-</ul>
-<h2 id="Shell的分类"><a href="#Shell的分类" class="headerlink" title="Shell的分类"></a>Shell的分类</h2><ul>
-<li>Bourne Shell: 从1979起Unix就开始使用Bourne Shell， 主文件名为sh。</li>
-<li>C Shell: 主要在BSD版的Unix系统中使用，其语言和C语言像相似而得名</li>
-<li>Shell的两种主要语法类型有Bourne和C，这两种语法彼此不兼容。Bourne家族主要有sh、ksh、Bash、psh、zsh； C家族主要包括csh、tcsh</li>
-</ul>
-<h2 id="脚本执行方式"><a href="#脚本执行方式" class="headerlink" title="脚本执行方式"></a>脚本执行方式</h2><ul>
-<li>echo </li>
-<li>vi hello.sh  (#!/bin/bash) 可以调用系统命令</li>
-<li>赋予执行权限，直接运行<ul>
-<li>chmod 755 hello.sh</li>
-<li>./hello.sh</li>
-</ul>
-</li>
-<li>通过Bash调用执行脚本<ul>
-<li>bash hello.sh</li>
-</ul>
-</li>
-</ul>
-<h2 id="别名与快捷键"><a href="#别名与快捷键" class="headerlink" title="别名与快捷键"></a>别名与快捷键</h2><ul>
-<li>alias cp = ‘cp -i’,  mv = ‘mv -i’,  rm = ‘rm -i’等等，提示，是否xxx？</li>
-<li>unalias 删除别名</li>
-<li>vi ~/.bashrc 写入环境变量配置文件</li>
-<li>source ~/.bashrc  可以让配置重新生效</li>
-</ul>
-<h3 id="命令生效顺序"><a href="#命令生效顺序" class="headerlink" title="命令生效顺序"></a>命令生效顺序</h3><ol>
-<li>用绝对路径或相对路径执行的命令</li>
-<li>执行别名</li>
-<li>执行Bash的内部命令</li>
-<li>执行按照$PATH环境变量定义的目录查找顺序找到的第一个命令</li>
-</ol>
-<h3 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h3><ul>
-<li>ctrl+c 强制终止当前命令</li>
-<li>ctrl+l 清屏</li>
-<li>ctrl+a 光标移动到命令行首</li>
-<li>ctrl+e 光标移动到命令行尾</li>
-<li>ctrl+u 从光标所在位置删除到行首</li>
-<li>ctrl+z 把命令放入后台</li>
-<li>ctrl+r 在历史命令中搜索</li>
-</ul>
-<h2 id="历史命令"><a href="#历史命令" class="headerlink" title="历史命令"></a>历史命令</h2><ul>
-<li>history [选项] [历史命令保存文件]</li>
-<li>-c 清空历史命令</li>
-<li>-w 把缓存中的历史命令写入历史命令保存文件 ~/.bash_history</li>
-<li>vim /etc/profile</li>
-<li>上下剪头调用以前的历史命令</li>
-<li>!n 重复执行第n条历史命令</li>
-<li>!! 重复执行上一条命令</li>
-<li>！字符串   重复执行最后一条以该字符串开头的命令</li>
-</ul>
-<h2 id="Bash命令补全"><a href="#Bash命令补全" class="headerlink" title="Bash命令补全"></a>Bash命令补全</h2><ul>
-<li>tab键</li>
-</ul>
-<h2 id="输出重定向"><a href="#输出重定向" class="headerlink" title="输出重定向"></a>输出重定向</h2><p>把命令输出保存到文件， &gt; 代表覆盖的形式写入， &gt;&gt;代表追加的方式写入</p>
-<ul>
-<li>‘&gt;’覆盖，&gt;&gt; 追加</li>
-<li>命令 &gt; 文件 2&gt;&amp;1    </li>
-<li>命令 &gt;&gt; 文件 2&gt;&amp;1  </li>
-<li>命令 &amp;&gt; 文件</li>
-<li>命令 &amp;&gt;&gt; 文件</li>
-<li>命令&gt;&gt;文件1  2&gt;&gt;文件2  <code>把正确的输出追加到文件1，把错误的输出追加到文件2中</code></li>
-</ul>
-<ul>
-<li><code>ls &amp;&gt;/dev/null</code> 相当于既不显示到屏幕上，也不保存</li>
-</ul>
-<h2 id="输入重定向"><a href="#输入重定向" class="headerlink" title="输入重定向"></a>输入重定向</h2><blockquote>
-<p>wc [选项] [文件名]</p>
-</blockquote>
-<ul>
-<li>-c 统计字节数</li>
-<li>-w 统计单词数</li>
-<li>-l 统计行数</li>
-</ul>
-<h2 id="管道符"><a href="#管道符" class="headerlink" title="管道符"></a>管道符</h2><h3 id="多命令顺序执行"><a href="#多命令顺序执行" class="headerlink" title="多命令顺序执行"></a>多命令顺序执行</h3><ul>
-<li>; 命令1：命令2  多个命令顺序执行，命令之间没有任何联系</li>
-<li>&amp;&amp; cmd1 &amp;&amp; cmd2 只有当cmd1正确执行 命令cmd2才会执行</li>
-<li>|| cmd1 || cmd2 当命令cmd1不正确的时候，命令2才会执行，正确则不执行</li>
-</ul>
-<h3 id="管道符-1"><a href="#管道符-1" class="headerlink" title="管道符"></a>管道符</h3><p><code>命令1 | 命令2</code>，命令1的正确输出作为命令2的操作对象</p>
-<ul>
-<li>ll -a /etc/ | more </li>
-<li>netstat -an | grep xxx</li>
-</ul>
-<h2 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h2><ul>
-<li>? 匹配<code>一个</code>任意字符</li>
-<li>* 匹配0个或<code>任意多个</code>任意字符，也就是可以匹配任何内容</li>
-<li>[] 匹配中括号中<code>任意一个</code>字符，例如：[abc]代表一定匹配一个字符串，或者是a,或者b,或者c。</li>
-<li>[-] 匹配中括号中<code>任意一个</code>字符， -代表一个<code>范围</code>。例如[a-z]代表匹配一个小写字母</li>
-<li>[^] 逻辑非，代表匹配<code>不是</code>中括号内的<code>一个字符</code>。例如：[^0-9]代表匹配不是一个数字的字符</li>
-</ul>
-<h2 id="Bash中其他特殊字符"><a href="#Bash中其他特殊字符" class="headerlink" title="Bash中其他特殊字符"></a>Bash中其他特殊字符</h2><table>
-<thead>
-<tr>
-<th align="center"><code>符号</code></th>
-<th align="center"><code>作用</code></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">‘’</td>
-<td align="center">单引号。在单引号中<code>所有的特殊符号</code>，如”$”和”`“(反引号)都 <code>没有特殊含义</code>。</td>
-</tr>
-<tr>
-<td align="center">“”</td>
-<td align="center">双引号。在双引号中特殊字符都没有特殊含义，但是”$”、”`”、和”&quot;是例外，拥有”调用变量的值”、”引用命令”、”转义符”的特殊含义。</td>
-</tr>
-<tr>
-<td align="center">``</td>
-<td align="center">反引号。反引号括起来的内容是系统命令，在Bash中会先执行它。和$()作用一样，补货推荐使用$()，因为反引号非常容易看错</td>
-</tr>
-<tr>
-<td align="center">$()</td>
-<td align="center">和反引号作用一样，用来引用系统命令</td>
-</tr>
-<tr>
-<td align="center">#</td>
-<td align="center">在Shell脚本中，#开头的行代表注释。</td>
-</tr>
-<tr>
-<td align="center">$</td>
-<td align="center">用于调用变量的值，如需要调用变量name的值得时候，需要用$name的方式得到变量的值</td>
-</tr>
-<tr>
-<td align="center">\</td>
-<td align="center">转义符，跟在\之后的特殊字符将失去特殊含义，变为普通字符。如$ 将输出”$”符号</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Autoreleasepool</title>
     <url>/iOS/Autoreleasepool.html</url>
     <content><![CDATA[<h1 id="Autoreleasepool"><a href="#Autoreleasepool" class="headerlink" title="Autoreleasepool"></a>Autoreleasepool</h1><ul>
-<li>首先是YY大神的理解<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmliaXJlbWUuY29tLzIwMTUvMDUvMTgvcnVubG9vcC8=">Autoreleasepool<i class="fa fa-external-link-alt"></i></span></li>
 <li>孙源大神的博客  <span class="exturl" data-url="aHR0cDovL2Jsb2cuc3Vubnl4eC5jb20vMjAxNC8xMC8xNS9iZWhpbmQtYXV0b3JlbGVhc2Uv">Autoreleasepool<i class="fa fa-external-link-alt"></i></span></li>
 <li><span class="exturl" data-url="aHR0cHM6Ly9zdWhvdS5naXRodWIuaW8vMjAxOC8wMS8yMS8lRTUlQjglQTYlRTclOUQlODAlRTklOTclQUUlRTklQTIlOTglRTclOUMlOEIlRTYlQkElOTAlRTclQTAlODEtLS0tJUU1JUFEJTkwJUU3JUJBJUJGJUU3JUE4JThCQXV0b1JlbGVhc2UlRTUlQUYlQjklRTglQjElQTElRTQlQkQlOTUlRTYlOTclQjYlRTklODclOEElRTYlOTQlQkUv">网上搜的<i class="fa fa-external-link-alt"></i></span></li>
 </ul>
@@ -1799,6 +1254,551 @@ dskjdhjksgdhjs -->
       </tags>
   </entry>
   <entry>
+    <title>Linux</title>
+    <url>/linux/home.html</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Linux内核官网<a href="www.kernel.org">www.kernel.org</a></p>
+<ul>
+<li>内核版本2.6.18  3.16等等</li>
+<li>发行版本 redhat==conterOS ubuntu debian等等</li>
+</ul>
+<ul>
+<li>使用的自由<ul>
+<li>绝大多数开源软件免费</li>
+</ul>
+</li>
+<li>研究的自由<ul>
+<li>可以获得软件源代码</li>
+</ul>
+</li>
+<li>散步及改良的自由<ul>
+<li>可以自由传播、改良甚至销售</li>
+</ul>
+</li>
+</ul>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><ul>
+<li>基于Linux服务器</li>
+<li>嵌入式应用 手机，接顶盒等等</li>
+</ul>
+<h2 id="Linux和Windows的不同"><a href="#Linux和Windows的不同" class="headerlink" title="Linux和Windows的不同"></a>Linux和Windows的不同</h2><ul>
+<li>Linux严格区分大小写</li>
+<li>Linux中所有内容以文件形式保存，包括硬件</li>
+<li>以前内容皆文件</li>
+<li>Linux不靠扩展名区分文件类型  (-&gt;权限)<ul>
+<li>压缩包 .gz .bz2 .tar.bz2  .tgz登</li>
+<li>二进制软件包：.rpm</li>
+<li>网页文件： *.html  .php</li>
+<li>脚本文件： *.sh</li>
+<li>配置文件： *.conf</li>
+</ul>
+</li>
+</ul>
+<h2 id="字符界面"><a href="#字符界面" class="headerlink" title="字符界面"></a>字符界面</h2><ul>
+<li>占用系统资源更少</li>
+<li>减少出错、被攻击的可能性越少</li>
+</ul>
+<h2 id="挂载-给每个分区分配挂载点"><a href="#挂载-给每个分区分配挂载点" class="headerlink" title="挂载 给每个分区分配挂载点"></a>挂载 给每个分区分配挂载点</h2><h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><ul>
+<li>服务器最小化安装</li>
+</ul>
+<h2 id="安装日志"><a href="#安装日志" class="headerlink" title="安装日志"></a>安装日志</h2><ul>
+<li>/root/install.log: 储存了安装在系统中的软件包及其版本信息</li>
+<li>/root/install.log.syslog: 储存了安装过程中留下的事件记录</li>
+<li>/root/anaconda-ks.cfg: 以Kickstart配置文件的格式记录安装过程中设置的选项信息</li>
+</ul>
+<h1 id="常用的目录的作用"><a href="#常用的目录的作用" class="headerlink" title="常用的目录的作用"></a>常用的目录的作用</h1><ul>
+<li>/根目录</li>
+<li>/bin 命令保存目录（普通用户就可以读取的命令）</li>
+<li>/sbin 超级权限才能读取的命令</li>
+<li>/boot 启动目录，启动相关文件</li>
+<li>/dev 设备文件保存目录</li>
+<li>/etc 配置文件</li>
+<li>/home 普通用户家目录</li>
+<li>/lib 系统库保存目录</li>
+<li>/mnt 系统挂载目录</li>
+<li>/media 挂载目录</li>
+<li>/proc和/sys 目录不能直接操作，保存的是内存的过载点</li>
+<li>/usr 系统软件资源目录<ul>
+<li>/usr/bin/ 系统命令（普通用户）</li>
+<li>/usr/sbin/ 系统命令（超级用户）</li>
+</ul>
+</li>
+<li>/var 系统相关文档内容</li>
+</ul>
+<h1 id="常用命令-文件处理命令"><a href="#常用命令-文件处理命令" class="headerlink" title="常用命令(文件处理命令)"></a>常用命令(文件处理命令)</h1><h2 id="命令的基本格式"><a href="#命令的基本格式" class="headerlink" title="命令的基本格式"></a>命令的基本格式</h2><ul>
+<li>~代表当前所在位置 家目录,初始目录</li>
+<li>#代表超级用户</li>
+<li>$代表普通用户</li>
+</ul>
+<ul>
+<li><code>命令 [选项] [参数]</code>  -a  -all简化</li>
+</ul>
+<h2 id="文件格式"><a href="#文件格式" class="headerlink" title="文件格式"></a>文件格式</h2><ul>
+<li>rw- r– r– 分为三组，三组的权限</li>
+<li>-文件类型(- 文件， d 目录， | 软连接文件)</li>
+<li>rw-   r–   r–</li>
+<li>所有者 g所属着 o其他人</li>
+<li>r读 w写 x执行</li>
+<li>.文件为隐藏文件</li>
+</ul>
+<h2 id="pwd-显示当前所在路径-print-working-dictionary"><a href="#pwd-显示当前所在路径-print-working-dictionary" class="headerlink" title="pwd 显示当前所在路径 print working dictionary"></a>pwd 显示当前所在路径 print working dictionary</h2><h2 id="mkdir-p-目录名"><a href="#mkdir-p-目录名" class="headerlink" title="mkdir -p [目录名]"></a>mkdir -p [目录名]</h2><ul>
+<li>-p 递归创建  /s/p 这样的</li>
+</ul>
+<h2 id="cd-进入目录"><a href="#cd-进入目录" class="headerlink" title="cd 进入目录"></a>cd 进入目录</h2><ul>
+<li>~进入当前用户目录，家目录</li>
+<li>..上一级目录</li>
+<li>.当前目录</li>
+</ul>
+<h2 id="rmdir-目录-remove-empty-dir"><a href="#rmdir-目录-remove-empty-dir" class="headerlink" title="rmdir [目录] remove empty dir"></a>rmdir [目录] remove empty dir</h2><ul>
+<li>只能删除空白目录</li>
+</ul>
+<h2 id="rm-rf-不询问是否删除"><a href="#rm-rf-不询问是否删除" class="headerlink" title="rm -rf 不询问是否删除"></a>rm -rf 不询问是否删除</h2><ul>
+<li>-r 删除目录</li>
+<li>-f 强制</li>
+</ul>
+<h2 id="cp-选项-源文件-目标目录"><a href="#cp-选项-源文件-目标目录" class="headerlink" title="cp [选项] [源文件] [目标目录]"></a>cp [选项] [源文件] [目标目录]</h2><ul>
+<li>-r 复制目录</li>
+<li>-p 连带文件属性复制</li>
+<li>-d 若源文件是链接文件，则复制链接属性</li>
+<li>-a 相当于 -pdr</li>
+</ul>
+<h2 id="mv-剪切或者改名命令"><a href="#mv-剪切或者改名命令" class="headerlink" title="mv 剪切或者改名命令"></a>mv 剪切或者改名命令</h2><ul>
+<li>源文件或者目录和目标文件目录  在一起，就是改名</li>
+</ul>
+<h2 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h2><ul>
+<li>ln -s [源文件] [目标文件]</li>
+<li>命令英文愿意： link</li>
+<li>功能描述：生成链接文件<ul>
+<li>选项： -s 创建软链接</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>硬链接特征 (i 文件索引点)<ol>
+<li>拥有相同的i节点和储存block块，可以看作是同一个文件</li>
+<li>可通过i节点识别</li>
+<li>不能跨分区</li>
+<li>不能准对目录使用</li>
+<li>引用计数加1，同一个文件</li>
+</ol>
+</li>
+<li>软链接特征<ul>
+<li>类似于windows快捷方式</li>
+<li>拥有自己的i节点和block块，但是数据块中只保存源文件的文件名和i节点号，并没有实际的文件数据</li>
+<li>Irwxrwxrwx I 软连接<ul>
+<li>软连接文件的权限都为rwxrwxrwx</li>
+</ul>
+</li>
+<li>修改任意文件，另一个都改变</li>
+<li>删除源文件，软连接不能使用</li>
+</ul>
+</li>
+</ul>
+<h1 id="文件搜索命令"><a href="#文件搜索命令" class="headerlink" title="文件搜索命令"></a>文件搜索命令</h1><ul>
+<li>文件搜索命令locate</li>
+<li>命令搜索命令whereis与which</li>
+<li>文件搜索命令find</li>
+<li>字符串搜索命令grep</li>
+<li>find命令与grep命令的区别</li>
+</ul>
+<h2 id="locate-速度相对较快"><a href="#locate-速度相对较快" class="headerlink" title="locate (速度相对较快)"></a>locate (速度相对较快)</h2><ul>
+<li>locate 文件名。 在后台数据库中按照文件名搜索，搜索速度更快</li>
+<li>/var/lib/mlocate  #locate命令所搜索的后台数据库</li>
+<li>updatedb 更新数据库, 可能是一天更新一次,开机更新一次</li>
+</ul>
+<h2 id="whereis与which-搜索命令的命令"><a href="#whereis与which-搜索命令的命令" class="headerlink" title="whereis与which 搜索命令的命令"></a>whereis与which 搜索命令的命令</h2><ul>
+<li>where 只能搜索<code>系统的命令</code><ul>
+<li>-b 只查看命令所在位置</li>
+<li>-m 只差看帮助文档</li>
+</ul>
+</li>
+<li>which 只能搜索<code>系统的命令</code><ul>
+<li>看命令所在位置,还能查到看别名</li>
+</ul>
+</li>
+</ul>
+<h2 id="find命令"><a href="#find命令" class="headerlink" title="find命令"></a>find命令</h2><ul>
+<li><p>find [搜索范围] [搜索条件]</p>
+</li>
+<li><p>find / -name install.log</p>
+<ul>
+<li>避免大范围搜索，会非常耗费系统资源</li>
+<li>find是在系统当中搜索符合条件的文件名。如果需要匹配，通常使用通配符匹配，<code>通配符</code>是完全匹配</li>
+</ul>
+</li>
+<li><p><code>*</code> 匹配任意字符</p>
+</li>
+<li><p><code>?</code> 匹配任意一个字符</p>
+</li>
+<li><p><code>[]</code> 匹配任意一个中括号内的字符 find -name ab[cd]</p>
+</li>
+<li><p>find /root -inname install.log  就不区分大小写了</p>
+</li>
+<li><p>find /root -user root 按照所有者搜索</p>
+</li>
+<li><p>find /root -nouser 查找没有所有者的文件</p>
+</li>
+<li><p>find /var/log/ -mtime +10 <code>查找10天前修改的文件</code></p>
+<ul>
+<li>-10 10天内修改的文件</li>
+<li>10 10天当天修改的文件</li>
+<li>+10 10天前修改的文件</li>
+<li>atime 文件访问时间</li>
+<li>ctime 改变文件属性</li>
+<li>mtime 修改文件内容</li>
+</ul>
+</li>
+<li><p>find . -size 25k <code>查找文件大小是25k的文件</code></p>
+<ul>
+<li>-25k 小于25KB的文件  注意是小写的<code>k</code>，兆字节用大写的<code>M</code></li>
+<li>25k 等于25KB的文件</li>
+<li>+25k 大于25KB的文件 </li>
+<li>find . -size 25 不加单位就是扇区搜索</li>
+</ul>
+</li>
+<li><p>find /root -inum 262422 <code>查找i节点是262422</code>的文件</p>
+</li>
+<li><p>find /etc -size +20k -a -size -50k</p>
+<ul>
+<li><code>查找/etc/目录下，大于20kb小于50kb的文件</code></li>
+<li>-a and 逻辑与，两个条件都满足</li>
+<li>-0 or  逻辑或，两个条件满足一个即可</li>
+</ul>
+</li>
+<li><p>find /etc -size +20k -a -size -50k -exec ls -lh {} ;</p>
+<ul>
+<li><code>查找/etc/目录下，大于20KB并且小于50KB的文件，并显示详细信息</code></li>
+<li><code>-exec/-ok 命令&#123;&#125; \; 对搜索结果执行操作,&quot;&#123;&#125; \;&quot;为标准格式，只要有-exec就要写它</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="grep命令"><a href="#grep命令" class="headerlink" title="grep命令"></a>grep命令</h2><ul>
+<li>grep [选项] 字符串 文件名<ul>
+<li>在文件档中匹配符合条件的字符串</li>
+<li>-i 忽略大小写</li>
+<li>-v 排除指定字符串</li>
+</ul>
+</li>
+</ul>
+<h2 id="find-与-grep区别"><a href="#find-与-grep区别" class="headerlink" title="find 与 grep区别"></a>find 与 grep区别</h2><ul>
+<li>find命令，在当前系统中搜索符合条件的文件名，如果需要匹配。使用通配符匹配，通配符是完全匹配</li>
+<li>grep命令：在文件当中搜索符合条件的字符串，如果需要匹配，使用正则表达式进行匹配，正则表达式是包含匹配</li>
+</ul>
+<h1 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h1><ul>
+<li><p>man帮助等级</p>
+<ol>
+<li>查看命令的帮助</li>
+<li>查看可被内核调用的函数的帮助</li>
+<li>查看函数和函数库的帮助</li>
+<li>查看特殊文件的帮助（主要是/dev目录下的文件）</li>
+<li>查看配置文件的帮助</li>
+<li>查看游戏的帮助</li>
+<li>查看其他杂项的帮助</li>
+<li>查看系统管理员可用命令的帮助</li>
+<li>查看和内核相关文件的帮助</li>
+</ol>
+</li>
+<li><p>man 命令 -&gt; 获取指定命令的帮助  man ls</p>
+</li>
+<li><p>man -f 相当于 whatis 命令</p>
+</li>
+<li><p>man -k 相当于 apropos命令 eg: apropos passwd</p>
+</li>
+<li><p>shell内部命令帮助</p>
+<ul>
+<li>help 只能获取shell内部命令的帮助 eg： whereis cd. help cd</li>
+<li>是安装的软件，就有路径，比如 /bin/ls ,如果 没有比如cd 就是shell内部命令。『whereis cd』</li>
+</ul>
+</li>
+<li><p>info 命令</p>
+<ul>
+<li>回车  进入子帮助页面 (带有*号标记)</li>
+<li>u 上层</li>
+<li>n 下一帮助小节</li>
+<li>p 上一帮助小节</li>
+<li>q 退出</li>
+</ul>
+</li>
+</ul>
+<h1 id="压缩与解压缩命令"><a href="#压缩与解压缩命令" class="headerlink" title="压缩与解压缩命令"></a>压缩与解压缩命令</h1><blockquote>
+<p><code>.zip</code> .7z .rar <code>.gz</code> <code>.bz2</code> .tar.gz .tar.bz2等等</p>
+</blockquote>
+<h2 id="zip格式"><a href="#zip格式" class="headerlink" title=".zip格式"></a>.zip格式</h2><ul>
+<li>zip 压缩文件名  源文件名  eg: <code>zip xxx.zip xxx</code></li>
+<li>zip -r 压缩目录 源文件</li>
+<li>unzip 解压缩文件</li>
+</ul>
+<h2 id="gz格式"><a href="#gz格式" class="headerlink" title=".gz格式"></a>.gz格式</h2><ul>
+<li>gzip 源文件 <code>压缩为.gz格式的压缩文件，源文件会消失</code></li>
+<li>gzip -c 源文件 &gt; 压缩文件  <ul>
+<li>压缩为.gz 格式，源文件保留</li>
+<li>eg： gzip -c cangls &gt; cangls.gz</li>
+</ul>
+</li>
+<li>gzip -r 目录<ul>
+<li><code>压缩目录下所有的子文件，但是不能压缩目录</code></li>
+</ul>
+</li>
+<li>gzip -d 解压缩</li>
+<li>gunzip 解压缩</li>
+</ul>
+<h2 id="bz2格式"><a href="#bz2格式" class="headerlink" title=".bz2格式"></a>.bz2格式</h2><ul>
+<li>bzip2 源文件 不保留源文件</li>
+<li>bzip2 -k 源文件<ul>
+<li>压缩之后保留源文件<blockquote>
+<p><code>注意：bzip2命令不能压缩目录</code></p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>bzip2 -d 解压缩  <code>-k保留源文件</code></li>
+<li>bunzip2  <code>-k保留源文件</code></li>
+</ul>
+<h2 id="tar-gz-tar-bz2"><a href="#tar-gz-tar-bz2" class="headerlink" title=".tar.gz  .tar.bz2"></a>.tar.gz  .tar.bz2</h2><p>先压缩成.tar 再压缩成.gz / .bz2</p>
+<h3 id="tar-cvf-打包文件名-源文件"><a href="#tar-cvf-打包文件名-源文件" class="headerlink" title="tar -cvf 打包文件名 源文件"></a>tar -cvf 打包文件名 源文件</h3><ul>
+<li><p>-c 打包</p>
+</li>
+<li><p>-v 显示过程</p>
+</li>
+<li><p>-f 指定打包后的文件名</p>
+</li>
+<li><p>-x 解压缩 eg -xvf</p>
+</li>
+<li><p>-t 只查看</p>
+</li>
+<li><p>.tar.gz （z)</p>
+<ul>
+<li><code>-z 压缩为.tar.gz格式</code>  tar -zcvf xx.tar.gz 源文件</li>
+<li><code>-x 解压缩为.tar.gz格式</code> tar -zxvf xx.tar.gz </li>
+</ul>
+</li>
+<li><p>.tar.bz2 (j)</p>
+<ul>
+<li><code>-j 压缩为.tar.bz2格式</code>   tar -jcvf xx.tar.bz2 源文件</li>
+<li><code>-x 解压缩为.tar.bz2格式</code>  tar -jxvf xx.tar.bz2 </li>
+</ul>
+</li>
+<li><p>-C 位置</p>
+</li>
+</ul>
+<h1 id="关机和重启命令"><a href="#关机和重启命令" class="headerlink" title="关机和重启命令"></a>关机和重启命令</h1><h2 id="shutdown-选项-时间"><a href="#shutdown-选项-时间" class="headerlink" title="shutdown [选项] 时间"></a>shutdown [选项] 时间</h2><ul>
+<li>-c 取消前一个关机命令</li>
+<li>-h 关机</li>
+<li>-r 重启</li>
+</ul>
+<h2 id="其他关机命令-非安全，建议shutdown"><a href="#其他关机命令-非安全，建议shutdown" class="headerlink" title="其他关机命令 (非安全，建议shutdown)"></a>其他关机命令 (非安全，建议shutdown)</h2><ul>
+<li>halt  (非安全，建议shutdown)</li>
+<li>poweroff (非安全，建议shutdown)</li>
+<li>init 0 (非安全，建议shutdown)</li>
+</ul>
+<h2 id="其他重启命令"><a href="#其他重启命令" class="headerlink" title="其他重启命令"></a>其他重启命令</h2><ul>
+<li>reboot 相对安全</li>
+<li>init 6 非安全</li>
+</ul>
+<h2 id="系统运行级别"><a href="#系统运行级别" class="headerlink" title="系统运行级别"></a>系统运行级别</h2><blockquote>
+<p>查看系统运行级别<br>cat /etc/inittab 默认级别<br>runlevel</p>
+</blockquote>
+<ul>
+<li>0 关机</li>
+<li>1 单用户</li>
+<li>2 不完全多用户，不包含NFS服务</li>
+<li>3 完全多用户</li>
+<li>4 未分配</li>
+<li>5 图形界面</li>
+<li>6 重启</li>
+</ul>
+<h1 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h1><h2 id="挂载命令"><a href="#挂载命令" class="headerlink" title="挂载命令"></a>挂载命令</h2><blockquote>
+<p>用户登录查看和用户交互命令</p>
+</blockquote>
+<ul>
+<li>mount 查询系统中已经挂载的设备</li>
+<li>mount -a 依据配置文件/etc/fstab的内容，自动挂载</li>
+</ul>
+<h2 id="挂载命令格式"><a href="#挂载命令格式" class="headerlink" title="挂载命令格式"></a>挂载命令格式</h2><p><code>mount [-t 文件系统] [-o 特殊选项] 设备文件名 挂载点</code></p>
+<ul>
+<li>-t 文件系统：加入文件系统类型来指定挂载的类型，可以ext3、ext4、iso9660等文件系统</li>
+<li>-0 特殊选项：可以指定挂载的额外选项</li>
+<li>#!/bin/bash  最好必须写</li>
+<li>默认是可执行 exec.  </li>
+<li>mount -0 remount, noexec /home  重新挂载/boot分区， 并使用noexec权限</li>
+<li>remount 重新挂载已经挂载的文件系统，一般用于指定修改特殊权限</li>
+</ul>
+<h3 id="挂载光盘"><a href="#挂载光盘" class="headerlink" title="挂载光盘"></a>挂载光盘</h3><ul>
+<li>mkdir /mnt/cdrom/  建立挂载点</li>
+<li>mount -t iso9660 /dev/cdrom /mnt/cdrom 挂载光盘</li>
+<li>mount /dev/sr0 /mnt/cdrom</li>
+<li>umount /mnt/cdrom 必须卸载</li>
+</ul>
+<h3 id="挂载U盘"><a href="#挂载U盘" class="headerlink" title="挂载U盘"></a>挂载U盘</h3><ul>
+<li>fdisk -i 查看U盘设备文件</li>
+<li>mount -t vfat /dev/sdb1 /mnt/usb/  </li>
+<li><code>注意：Linux默认不支持NTFS文件系统</code></li>
+</ul>
+<h2 id="用户登录查看命令"><a href="#用户登录查看命令" class="headerlink" title="用户登录查看命令"></a>用户登录查看命令</h2><ul>
+<li>w 用户名 命令输出如下<ul>
+<li>USER: 登录的用户名</li>
+<li>TTY:  登录终端</li>
+<li>FROM： 从哪个IP地址登录</li>
+<li>LOGIN@: 登录时间</li>
+<li>IDLE： 用户闲置时间</li>
+<li>JCPU: 指的是和该终端廉洁的所有进程占用的时间。这个时间里并不包括过去的后台作业时间，但却包括当前正在运行的后台作业所占用的时间</li>
+<li>PCUP：是指当前进程所占用的时间</li>
+<li>WHAT: 当前正在运行的命令</li>
+</ul>
+</li>
+<li>who 用户名</li>
+<li>last 默认是读取 /var/log/wtmp文件数据，输出如下<ul>
+<li>用户名</li>
+<li>登录终端</li>
+<li>登录IP</li>
+<li>登录时间</li>
+<li>退出时间（在线时间）</li>
+</ul>
+</li>
+<li>lastlog 默认是读取/var/log/lastlog文件内容<ul>
+<li>用户名</li>
+<li>登录终端</li>
+<li>登录ip</li>
+<li>最后一次登录时间</li>
+</ul>
+</li>
+</ul>
+<h1 id="Shell部分"><a href="#Shell部分" class="headerlink" title="Shell部分"></a>Shell部分</h1><h2 id="Shell概况"><a href="#Shell概况" class="headerlink" title="Shell概况"></a>Shell概况</h2><ul>
+<li>命令行解释器，计算机可不认识命令，只认识0101. 为用户提供了一个向Linux内核发送请求以便运行程序的界面系统级程序，用户可以用Shell来启东、挂起、挺直甚至是编写一个程序</li>
+<li>SHell还是一个功能相当强大的编译语言，易变写，易调试，灵活性较强。Shell是解释执行的脚本语言，在Sjell中可以直接调用Linux系统命令</li>
+</ul>
+<h2 id="Shell的分类"><a href="#Shell的分类" class="headerlink" title="Shell的分类"></a>Shell的分类</h2><ul>
+<li>Bourne Shell: 从1979起Unix就开始使用Bourne Shell， 主文件名为sh。</li>
+<li>C Shell: 主要在BSD版的Unix系统中使用，其语言和C语言像相似而得名</li>
+<li>Shell的两种主要语法类型有Bourne和C，这两种语法彼此不兼容。Bourne家族主要有sh、ksh、Bash、psh、zsh； C家族主要包括csh、tcsh</li>
+</ul>
+<h2 id="脚本执行方式"><a href="#脚本执行方式" class="headerlink" title="脚本执行方式"></a>脚本执行方式</h2><ul>
+<li>echo </li>
+<li>vi hello.sh  (#!/bin/bash) 可以调用系统命令</li>
+<li>赋予执行权限，直接运行<ul>
+<li>chmod 755 hello.sh</li>
+<li>./hello.sh</li>
+</ul>
+</li>
+<li>通过Bash调用执行脚本<ul>
+<li>bash hello.sh</li>
+</ul>
+</li>
+</ul>
+<h2 id="别名与快捷键"><a href="#别名与快捷键" class="headerlink" title="别名与快捷键"></a>别名与快捷键</h2><ul>
+<li>alias cp = ‘cp -i’,  mv = ‘mv -i’,  rm = ‘rm -i’等等，提示，是否xxx？</li>
+<li>unalias 删除别名</li>
+<li>vi ~/.bashrc 写入环境变量配置文件</li>
+<li>source ~/.bashrc  可以让配置重新生效</li>
+</ul>
+<h3 id="命令生效顺序"><a href="#命令生效顺序" class="headerlink" title="命令生效顺序"></a>命令生效顺序</h3><ol>
+<li>用绝对路径或相对路径执行的命令</li>
+<li>执行别名</li>
+<li>执行Bash的内部命令</li>
+<li>执行按照$PATH环境变量定义的目录查找顺序找到的第一个命令</li>
+</ol>
+<h3 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h3><ul>
+<li>ctrl+c 强制终止当前命令</li>
+<li>ctrl+l 清屏</li>
+<li>ctrl+a 光标移动到命令行首</li>
+<li>ctrl+e 光标移动到命令行尾</li>
+<li>ctrl+u 从光标所在位置删除到行首</li>
+<li>ctrl+z 把命令放入后台</li>
+<li>ctrl+r 在历史命令中搜索</li>
+</ul>
+<h2 id="历史命令"><a href="#历史命令" class="headerlink" title="历史命令"></a>历史命令</h2><ul>
+<li>history [选项] [历史命令保存文件]</li>
+<li>-c 清空历史命令</li>
+<li>-w 把缓存中的历史命令写入历史命令保存文件 ~/.bash_history</li>
+<li>vim /etc/profile</li>
+<li>上下剪头调用以前的历史命令</li>
+<li>!n 重复执行第n条历史命令</li>
+<li>!! 重复执行上一条命令</li>
+<li>！字符串   重复执行最后一条以该字符串开头的命令</li>
+</ul>
+<h2 id="Bash命令补全"><a href="#Bash命令补全" class="headerlink" title="Bash命令补全"></a>Bash命令补全</h2><ul>
+<li>tab键</li>
+</ul>
+<h2 id="输出重定向"><a href="#输出重定向" class="headerlink" title="输出重定向"></a>输出重定向</h2><p>把命令输出保存到文件， &gt; 代表覆盖的形式写入， &gt;&gt;代表追加的方式写入</p>
+<ul>
+<li>‘&gt;’覆盖，&gt;&gt; 追加</li>
+<li>命令 &gt; 文件 2&gt;&amp;1    </li>
+<li>命令 &gt;&gt; 文件 2&gt;&amp;1  </li>
+<li>命令 &amp;&gt; 文件</li>
+<li>命令 &amp;&gt;&gt; 文件</li>
+<li>命令&gt;&gt;文件1  2&gt;&gt;文件2  <code>把正确的输出追加到文件1，把错误的输出追加到文件2中</code></li>
+</ul>
+<ul>
+<li><code>ls &amp;&gt;/dev/null</code> 相当于既不显示到屏幕上，也不保存</li>
+</ul>
+<h2 id="输入重定向"><a href="#输入重定向" class="headerlink" title="输入重定向"></a>输入重定向</h2><blockquote>
+<p>wc [选项] [文件名]</p>
+</blockquote>
+<ul>
+<li>-c 统计字节数</li>
+<li>-w 统计单词数</li>
+<li>-l 统计行数</li>
+</ul>
+<h2 id="管道符"><a href="#管道符" class="headerlink" title="管道符"></a>管道符</h2><h3 id="多命令顺序执行"><a href="#多命令顺序执行" class="headerlink" title="多命令顺序执行"></a>多命令顺序执行</h3><ul>
+<li>; 命令1：命令2  多个命令顺序执行，命令之间没有任何联系</li>
+<li>&amp;&amp; cmd1 &amp;&amp; cmd2 只有当cmd1正确执行 命令cmd2才会执行</li>
+<li>|| cmd1 || cmd2 当命令cmd1不正确的时候，命令2才会执行，正确则不执行</li>
+</ul>
+<h3 id="管道符-1"><a href="#管道符-1" class="headerlink" title="管道符"></a>管道符</h3><p><code>命令1 | 命令2</code>，命令1的正确输出作为命令2的操作对象</p>
+<ul>
+<li>ll -a /etc/ | more </li>
+<li>netstat -an | grep xxx</li>
+</ul>
+<h2 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h2><ul>
+<li>? 匹配<code>一个</code>任意字符</li>
+<li>* 匹配0个或<code>任意多个</code>任意字符，也就是可以匹配任何内容</li>
+<li>[] 匹配中括号中<code>任意一个</code>字符，例如：[abc]代表一定匹配一个字符串，或者是a,或者b,或者c。</li>
+<li>[-] 匹配中括号中<code>任意一个</code>字符， -代表一个<code>范围</code>。例如[a-z]代表匹配一个小写字母</li>
+<li>[^] 逻辑非，代表匹配<code>不是</code>中括号内的<code>一个字符</code>。例如：[^0-9]代表匹配不是一个数字的字符</li>
+</ul>
+<h2 id="Bash中其他特殊字符"><a href="#Bash中其他特殊字符" class="headerlink" title="Bash中其他特殊字符"></a>Bash中其他特殊字符</h2><table>
+<thead>
+<tr>
+<th align="center"><code>符号</code></th>
+<th align="center"><code>作用</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">‘’</td>
+<td align="center">单引号。在单引号中<code>所有的特殊符号</code>，如”$”和”`“(反引号)都 <code>没有特殊含义</code>。</td>
+</tr>
+<tr>
+<td align="center">“”</td>
+<td align="center">双引号。在双引号中特殊字符都没有特殊含义，但是”$”、”`”、和”&quot;是例外，拥有”调用变量的值”、”引用命令”、”转义符”的特殊含义。</td>
+</tr>
+<tr>
+<td align="center">``</td>
+<td align="center">反引号。反引号括起来的内容是系统命令，在Bash中会先执行它。和$()作用一样，补货推荐使用$()，因为反引号非常容易看错</td>
+</tr>
+<tr>
+<td align="center">$()</td>
+<td align="center">和反引号作用一样，用来引用系统命令</td>
+</tr>
+<tr>
+<td align="center">#</td>
+<td align="center">在Shell脚本中，#开头的行代表注释。</td>
+</tr>
+<tr>
+<td align="center">$</td>
+<td align="center">用于调用变量的值，如需要调用变量name的值得时候，需要用$name的方式得到变量的值</td>
+</tr>
+<tr>
+<td align="center">\</td>
+<td align="center">转义符，跟在\之后的特殊字符将失去特殊含义，变为普通字符。如$ 将输出”$”符号</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LLDB</title>
     <url>/llvm/lldb.html</url>
     <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9sbGRiLmxsdm0ub3JnLw==">LLDB官方文档地址<i class="fa fa-external-link-alt"></i></span></p>
@@ -1907,6 +1907,7 @@ dskjdhjksgdhjs -->
 <li><a href="./lua-patch">在iOS上面的应用，Lua热修复</a></li>
 <li><a href="./lua">lua随缘记录</a></li>
 </ul>
+<p>参考：<br><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNvZGluZ25vdy5jb20vMjAwNS8xMi9jb21wYXJlX3dpdGhfbHVhXzUuaHRtbA==">虚拟机之比较，lua 5 的实现<i class="fa fa-external-link-alt"></i></span></p>
 ]]></content>
       <categories>
         <category>lua</category>
@@ -2274,6 +2275,92 @@ EndPC       Uint32
       </tags>
   </entry>
   <entry>
+    <title>Python</title>
+    <url>/python/index.html</url>
+    <content><![CDATA[<h1 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h1><p>Linux和Mac环境自带了Python 2.x版本，但是如果要更新到3.x的版本，可以在<span class="exturl" data-url="aHR0cHM6Ly93d3cucHl0aG9uLm9yZy8=">Python的官方网站<i class="fa fa-external-link-alt"></i></span>下载安装</p>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><ol>
+<li>单行注释 - 以#和空格开头的部分 </li>
+<li>多行注释 - 三个引号开头，三个引号结尾</li>
+</ol>
+<h2 id="语言元素"><a href="#语言元素" class="headerlink" title="语言元素"></a>语言元素</h2><h3 id="变量和类型"><a href="#变量和类型" class="headerlink" title="变量和类型"></a>变量和类型</h3><ul>
+<li>整型：Python中可以处理任意大小的整数<ul>
+<li>（Python 2.x中有int和long两种类型的整数，但这种区分对Python来说意义不大，因此在Python 3.x中整数只有int这一种了），而且支持二进制（如<code>0b100</code>，换算成十进制是4）、八进制（如<code>0o100</code>，换算成十进制是64）、十进制（<code>100</code>）和十六进制（<code>0x100</code>，换算成十进制是256）的表示法。</li>
+</ul>
+</li>
+<li>浮点型：浮点数也就是小数，之所以称为浮点数，是因为按照科学记数法表示时，一个浮点数的小数点位置是可变的，浮点数除了数学写法（如<code>123.456</code>）之外还支持科学计数法（如<code>1.23456e2</code>）。</li>
+<li>字符串型：字符串是以单引号或双引号括起来的任意文本，比如<code>&#39;hello&#39;</code>和<code>&quot;hello&quot;</code>,字符串还有原始字符串表示法、字节字符串表示法、Unicode字符串表示法，而且可以书写成多行的形式（用三个单引号或三个双引号开头，三个单引号或三个双引号结尾）。</li>
+<li>布尔型：布尔值只有<code>True</code>、<code>False</code>两种值，要么是<code>True</code>，要么是<code>False</code>，在Python中，可以直接用<code>True</code>、<code>False</code>表示布尔值（请注意大小写），也可以通过布尔运算计算出来（例如<code>3 &lt; 5</code>会产生布尔值<code>True</code>，而<code>2 == 1</code>会产生布尔值<code>False</code>）。</li>
+<li>复数型：形如<code>3+5j</code>，跟数学上的复数表示一样，唯一不同的是虚部的<code>i</code>换成了<code>j</code>。</li>
+</ul>
+<p>在对变量类型进行转换时可以使用Python的内置函数（准确的说下面列出的并不是真正意义上的函数，而是后面我们要讲到的创建对象的构造方法）。</p>
+<ul>
+<li><code>int()</code>：将一个数值或字符串转换成整数，可以指定进制。</li>
+<li><code>float()</code>：将一个字符串转换成浮点数。</li>
+<li><code>str()</code>：将指定的对象转换成字符串形式，可以指定编码。</li>
+<li><code>chr()</code>：将整数转换成该编码对应的字符串（一个字符）。</li>
+<li><code>ord()</code>：将字符串（一个字符）转换成对应的编码（整数）。</li>
+</ul>
+<h3 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h3><blockquote>
+<p><strong>说明：</strong> 在实际开发中，如果搞不清楚运算符的优先级，可以使用括号来确保运算的执行顺序。</p>
+</blockquote>
+<h2 id="分支结构"><a href="#分支结构" class="headerlink" title="分支结构"></a>分支结构</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x = <span class="built_in">float</span>(<span class="built_in">input</span>(<span class="string">&#x27;x = &#x27;</span>))</span><br><span class="line"><span class="keyword">if</span> x &gt; <span class="number">1</span>:</span><br><span class="line">    y = <span class="number">3</span> * x - <span class="number">5</span></span><br><span class="line"><span class="keyword">elif</span> x &gt;= -<span class="number">1</span>:</span><br><span class="line">    y = x + <span class="number">2</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    y = <span class="number">5</span> * x + <span class="number">3</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;f(%.2f) = %.2f&#x27;</span> % (x, y))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x = <span class="built_in">float</span>(<span class="built_in">input</span>(<span class="string">&#x27;x = &#x27;</span>))</span><br><span class="line"><span class="keyword">if</span> x &gt; <span class="number">1</span>:</span><br><span class="line">    y = <span class="number">3</span> * x - <span class="number">5</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">if</span> x &gt;= -<span class="number">1</span>:</span><br><span class="line">        y = x + <span class="number">2</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        y = <span class="number">5</span> * x + <span class="number">3</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;f(%.2f) = %.2f&#x27;</span> % (x, y))</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>说明：</strong> 大家可以自己感受一下这两种写法到底是哪一种更好。在之前我们提到的Python之禅中有这么一句话“Flat is better than nested.”，之所以提倡代码“扁平化”是因为嵌套结构的嵌套层次多了之后会严重的影响代码的可读性，所以能使用扁平化的结构时就不要使用嵌套。</p>
+</blockquote>
+<h2 id="循环结构"><a href="#循环结构" class="headerlink" title="循环结构"></a>循环结构</h2><h3 id="for-in循环"><a href="#for-in循环" class="headerlink" title="for-in循环"></a>for-in循环</h3><p>如果明确的知道循环执行的次数或者要对一个容器进行迭代（后面会讲到），那么我们推荐使用<code>for-in</code>循环。</p>
+<ul>
+<li><code>range(101)</code>可以产生一个0到100的整数序列。</li>
+<li><code>range(1, 100)</code>可以产生一个1到99的整数序列。</li>
+<li><code>range(1, 100, 2)</code>可以产生一个1到99的奇数序列，其中的2是步长，即数值序列的增量。</li>
+</ul>
+<h3 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h3><p>如果要构造不知道具体循环次数的循环结构，我们推荐使用<code>while</code>循环。<code>while</code>循环通过一个能够产生或转换出<code>bool</code>值的表达式来控制循环，表达式的值为<code>True</code>循环继续，表达式的值为<code>False</code>循环结束。下面我们通过一个“猜数字”的小游戏（计算机出一个1~100之间的随机数，人输入自己猜的数字，计算机给出对应的提示信息，直到人猜出计算机出的数字）来看看如何使用<code>while</code>循环。</p>
+<blockquote>
+<p><strong>说明：</strong> <code>break</code>关键字来提前终止循环，需要注意的是<code>break</code>只能终止它所在的那个循环，这一点在使用嵌套的循环结构需要引起注意。除了<code>break</code>之外，还有另一个关键字是<code>continue</code>，它可以用来放弃本次循环后续的代码直接让循环进入下一轮。</p>
+</blockquote>
+<h2 id="函数和模块的使用"><a href="#函数和模块的使用" class="headerlink" title="函数和模块的使用"></a>函数和模块的使用</h2><p>编程大师<em>Martin Fowler</em>先生曾经说过：“<strong>代码有很多种坏味道，重复是最坏的一种！</strong>”，要写出高质量的代码首先要解决的就是重复代码的问题。</p>
+<h3 id="定义函数"><a href="#定义函数" class="headerlink" title="定义函数"></a>定义函数</h3><p>在Python中可以使用<code>def</code>关键字来定义函数，和变量一样每个函数也有一个响亮的名字，而且命名规则跟变量的命名规则是一致的。在函数名后面的圆括号中可以放置传递给函数的参数，这一点和数学上的函数非常相似，程序中函数的参数就相当于是数学上说的函数的自变量，而函数执行完成后我们可以通过<code>return</code>关键字来返回一个值，这相当于数学上说的函数的因变量。</p>
+<h3 id="函数的参数"><a href="#函数的参数" class="headerlink" title="函数的参数"></a>函数的参数</h3><p>函数是绝大多数编程语言中都支持的一个代码的“构建块”，但是Python中的函数与其他语言中的函数还是有很多不太相同的地方，其中一个显著的区别就是Python对函数参数的处理。在Python中，函数的参数可以有默认值，也支持使用可变参数，所以Python并不需要像其他语言一样支持<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU1JTg3JUJEJUU2JTk1JUIwJUU5JTg3JThEJUU4JUJEJUJE">函数的重载<i class="fa fa-external-link-alt"></i></span>，因为我们在定义一个函数的时候可以让它有多种不同的使用方式.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在参数名前面的*表示args是一个可变参数</span></span><br><span class="line"><span class="comment"># 即在调用add函数时可以传入0个或多个参数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">*args</span>):</span><br><span class="line">    total = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> val <span class="keyword">in</span> args:</span><br><span class="line">        total += val</span><br><span class="line">    <span class="keyword">return</span> total</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(add())</span><br><span class="line"><span class="built_in">print</span>(add(<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(add(<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line"><span class="built_in">print</span>(add(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>))</span><br><span class="line"><span class="built_in">print</span>(add(<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>))</span><br></pre></td></tr></table></figure>
+
+<h3 id="用模块管理函数"><a href="#用模块管理函数" class="headerlink" title="用模块管理函数"></a>用模块管理函数</h3><p>需要说明的是，如果我们导入的模块除了定义函数之外还中有可以执行代码，那么Python解释器在导入这个模块时就会执行这些代码，事实上我们可能并不希望如此，因此如果我们在模块中编写了执行代码，最好是将这些执行代码放入如下所示的条件中，这样的话除非直接运行该模块，if条件下的这些代码是不会执行的，因为只有直接执行的模块的名字才是“__main__”。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bar</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># __name__是Python中一个隐含的变量它代表了模块的名字</span></span><br><span class="line"><span class="comment"># 只有被Python解释器直接执行的模块的名字才是__main__</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;call foo()&#x27;</span>)</span><br><span class="line">    foo()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;call bar()&#x27;</span>)</span><br><span class="line">    bar()</span><br></pre></td></tr></table></figure>
+<h2 id="字符串和常用数据结构"><a href="#字符串和常用数据结构" class="headerlink" title="字符串和常用数据结构"></a>字符串和常用数据结构</h2><ul>
+<li>sorted函数返回列表排序后的拷贝不会修改传入的列表</li>
+<li>函数的设计就应该像sorted函数一样尽可能不产生副作用</li>
+<li>通过<code>yield</code>关键字将一个普通函数改造成生成器函数。</li>
+</ul>
+<h3 id="使用元组"><a href="#使用元组" class="headerlink" title="使用元组"></a>使用元组</h3><ol>
+<li>元组中的元素是无法修改的</li>
+<li>元组在创建时间和占用的空间上面都优于列表。</li>
+</ol>
+<h2 id="面向对象编程基础"><a href="#面向对象编程基础" class="headerlink" title="面向对象编程基础"></a>面向对象编程基础</h2><p>类是抽象的概念，而对象是具体的东西。在面向对象编程的世界中，一切皆为对象，对象都有属性和行为，每个对象都是独一无二的，而且对象一定属于某个类（型）</p>
+<p>在Python中可以使用<code>class</code>关键字定义类，然后在类中通过之前学习过的函数来定义方法，这样就可以将对象的动态特征描述出来，</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="comment"># __init__是一个特殊方法用于在创建对象时进行初始化操作</span></span><br><span class="line">    <span class="comment"># 通过这个方法我们可以为学生对象绑定name和age两个属性</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, age</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        self.age = age</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">study</span>(<span class="params">self, course_name</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;%s正在学习%s.&#x27;</span> % (self.name, course_name))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># PEP 8要求标识符的名字用全小写多个单词用下划线连接</span></span><br><span class="line">    <span class="comment"># 但是部分程序员和公司更倾向于使用驼峰命名法(驼峰标识)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">watch_movie</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self.age &lt; <span class="number">18</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s只能观看《熊出没》.&#x27;</span> % self.name)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s正在观看岛国爱情大电影.&#x27;</span> % self.name)</span><br></pre></td></tr></table></figure>
+
+<h2 id="面向对象进阶"><a href="#面向对象进阶" class="headerlink" title="面向对象进阶"></a>面向对象进阶</h2><h3 id="property装饰器"><a href="#property装饰器" class="headerlink" title="@property装饰器"></a>@property装饰器</h3><p>使用@property包装器来包装getter和setter方法，使得对属性的访问既安全又方便，</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, age</span>):</span><br><span class="line">        self._name = name</span><br><span class="line">        self._age = age</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 访问器 - getter方法</span></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">name</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._name</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 访问器 - getter方法</span></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">age</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._age</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 修改器 - setter方法</span></span><br><span class="line"><span class="meta">    @age.setter</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">age</span>(<span class="params">self, age</span>):</span><br><span class="line">        self._age = age</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">play</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self._age &lt;= <span class="number">16</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s正在玩飞行棋.&#x27;</span> % self._name)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s正在玩斗地主.&#x27;</span> % self._name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    person = Person(<span class="string">&#x27;王大锤&#x27;</span>, <span class="number">12</span>)</span><br><span class="line">    person.play()</span><br><span class="line">    person.age = <span class="number">22</span></span><br><span class="line">    person.play()</span><br><span class="line">    <span class="comment"># person.name = &#x27;白元芳&#x27;  # AttributeError: can&#x27;t set attribute</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h3 id="slots-魔法"><a href="#slots-魔法" class="headerlink" title="__slots__魔法"></a>__slots__魔法</h3><p>通常，动态语言允许我们在程序运行时给对象绑定新的属性或方法，当然也可以对已经绑定的属性和方法进行解绑定。但是如果我们需要限定自定义类型的对象只能绑定某些属性，可以通过在类中定义__slots__变量来进行限定。需要注意的是__slots__的限定只对当前类的对象生效，对子类并不起任何作用。</p>
+<ul>
+<li><h1 id="限定Person对象只能绑定-name-age和-gender属性"><a href="#限定Person对象只能绑定-name-age和-gender属性" class="headerlink" title="限定Person对象只能绑定_name, _age和_gender属性"></a>限定Person对象只能绑定_name, _age和_gender属性</h1><ul>
+<li>__slots__ = (‘_name’, ‘_age’, ‘_gender’)</li>
+</ul>
+</li>
+</ul>
+<h3 id="静态方法和类方法"><a href="#静态方法和类方法" class="headerlink" title="静态方法和类方法"></a>静态方法和类方法</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line">   <span class="keyword">def</span> <span class="title function_">is_valid</span>(<span class="params">a, b, c</span>):</span><br><span class="line">       <span class="keyword">return</span> a + b &gt; c <span class="keyword">and</span> b + c &gt; a <span class="keyword">and</span> a + c &gt; b</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@classmethod</span></span><br><span class="line">   <span class="keyword">def</span> <span class="title function_">now</span>(<span class="params">cls</span>):</span><br><span class="line">       ctime = localtime(time())</span><br><span class="line">       <span class="keyword">return</span> cls(ctime.tm_hour, ctime.tm_min, ctime.tm_sec)</span><br></pre></td></tr></table></figure>
+
+<h3 id="类之间的关系"><a href="#类之间的关系" class="headerlink" title="类之间的关系"></a>类之间的关系</h3><p>简单的说，类和类之间的关系有三种：is-a、has-a和use-a关系。</p>
+<h3 id="继承和多态"><a href="#继承和多态" class="headerlink" title="继承和多态"></a>继承和多态</h3>]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>dyld和启动流程</title>
     <url>/os/dyld.html</url>
     <content><![CDATA[<h1 id="先看一个断点"><a href="#先看一个断点" class="headerlink" title="先看一个断点"></a>先看一个断点</h1><img src="/images/iOS/dyld_mainluanch.png" class="" title="启动流程">
@@ -2381,92 +2468,6 @@ mach_init(); // from libc.a
       <tags>
         <tag>dyld</tag>
         <tag>启动流程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python</title>
-    <url>/python/index.html</url>
-    <content><![CDATA[<h1 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h1><p>Linux和Mac环境自带了Python 2.x版本，但是如果要更新到3.x的版本，可以在<span class="exturl" data-url="aHR0cHM6Ly93d3cucHl0aG9uLm9yZy8=">Python的官方网站<i class="fa fa-external-link-alt"></i></span>下载安装</p>
-<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><ol>
-<li>单行注释 - 以#和空格开头的部分 </li>
-<li>多行注释 - 三个引号开头，三个引号结尾</li>
-</ol>
-<h2 id="语言元素"><a href="#语言元素" class="headerlink" title="语言元素"></a>语言元素</h2><h3 id="变量和类型"><a href="#变量和类型" class="headerlink" title="变量和类型"></a>变量和类型</h3><ul>
-<li>整型：Python中可以处理任意大小的整数<ul>
-<li>（Python 2.x中有int和long两种类型的整数，但这种区分对Python来说意义不大，因此在Python 3.x中整数只有int这一种了），而且支持二进制（如<code>0b100</code>，换算成十进制是4）、八进制（如<code>0o100</code>，换算成十进制是64）、十进制（<code>100</code>）和十六进制（<code>0x100</code>，换算成十进制是256）的表示法。</li>
-</ul>
-</li>
-<li>浮点型：浮点数也就是小数，之所以称为浮点数，是因为按照科学记数法表示时，一个浮点数的小数点位置是可变的，浮点数除了数学写法（如<code>123.456</code>）之外还支持科学计数法（如<code>1.23456e2</code>）。</li>
-<li>字符串型：字符串是以单引号或双引号括起来的任意文本，比如<code>&#39;hello&#39;</code>和<code>&quot;hello&quot;</code>,字符串还有原始字符串表示法、字节字符串表示法、Unicode字符串表示法，而且可以书写成多行的形式（用三个单引号或三个双引号开头，三个单引号或三个双引号结尾）。</li>
-<li>布尔型：布尔值只有<code>True</code>、<code>False</code>两种值，要么是<code>True</code>，要么是<code>False</code>，在Python中，可以直接用<code>True</code>、<code>False</code>表示布尔值（请注意大小写），也可以通过布尔运算计算出来（例如<code>3 &lt; 5</code>会产生布尔值<code>True</code>，而<code>2 == 1</code>会产生布尔值<code>False</code>）。</li>
-<li>复数型：形如<code>3+5j</code>，跟数学上的复数表示一样，唯一不同的是虚部的<code>i</code>换成了<code>j</code>。</li>
-</ul>
-<p>在对变量类型进行转换时可以使用Python的内置函数（准确的说下面列出的并不是真正意义上的函数，而是后面我们要讲到的创建对象的构造方法）。</p>
-<ul>
-<li><code>int()</code>：将一个数值或字符串转换成整数，可以指定进制。</li>
-<li><code>float()</code>：将一个字符串转换成浮点数。</li>
-<li><code>str()</code>：将指定的对象转换成字符串形式，可以指定编码。</li>
-<li><code>chr()</code>：将整数转换成该编码对应的字符串（一个字符）。</li>
-<li><code>ord()</code>：将字符串（一个字符）转换成对应的编码（整数）。</li>
-</ul>
-<h3 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h3><blockquote>
-<p><strong>说明：</strong> 在实际开发中，如果搞不清楚运算符的优先级，可以使用括号来确保运算的执行顺序。</p>
-</blockquote>
-<h2 id="分支结构"><a href="#分支结构" class="headerlink" title="分支结构"></a>分支结构</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x = <span class="built_in">float</span>(<span class="built_in">input</span>(<span class="string">&#x27;x = &#x27;</span>))</span><br><span class="line"><span class="keyword">if</span> x &gt; <span class="number">1</span>:</span><br><span class="line">    y = <span class="number">3</span> * x - <span class="number">5</span></span><br><span class="line"><span class="keyword">elif</span> x &gt;= -<span class="number">1</span>:</span><br><span class="line">    y = x + <span class="number">2</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    y = <span class="number">5</span> * x + <span class="number">3</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;f(%.2f) = %.2f&#x27;</span> % (x, y))</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x = <span class="built_in">float</span>(<span class="built_in">input</span>(<span class="string">&#x27;x = &#x27;</span>))</span><br><span class="line"><span class="keyword">if</span> x &gt; <span class="number">1</span>:</span><br><span class="line">    y = <span class="number">3</span> * x - <span class="number">5</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">if</span> x &gt;= -<span class="number">1</span>:</span><br><span class="line">        y = x + <span class="number">2</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        y = <span class="number">5</span> * x + <span class="number">3</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;f(%.2f) = %.2f&#x27;</span> % (x, y))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>说明：</strong> 大家可以自己感受一下这两种写法到底是哪一种更好。在之前我们提到的Python之禅中有这么一句话“Flat is better than nested.”，之所以提倡代码“扁平化”是因为嵌套结构的嵌套层次多了之后会严重的影响代码的可读性，所以能使用扁平化的结构时就不要使用嵌套。</p>
-</blockquote>
-<h2 id="循环结构"><a href="#循环结构" class="headerlink" title="循环结构"></a>循环结构</h2><h3 id="for-in循环"><a href="#for-in循环" class="headerlink" title="for-in循环"></a>for-in循环</h3><p>如果明确的知道循环执行的次数或者要对一个容器进行迭代（后面会讲到），那么我们推荐使用<code>for-in</code>循环。</p>
-<ul>
-<li><code>range(101)</code>可以产生一个0到100的整数序列。</li>
-<li><code>range(1, 100)</code>可以产生一个1到99的整数序列。</li>
-<li><code>range(1, 100, 2)</code>可以产生一个1到99的奇数序列，其中的2是步长，即数值序列的增量。</li>
-</ul>
-<h3 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h3><p>如果要构造不知道具体循环次数的循环结构，我们推荐使用<code>while</code>循环。<code>while</code>循环通过一个能够产生或转换出<code>bool</code>值的表达式来控制循环，表达式的值为<code>True</code>循环继续，表达式的值为<code>False</code>循环结束。下面我们通过一个“猜数字”的小游戏（计算机出一个1~100之间的随机数，人输入自己猜的数字，计算机给出对应的提示信息，直到人猜出计算机出的数字）来看看如何使用<code>while</code>循环。</p>
-<blockquote>
-<p><strong>说明：</strong> <code>break</code>关键字来提前终止循环，需要注意的是<code>break</code>只能终止它所在的那个循环，这一点在使用嵌套的循环结构需要引起注意。除了<code>break</code>之外，还有另一个关键字是<code>continue</code>，它可以用来放弃本次循环后续的代码直接让循环进入下一轮。</p>
-</blockquote>
-<h2 id="函数和模块的使用"><a href="#函数和模块的使用" class="headerlink" title="函数和模块的使用"></a>函数和模块的使用</h2><p>编程大师<em>Martin Fowler</em>先生曾经说过：“<strong>代码有很多种坏味道，重复是最坏的一种！</strong>”，要写出高质量的代码首先要解决的就是重复代码的问题。</p>
-<h3 id="定义函数"><a href="#定义函数" class="headerlink" title="定义函数"></a>定义函数</h3><p>在Python中可以使用<code>def</code>关键字来定义函数，和变量一样每个函数也有一个响亮的名字，而且命名规则跟变量的命名规则是一致的。在函数名后面的圆括号中可以放置传递给函数的参数，这一点和数学上的函数非常相似，程序中函数的参数就相当于是数学上说的函数的自变量，而函数执行完成后我们可以通过<code>return</code>关键字来返回一个值，这相当于数学上说的函数的因变量。</p>
-<h3 id="函数的参数"><a href="#函数的参数" class="headerlink" title="函数的参数"></a>函数的参数</h3><p>函数是绝大多数编程语言中都支持的一个代码的“构建块”，但是Python中的函数与其他语言中的函数还是有很多不太相同的地方，其中一个显著的区别就是Python对函数参数的处理。在Python中，函数的参数可以有默认值，也支持使用可变参数，所以Python并不需要像其他语言一样支持<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU1JTg3JUJEJUU2JTk1JUIwJUU5JTg3JThEJUU4JUJEJUJE">函数的重载<i class="fa fa-external-link-alt"></i></span>，因为我们在定义一个函数的时候可以让它有多种不同的使用方式.</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在参数名前面的*表示args是一个可变参数</span></span><br><span class="line"><span class="comment"># 即在调用add函数时可以传入0个或多个参数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">*args</span>):</span><br><span class="line">    total = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> val <span class="keyword">in</span> args:</span><br><span class="line">        total += val</span><br><span class="line">    <span class="keyword">return</span> total</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(add())</span><br><span class="line"><span class="built_in">print</span>(add(<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(add(<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line"><span class="built_in">print</span>(add(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>))</span><br><span class="line"><span class="built_in">print</span>(add(<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>))</span><br></pre></td></tr></table></figure>
-
-<h3 id="用模块管理函数"><a href="#用模块管理函数" class="headerlink" title="用模块管理函数"></a>用模块管理函数</h3><p>需要说明的是，如果我们导入的模块除了定义函数之外还中有可以执行代码，那么Python解释器在导入这个模块时就会执行这些代码，事实上我们可能并不希望如此，因此如果我们在模块中编写了执行代码，最好是将这些执行代码放入如下所示的条件中，这样的话除非直接运行该模块，if条件下的这些代码是不会执行的，因为只有直接执行的模块的名字才是“__main__”。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bar</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># __name__是Python中一个隐含的变量它代表了模块的名字</span></span><br><span class="line"><span class="comment"># 只有被Python解释器直接执行的模块的名字才是__main__</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;call foo()&#x27;</span>)</span><br><span class="line">    foo()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;call bar()&#x27;</span>)</span><br><span class="line">    bar()</span><br></pre></td></tr></table></figure>
-<h2 id="字符串和常用数据结构"><a href="#字符串和常用数据结构" class="headerlink" title="字符串和常用数据结构"></a>字符串和常用数据结构</h2><ul>
-<li>sorted函数返回列表排序后的拷贝不会修改传入的列表</li>
-<li>函数的设计就应该像sorted函数一样尽可能不产生副作用</li>
-<li>通过<code>yield</code>关键字将一个普通函数改造成生成器函数。</li>
-</ul>
-<h3 id="使用元组"><a href="#使用元组" class="headerlink" title="使用元组"></a>使用元组</h3><ol>
-<li>元组中的元素是无法修改的</li>
-<li>元组在创建时间和占用的空间上面都优于列表。</li>
-</ol>
-<h2 id="面向对象编程基础"><a href="#面向对象编程基础" class="headerlink" title="面向对象编程基础"></a>面向对象编程基础</h2><p>类是抽象的概念，而对象是具体的东西。在面向对象编程的世界中，一切皆为对象，对象都有属性和行为，每个对象都是独一无二的，而且对象一定属于某个类（型）</p>
-<p>在Python中可以使用<code>class</code>关键字定义类，然后在类中通过之前学习过的函数来定义方法，这样就可以将对象的动态特征描述出来，</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="comment"># __init__是一个特殊方法用于在创建对象时进行初始化操作</span></span><br><span class="line">    <span class="comment"># 通过这个方法我们可以为学生对象绑定name和age两个属性</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, age</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        self.age = age</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">study</span>(<span class="params">self, course_name</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;%s正在学习%s.&#x27;</span> % (self.name, course_name))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># PEP 8要求标识符的名字用全小写多个单词用下划线连接</span></span><br><span class="line">    <span class="comment"># 但是部分程序员和公司更倾向于使用驼峰命名法(驼峰标识)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">watch_movie</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self.age &lt; <span class="number">18</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s只能观看《熊出没》.&#x27;</span> % self.name)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s正在观看岛国爱情大电影.&#x27;</span> % self.name)</span><br></pre></td></tr></table></figure>
-
-<h2 id="面向对象进阶"><a href="#面向对象进阶" class="headerlink" title="面向对象进阶"></a>面向对象进阶</h2><h3 id="property装饰器"><a href="#property装饰器" class="headerlink" title="@property装饰器"></a>@property装饰器</h3><p>使用@property包装器来包装getter和setter方法，使得对属性的访问既安全又方便，</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, age</span>):</span><br><span class="line">        self._name = name</span><br><span class="line">        self._age = age</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 访问器 - getter方法</span></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">name</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._name</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 访问器 - getter方法</span></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">age</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._age</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 修改器 - setter方法</span></span><br><span class="line"><span class="meta">    @age.setter</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">age</span>(<span class="params">self, age</span>):</span><br><span class="line">        self._age = age</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">play</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self._age &lt;= <span class="number">16</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s正在玩飞行棋.&#x27;</span> % self._name)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s正在玩斗地主.&#x27;</span> % self._name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    person = Person(<span class="string">&#x27;王大锤&#x27;</span>, <span class="number">12</span>)</span><br><span class="line">    person.play()</span><br><span class="line">    person.age = <span class="number">22</span></span><br><span class="line">    person.play()</span><br><span class="line">    <span class="comment"># person.name = &#x27;白元芳&#x27;  # AttributeError: can&#x27;t set attribute</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
-
-<h3 id="slots-魔法"><a href="#slots-魔法" class="headerlink" title="__slots__魔法"></a>__slots__魔法</h3><p>通常，动态语言允许我们在程序运行时给对象绑定新的属性或方法，当然也可以对已经绑定的属性和方法进行解绑定。但是如果我们需要限定自定义类型的对象只能绑定某些属性，可以通过在类中定义__slots__变量来进行限定。需要注意的是__slots__的限定只对当前类的对象生效，对子类并不起任何作用。</p>
-<ul>
-<li><h1 id="限定Person对象只能绑定-name-age和-gender属性"><a href="#限定Person对象只能绑定-name-age和-gender属性" class="headerlink" title="限定Person对象只能绑定_name, _age和_gender属性"></a>限定Person对象只能绑定_name, _age和_gender属性</h1><ul>
-<li>__slots__ = (‘_name’, ‘_age’, ‘_gender’)</li>
-</ul>
-</li>
-</ul>
-<h3 id="静态方法和类方法"><a href="#静态方法和类方法" class="headerlink" title="静态方法和类方法"></a>静态方法和类方法</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line">   <span class="keyword">def</span> <span class="title function_">is_valid</span>(<span class="params">a, b, c</span>):</span><br><span class="line">       <span class="keyword">return</span> a + b &gt; c <span class="keyword">and</span> b + c &gt; a <span class="keyword">and</span> a + c &gt; b</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@classmethod</span></span><br><span class="line">   <span class="keyword">def</span> <span class="title function_">now</span>(<span class="params">cls</span>):</span><br><span class="line">       ctime = localtime(time())</span><br><span class="line">       <span class="keyword">return</span> cls(ctime.tm_hour, ctime.tm_min, ctime.tm_sec)</span><br></pre></td></tr></table></figure>
-
-<h3 id="类之间的关系"><a href="#类之间的关系" class="headerlink" title="类之间的关系"></a>类之间的关系</h3><p>简单的说，类和类之间的关系有三种：is-a、has-a和use-a关系。</p>
-<h3 id="继承和多态"><a href="#继承和多态" class="headerlink" title="继承和多态"></a>继承和多态</h3>]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -3099,7 +3100,7 @@ mach_init(); // from libc.a
   <entry>
     <title>RunLoop相关知识点收集</title>
     <url>/iOS/RunLoop/index.html</url>
-    <content><![CDATA[<p>首先是YY大神的理解<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmliaXJlbWUuY29tLzIwMTUvMDUvMTgvcnVubG9vcC8=">Autoreleasepool<i class="fa fa-external-link-alt"></i></span><br>下面是收集的RunLoop相关知识点，一些应用场景<a href="./iOS/RunLoop/runloop.html">点击这里查看</a></p>
+    <content><![CDATA[<p>首先是YY大神的理解<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmliaXJlbWUuY29tLzIwMTUvMDUvMTgvcnVubG9vcC8=">runloop<i class="fa fa-external-link-alt"></i></span><br>下面是收集的RunLoop相关知识点，一些应用场景<a href="./iOS/RunLoop/runloop.html">点击这里查看</a></p>
 <p><a href="./iOS/RunLoop/runloopfanyi.html">官方文档翻译</a></p>
 <h2 id="一、RunLoop概念"><a href="#一、RunLoop概念" class="headerlink" title="一、RunLoop概念"></a>一、RunLoop概念</h2><p>RunLoop是通过内部维护的<code>事件循环(Event Loop)</code>来对<code>事件/消息进行管理</code>的一个对象。</p>
 <p>1、没有消息处理时，休眠已避免资源占用，由用户态切换到内核态(CPU-内核态和用户态)<br>2、有消息需要处理时，立刻被唤醒，由内核态切换到用户态</p>
@@ -3317,144 +3318,6 @@ mach_init(); // from libc.a
       </categories>
       <tags>
         <tag>scrollView</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>iOS 算法收集</title>
-    <url>/iOS/algorithm/index.html</url>
-    <content><![CDATA[<h2 id="回溯算法-问题"><a href="#回溯算法-问题" class="headerlink" title="回溯算法 问题"></a>回溯算法 问题</h2><table>
-<thead>
-<tr>
-<th>类型</th>
-<th>题目链接</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>子集、组合</td>
-<td>子集、子集 II、组合、组合总和、组合总和 II</td>
-</tr>
-<tr>
-<td>全排列</td>
-<td>全排列、全排列 II、字符串的全排列、字母大小写全排列</td>
-</tr>
-<tr>
-<td>搜索</td>
-<td>解数独、单词搜索、N皇后、分割回文串、二进制手表</td>
-</tr>
-</tbody></table>
-<p>参考力扣解法<br><span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS1jbi5jb20vcHJvYmxlbXMvc3Vic2V0cy9zb2x1dGlvbi9jLXpvbmctamllLWxpYW8taHVpLXN1LXdlbi10aS1sZWkteGluZy1kYWktbmktZ2FvLS8=">C++<i class="fa fa-external-link-alt"></i></span><br><span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS1jbi5jb20vcHJvYmxlbXMvc3Vic2V0cy9zb2x1dGlvbi9lci1qaW4temhpLXdlaS16aHUtZ2UtbWVpLWp1LWRmc3Nhbi1jaG9uZy1zaS1sdS05Yy8=">java<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>①递归树<br>②找结束条件<br>③找准选择列表<br>④判断是否需要剪枝<br>⑤做出选择<br>⑥撤销选择</p>
-<blockquote>
-<p>总结：可以发现“排列”类型问题和“子集、组合”问题不同在于：“排列”问题使用used数组来标识选择列表，而“子集、组合”问题则使用start参数</p>
-</blockquote>
-<h2 id="1、不用中间变量-用两种方法交换A和B的值"><a href="#1、不用中间变量-用两种方法交换A和B的值" class="headerlink" title="1、不用中间变量,用两种方法交换A和B的值"></a><strong>1、不用中间变量,用两种方法交换A和B的值</strong></h2><figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1.中间变量</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">   <span class="type">int</span> temp = a;</span><br><span class="line">   a = b;</span><br><span class="line">   b = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.加法</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">   a = a + b;</span><br><span class="line">   b = a - b;</span><br><span class="line">   a = a - b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3.异或（相同为0，不同为1. 可以理解为不进位加法）</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">   a = a ^ b;</span><br><span class="line">   b = a ^ b;</span><br><span class="line">   a = a ^ b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2、求最大公约数"><a href="#2、求最大公约数" class="headerlink" title="2、求最大公约数"></a><strong>2、求最大公约数</strong></h2><figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** 1.直接遍历法 */</span></span><br><span class="line"><span class="built_in">int</span> max<span class="constructor">CommonDivisor(<span class="params">int</span> <span class="params">a</span>, <span class="params">int</span> <span class="params">b</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">int</span> max = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;=b; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a % i<span class="operator"> == </span><span class="number">0</span><span class="operator"> &amp;&amp; </span>b % i<span class="operator"> == </span><span class="number">0</span>) &#123;</span><br><span class="line">            max = i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return max;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/** 2.辗转相除法 */</span></span><br><span class="line"><span class="built_in">int</span> max<span class="constructor">CommonDivisor(<span class="params">int</span> <span class="params">a</span>, <span class="params">int</span> <span class="params">b</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">int</span> r;</span><br><span class="line">    <span class="keyword">while</span>(a % b &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        r = a % b;</span><br><span class="line">        a = b;</span><br><span class="line">        b = r;</span><br><span class="line">    &#125;</span><br><span class="line">    return b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 扩展：最小公倍数 = (a * b)/最大公约数</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="3、模拟栈操作"><a href="#3、模拟栈操作" class="headerlink" title="3、模拟栈操作"></a><strong>3、模拟栈操作</strong></h2><ul>
-<li>栈是一种数据结构，特点：先进后出 -</li>
-<li>练习：使用全局变量模拟栈的操作</li>
-</ul>
-<p><strong>#include &lt;stdio.h&gt;<br>#include &lt;stdbool.h&gt;<br>#include &lt;assert.h&gt;</strong></p>
-<p>//保护全局变量：在全局变量前加static后，这个全局变量就只能在本文件中使用<br>static int data[1024];//栈最多能保存1024个数据<br>static int count = 0;//目前已经放了多少个数(相当于栈顶位置)</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//数据入栈 push</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push</span>(<span class="params"><span class="built_in">int</span> x</span>)</span>&#123;</span><br><span class="line">    assert(!full());<span class="comment">//防止数组越界</span></span><br><span class="line">    data[count++] = x;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//数据出栈 pop</span></span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">pop</span>()</span>&#123;</span><br><span class="line">    assert(!empty());</span><br><span class="line">    <span class="keyword">return</span> data[--count];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//查看栈顶元素 top</span></span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">top</span>()</span>&#123;</span><br><span class="line">    assert(!empty());</span><br><span class="line">    <span class="keyword">return</span> data[count<span class="number">-1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//查询栈满 full</span></span><br><span class="line"><span class="function"><span class="built_in">bool</span> <span class="title">full</span>()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(count &gt;= <span class="number">1024</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//查询栈空 empty</span></span><br><span class="line"><span class="function"><span class="built_in">bool</span> <span class="title">empty</span>()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(count &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">main</span>()</span>&#123;</span><br><span class="line">    <span class="comment">//入栈</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++) &#123;</span><br><span class="line">        push(i);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">//出栈</span></span><br><span class="line">    <span class="keyword">while</span>(!empty())&#123;</span><br><span class="line">        printf(<span class="string">&quot;%d &quot;</span>, top()); <span class="comment">//栈顶元素</span></span><br><span class="line">        pop(); <span class="comment">//出栈</span></span><br><span class="line">    &#125;</span><br><span class="line">    printf(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="4、排序算法"><a href="#4、排序算法" class="headerlink" title="4、排序算法"></a><strong>4、排序算法</strong></h2><p>选择排序、冒泡排序、插入排序三种排序算法可以总结为如下：<br>都将数组分为已排序部分和未排序部分。</p>
-<p>1.选择排序将已排序部分定义在左端，然后选择未排序部分的最小元素和未排序部分的第一个元素交换。</p>
-<p>2.冒泡排序将已排序部分定义在右端，在遍历未排序部分的过程执行交换，将最大元素交换到最右端。</p>
-<p>3.插入排序将已排序部分定义在左端，将未排序部分元的第一个元素插入到已排序部分合适的位置。</p>
-<p><strong>4.1、选择排序</strong></p>
-<ul>
-<li>【选择排序】：最值出现在起始端</li>
-<li>第1趟：在n个数中找到最小(大)数与第一个数交换位置</li>
-<li>第2趟：在剩下n-1个数中找到最小(大)数与第二个数交换位置</li>
-<li>重复这样的操作…依次与第三个、第四个…数交换位置</li>
-<li>第n-1趟，最终可实现数据的升序（降序）排列。</li>
-</ul>
-<figure class="highlight glsl"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> selectSort(<span class="type">int</span> *arr, <span class="type">int</span> <span class="built_in">length</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">length</span> - <span class="number">1</span>; i++) &#123; <span class="comment">//趟数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; <span class="built_in">length</span>; j++) &#123; <span class="comment">//比较次数</span></span><br><span class="line">            <span class="keyword">if</span> (arr[i] &gt; arr[j]) &#123;</span><br><span class="line">                <span class="type">int</span> temp = arr[i];</span><br><span class="line">                arr[i] = arr[j];</span><br><span class="line">                arr[j] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>4.2、冒泡排序</strong></p>
-<ul>
-<li>【冒泡排序】：相邻元素两两比较，比较完一趟，最值出现在末尾</li>
-<li>第1趟：依次比较相邻的两个数，不断交换（小数放前，大数放后）逐个推进，最值最后出现在第n个元素位置</li>
-<li>第2趟：依次比较相邻的两个数，不断交换（小数放前，大数放后）逐个推进，最值最后出现在第n-1个元素位置</li>
-<li>……   ……</li>
-<li>第n-1趟：依次比较相邻的两个数，不断交换（小数放前，大数放后）逐个推进，最值最后出现在第2个元素位置</li>
-</ul>
-<figure class="highlight glsl"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> bublleSort(<span class="type">int</span> *arr, <span class="type">int</span> <span class="built_in">length</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">length</span> - <span class="number">1</span>; i++) &#123; <span class="comment">//趟数</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="built_in">length</span> - i - <span class="number">1</span>; j++) &#123; <span class="comment">//比较次数</span></span><br><span class="line">            <span class="keyword">if</span>(arr[j] &gt; arr[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="type">int</span> temp = arr[j];</span><br><span class="line">                arr[j] = arr[j+<span class="number">1</span>];</span><br><span class="line">                arr[j+<span class="number">1</span>] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="5、折半查找（二分查找）"><a href="#5、折半查找（二分查找）" class="headerlink" title="#### 5、折半查找（二分查找）"></a>#### 5、折半查找（二分查找）</h2><p>折半查找：优化查找时间（不用遍历全部数据）<br>折半查找的原理：</p>
-<ul>
-<li>1&gt; 数组必须是有序的</li>
-<li>2&gt; 必须已知min和max（知道范围）</li>
-<li>3&gt; 动态计算mid的值，取出mid对应的值进行比较</li>
-<li>4&gt; 如果mid对应的值大于要查找的值，那么max要变小为mid-1</li>
-<li>5&gt; 如果mid对应的值小于要查找的值，那么min要变大为mid+1</li>
-</ul>
-<p>// 已知一个有序数组, 和一个key, 要求从数组中找到key对应的索引位置</p>
-<figure class="highlight arcade"><table><tr><td class="code"><pre><span class="line">int findKey(int *arr, int <span class="built_in">length</span>, int key) &#123;</span><br><span class="line">    int <span class="built_in">min</span> = <span class="number">0</span>, <span class="built_in">max</span> = <span class="built_in">length</span> - <span class="number">1</span>, <span class="built_in">mid</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">min</span> &lt;= <span class="built_in">max</span>) &#123;</span><br><span class="line">        <span class="built_in">mid</span> = (<span class="built_in">min</span> + <span class="built_in">max</span>) / <span class="number">2</span>; <span class="comment">//计算中间值</span></span><br><span class="line">        <span class="keyword">if</span> (key &gt; arr[<span class="built_in">mid</span>]) &#123;</span><br><span class="line">            <span class="built_in">min</span> = <span class="built_in">mid</span> + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; arr[<span class="built_in">mid</span>]) &#123;</span><br><span class="line">            <span class="built_in">max</span> = <span class="built_in">mid</span> - <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">mid</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="6、集合结构-线性结构-树形结构-图形结构"><a href="#6、集合结构-线性结构-树形结构-图形结构" class="headerlink" title="6、集合结构 线性结构 树形结构 图形结构"></a>6、集合结构 线性结构 树形结构 图形结构</h2><ul>
-<li>1.1、集合结构 说白了就是一个集合，就是一个圆圈中有很多个元素，元素与元素之间没有任何关系  这个很简单</li>
-<li>1.2、线性结构 说白了就是一个条线上站着很多个人。 这条线不一定是直的。也可以是弯的。也可以是值的 相当于一条线被分成了好几段的样子 （发挥你的想象力）。 线性结构是一对一的关系</li>
-<li>1.3、树形结构 说白了  做开发的肯定或多或少的知道xml 解析  树形结构跟他非常类似。也可以想象成一个金字塔。树形结构是一对多的关系</li>
-<li>1.4、图形结构 这个就比较复杂了。他呢 无穷。无边  无向（没有方向）图形机构 你可以理解为多对多 类似于我们人的交集关系</li>
-</ul>
-<h2 id="7、数据结构的存储"><a href="#7、数据结构的存储" class="headerlink" title="7、数据结构的存储"></a>7、数据结构的存储</h2><p>数据结构的存储一般常用的有两种   顺序存储结构 和 链式存储结构</p>
-<ul>
-<li>2.1  顺序存储结构</li>
-</ul>
-<p>发挥想象力啊。 举个列子。数组。1-2-3-4-5-6-7-8-9-10。这个就是一个顺序存储结构 ，存储是按顺序的  举例说明啊。 栈。做开发的都熟悉。栈是先进后出 ，后进先出的形式 对不对 ？！他的你可以这样理解</p>
-<p>hello world 在栈里面从栈底到栈顶的逻辑依次为 h-e-l-l-o-w-o-r-l-d 这就是顺序存储 再比如 队列 ，队列是先进先出的对吧，从头到尾 h-e-l-l-o-w-o-r-l-d 就是这样排对的</p>
-<ul>
-<li>2.2 链式存储结构</li>
-</ul>
-<p>再次发挥想象力 这个稍微复杂一点 这个图片我一直弄好 ，回头找美工问问，再贴上  例如 还是一个数组</p>
-<p>1-2-3-4-5-6-7-8-9-10  链式存储就不一样了 1(地址)-2(地址)-7(地址)-4(地址)-5(地址)-9(地址)-8(地址)-3(地址)-6(地址)-10(地址)。每个数字后面跟着一个地址 而且存储形式不再是顺序 ，也就说顺序乱了，1（地址） 1后面跟着的这个地址指向的是2，2后面的地址指向的是3，3后面的地址指向是谁你应该清楚了吧。他执行的时候是 1(地址)-2(地址)-3(地址)-4(地址)-5(地址)-6(地址)-7(地址)-8(地址)-9(地址)-10(地址)，但是存储的时候就是完全随机的。明白了？！</p>
-<h2 id="8、单向链表-双向链表-循环链表"><a href="#8、单向链表-双向链表-循环链表" class="headerlink" title="8、单向链表\双向链表\循环链表"></a>8、单向链表\双向链表\循环链表</h2><p>还是举例子。理解最重要。不要去死记硬背 哪些什么。定义啊。逻辑啊。理解才是最重要滴</p>
-<ul>
-<li>3.1 单向链表</li>
-</ul>
-<p>A-&gt;B-&gt;C-&gt;D-&gt;E-&gt;F-&gt;G-&gt;H. 这就是单向链表 H 是头 A 是尾 像一个只有一个头的火车一样 只能一个头拉着跑<br><img src="https://upload-images.jianshu.io/upload_images/13252132-681296a63ca929e4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<ul>
-<li>3.2 双向链表</li>
-</ul>
-<p><img src="https://upload-images.jianshu.io/upload_images/13252132-b3d7480416c4f332.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<blockquote>
-<p>数组和链表区别：<br>数组：数组元素在内存上连续存放，可以通过下标查找元素；插入、删除需要移动大量元素，比较适用于元素很少变化的情况<br>链表：链表中的元素在内存中不是顺序存储的，查找慢，插入、删除只需要对元素指针重新赋值，效率高</p>
-</blockquote>
-<ul>
-<li>3.3 循环链表</li>
-</ul>
-<p>循环链表是与单向链表一样，是一种链式的存储结构，所不同的是，循环链表的最后一个结点的指针是指向该循环链表的第一个结点或者表头结点，从而构成一个环形的链。发挥想象力  A-&gt;B-&gt;C-&gt;D-&gt;E-&gt;F-&gt;G-&gt;H-&gt;A. 绕成一个圈。就像蛇吃自己的这就是循环  不需要去死记硬背哪些理论知识。</p>
-<h2 id="9、二叉树／平衡二叉树"><a href="#9、二叉树／平衡二叉树" class="headerlink" title="9、二叉树／平衡二叉树"></a>9、二叉树／平衡二叉树</h2><ul>
-<li>4.1 什么是二叉树</li>
-</ul>
-<p>树形结构下,两个节点以内 都称之为二叉树 不存在大于2 的节点 分为左子树 右子树 有顺序 不能颠倒 ，懵逼了吧，你肯定会想这是什么玩意，什么左子树右子树 ，都什么跟什么鬼？  现在我以普通话再讲一遍，你把二叉树看成一个人 ，人的头呢就是树的根 ，左子树就是左手，右子树就是右手，左右手可以都没有（残疾嘛，声明一下，绝非歧视残疾朋友，勿怪，勿怪就是举个例子，i am very sorry）  , 左右手呢可以有一个，就是不能颠倒。这样讲应该明白了吧</p>
-<p><strong>二叉树有五种表现形式</strong></p>
-<p>1.空的树（没有节点）可以理解为什么都没 像空气一样<br>2.只有根节点。 （理解一个人只有一个头 其他的什么都没，说的有点恐怖）<br>3.只有左子树 （一个头 一个左手 感觉越来越写不下去了）<br>4.只有右子树<br>5.左右子树都有</p>
-<p>二叉树可以转换成森林 树也可以转换成二叉树。这里就不介绍了 你做项目绝对用不到<br>数据结构大致介绍这么多吧。理解为主, 别死记，死记没什么用</p>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2>]]></content>
-      <categories>
-        <category>iOS</category>
-        <category>iOS算法</category>
-      </categories>
-      <tags>
-        <tag>iOS算法收集</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>iOS动画</title>
-    <url>/iOS/animation/index.html</url>
-    <content><![CDATA[<h2 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h2><p><code>AirBnb</code> 的 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FpcmJuYi9sb3R0aWUtaW9z">Lottie<i class="fa fa-external-link-alt"></i></span></p>
-<h2 id="Layar的认识"><a href="#Layar的认识" class="headerlink" title="Layar的认识"></a>Layar的认识</h2><p><code>layer</code> 层是涂层绘制、渲染、以及动画的完成者，它无法直接的处理触摸事件（也可以捕捉事件）<br><code>layer</code> 包含的方面非常多，常见的属性有 <code>Frame</code>、<code>Bounds</code>、<code>Position</code>、<code>AnchorPoint</code>、<code>Contents</code> 等等。<br>想详细了解 <code>CALayer</code> 以及动画的 ，可以看看这本书 - <span class="exturl" data-url="aHR0cHM6Ly9sZWdhY3kuZ2l0Ym9vay5jb20vYm9vay96c2lzbWUvaW9zLS9kZXRhaWxz">Core-Animation<i class="fa fa-external-link-alt"></i></span></p>
-]]></content>
-      <categories>
-        <category>iOS</category>
-        <category>iOS动画</category>
-      </categories>
-      <tags>
-        <tag>Objetive-C</tag>
       </tags>
   </entry>
   <entry>
@@ -3704,6 +3567,144 @@ mach_init(); // from libc.a
       <tags>
         <tag>RunLoop</tag>
         <tag>RunLoop翻译</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>iOS 算法收集</title>
+    <url>/iOS/algorithm/index.html</url>
+    <content><![CDATA[<h2 id="回溯算法-问题"><a href="#回溯算法-问题" class="headerlink" title="回溯算法 问题"></a>回溯算法 问题</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>题目链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>子集、组合</td>
+<td>子集、子集 II、组合、组合总和、组合总和 II</td>
+</tr>
+<tr>
+<td>全排列</td>
+<td>全排列、全排列 II、字符串的全排列、字母大小写全排列</td>
+</tr>
+<tr>
+<td>搜索</td>
+<td>解数独、单词搜索、N皇后、分割回文串、二进制手表</td>
+</tr>
+</tbody></table>
+<p>参考力扣解法<br><span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS1jbi5jb20vcHJvYmxlbXMvc3Vic2V0cy9zb2x1dGlvbi9jLXpvbmctamllLWxpYW8taHVpLXN1LXdlbi10aS1sZWkteGluZy1kYWktbmktZ2FvLS8=">C++<i class="fa fa-external-link-alt"></i></span><br><span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS1jbi5jb20vcHJvYmxlbXMvc3Vic2V0cy9zb2x1dGlvbi9lci1qaW4temhpLXdlaS16aHUtZ2UtbWVpLWp1LWRmc3Nhbi1jaG9uZy1zaS1sdS05Yy8=">java<i class="fa fa-external-link-alt"></i></span></p>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>①递归树<br>②找结束条件<br>③找准选择列表<br>④判断是否需要剪枝<br>⑤做出选择<br>⑥撤销选择</p>
+<blockquote>
+<p>总结：可以发现“排列”类型问题和“子集、组合”问题不同在于：“排列”问题使用used数组来标识选择列表，而“子集、组合”问题则使用start参数</p>
+</blockquote>
+<h2 id="1、不用中间变量-用两种方法交换A和B的值"><a href="#1、不用中间变量-用两种方法交换A和B的值" class="headerlink" title="1、不用中间变量,用两种方法交换A和B的值"></a><strong>1、不用中间变量,用两种方法交换A和B的值</strong></h2><figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1.中间变量</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">   <span class="type">int</span> temp = a;</span><br><span class="line">   a = b;</span><br><span class="line">   b = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.加法</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">   a = a + b;</span><br><span class="line">   b = a - b;</span><br><span class="line">   a = a - b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3.异或（相同为0，不同为1. 可以理解为不进位加法）</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">   a = a ^ b;</span><br><span class="line">   b = a ^ b;</span><br><span class="line">   a = a ^ b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、求最大公约数"><a href="#2、求最大公约数" class="headerlink" title="2、求最大公约数"></a><strong>2、求最大公约数</strong></h2><figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** 1.直接遍历法 */</span></span><br><span class="line"><span class="built_in">int</span> max<span class="constructor">CommonDivisor(<span class="params">int</span> <span class="params">a</span>, <span class="params">int</span> <span class="params">b</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">int</span> max = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;=b; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a % i<span class="operator"> == </span><span class="number">0</span><span class="operator"> &amp;&amp; </span>b % i<span class="operator"> == </span><span class="number">0</span>) &#123;</span><br><span class="line">            max = i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return max;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/** 2.辗转相除法 */</span></span><br><span class="line"><span class="built_in">int</span> max<span class="constructor">CommonDivisor(<span class="params">int</span> <span class="params">a</span>, <span class="params">int</span> <span class="params">b</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">int</span> r;</span><br><span class="line">    <span class="keyword">while</span>(a % b &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        r = a % b;</span><br><span class="line">        a = b;</span><br><span class="line">        b = r;</span><br><span class="line">    &#125;</span><br><span class="line">    return b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 扩展：最小公倍数 = (a * b)/最大公约数</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3、模拟栈操作"><a href="#3、模拟栈操作" class="headerlink" title="3、模拟栈操作"></a><strong>3、模拟栈操作</strong></h2><ul>
+<li>栈是一种数据结构，特点：先进后出 -</li>
+<li>练习：使用全局变量模拟栈的操作</li>
+</ul>
+<p><strong>#include &lt;stdio.h&gt;<br>#include &lt;stdbool.h&gt;<br>#include &lt;assert.h&gt;</strong></p>
+<p>//保护全局变量：在全局变量前加static后，这个全局变量就只能在本文件中使用<br>static int data[1024];//栈最多能保存1024个数据<br>static int count = 0;//目前已经放了多少个数(相当于栈顶位置)</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//数据入栈 push</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push</span>(<span class="params"><span class="built_in">int</span> x</span>)</span>&#123;</span><br><span class="line">    assert(!full());<span class="comment">//防止数组越界</span></span><br><span class="line">    data[count++] = x;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//数据出栈 pop</span></span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">pop</span>()</span>&#123;</span><br><span class="line">    assert(!empty());</span><br><span class="line">    <span class="keyword">return</span> data[--count];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//查看栈顶元素 top</span></span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">top</span>()</span>&#123;</span><br><span class="line">    assert(!empty());</span><br><span class="line">    <span class="keyword">return</span> data[count<span class="number">-1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//查询栈满 full</span></span><br><span class="line"><span class="function"><span class="built_in">bool</span> <span class="title">full</span>()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(count &gt;= <span class="number">1024</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//查询栈空 empty</span></span><br><span class="line"><span class="function"><span class="built_in">bool</span> <span class="title">empty</span>()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(count &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">main</span>()</span>&#123;</span><br><span class="line">    <span class="comment">//入栈</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++) &#123;</span><br><span class="line">        push(i);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">//出栈</span></span><br><span class="line">    <span class="keyword">while</span>(!empty())&#123;</span><br><span class="line">        printf(<span class="string">&quot;%d &quot;</span>, top()); <span class="comment">//栈顶元素</span></span><br><span class="line">        pop(); <span class="comment">//出栈</span></span><br><span class="line">    &#125;</span><br><span class="line">    printf(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4、排序算法"><a href="#4、排序算法" class="headerlink" title="4、排序算法"></a><strong>4、排序算法</strong></h2><p>选择排序、冒泡排序、插入排序三种排序算法可以总结为如下：<br>都将数组分为已排序部分和未排序部分。</p>
+<p>1.选择排序将已排序部分定义在左端，然后选择未排序部分的最小元素和未排序部分的第一个元素交换。</p>
+<p>2.冒泡排序将已排序部分定义在右端，在遍历未排序部分的过程执行交换，将最大元素交换到最右端。</p>
+<p>3.插入排序将已排序部分定义在左端，将未排序部分元的第一个元素插入到已排序部分合适的位置。</p>
+<p><strong>4.1、选择排序</strong></p>
+<ul>
+<li>【选择排序】：最值出现在起始端</li>
+<li>第1趟：在n个数中找到最小(大)数与第一个数交换位置</li>
+<li>第2趟：在剩下n-1个数中找到最小(大)数与第二个数交换位置</li>
+<li>重复这样的操作…依次与第三个、第四个…数交换位置</li>
+<li>第n-1趟，最终可实现数据的升序（降序）排列。</li>
+</ul>
+<figure class="highlight glsl"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> selectSort(<span class="type">int</span> *arr, <span class="type">int</span> <span class="built_in">length</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">length</span> - <span class="number">1</span>; i++) &#123; <span class="comment">//趟数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; <span class="built_in">length</span>; j++) &#123; <span class="comment">//比较次数</span></span><br><span class="line">            <span class="keyword">if</span> (arr[i] &gt; arr[j]) &#123;</span><br><span class="line">                <span class="type">int</span> temp = arr[i];</span><br><span class="line">                arr[i] = arr[j];</span><br><span class="line">                arr[j] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>4.2、冒泡排序</strong></p>
+<ul>
+<li>【冒泡排序】：相邻元素两两比较，比较完一趟，最值出现在末尾</li>
+<li>第1趟：依次比较相邻的两个数，不断交换（小数放前，大数放后）逐个推进，最值最后出现在第n个元素位置</li>
+<li>第2趟：依次比较相邻的两个数，不断交换（小数放前，大数放后）逐个推进，最值最后出现在第n-1个元素位置</li>
+<li>……   ……</li>
+<li>第n-1趟：依次比较相邻的两个数，不断交换（小数放前，大数放后）逐个推进，最值最后出现在第2个元素位置</li>
+</ul>
+<figure class="highlight glsl"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> bublleSort(<span class="type">int</span> *arr, <span class="type">int</span> <span class="built_in">length</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">length</span> - <span class="number">1</span>; i++) &#123; <span class="comment">//趟数</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="built_in">length</span> - i - <span class="number">1</span>; j++) &#123; <span class="comment">//比较次数</span></span><br><span class="line">            <span class="keyword">if</span>(arr[j] &gt; arr[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="type">int</span> temp = arr[j];</span><br><span class="line">                arr[j] = arr[j+<span class="number">1</span>];</span><br><span class="line">                arr[j+<span class="number">1</span>] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5、折半查找（二分查找）"><a href="#5、折半查找（二分查找）" class="headerlink" title="#### 5、折半查找（二分查找）"></a>#### 5、折半查找（二分查找）</h2><p>折半查找：优化查找时间（不用遍历全部数据）<br>折半查找的原理：</p>
+<ul>
+<li>1&gt; 数组必须是有序的</li>
+<li>2&gt; 必须已知min和max（知道范围）</li>
+<li>3&gt; 动态计算mid的值，取出mid对应的值进行比较</li>
+<li>4&gt; 如果mid对应的值大于要查找的值，那么max要变小为mid-1</li>
+<li>5&gt; 如果mid对应的值小于要查找的值，那么min要变大为mid+1</li>
+</ul>
+<p>// 已知一个有序数组, 和一个key, 要求从数组中找到key对应的索引位置</p>
+<figure class="highlight arcade"><table><tr><td class="code"><pre><span class="line">int findKey(int *arr, int <span class="built_in">length</span>, int key) &#123;</span><br><span class="line">    int <span class="built_in">min</span> = <span class="number">0</span>, <span class="built_in">max</span> = <span class="built_in">length</span> - <span class="number">1</span>, <span class="built_in">mid</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">min</span> &lt;= <span class="built_in">max</span>) &#123;</span><br><span class="line">        <span class="built_in">mid</span> = (<span class="built_in">min</span> + <span class="built_in">max</span>) / <span class="number">2</span>; <span class="comment">//计算中间值</span></span><br><span class="line">        <span class="keyword">if</span> (key &gt; arr[<span class="built_in">mid</span>]) &#123;</span><br><span class="line">            <span class="built_in">min</span> = <span class="built_in">mid</span> + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; arr[<span class="built_in">mid</span>]) &#123;</span><br><span class="line">            <span class="built_in">max</span> = <span class="built_in">mid</span> - <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">mid</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6、集合结构-线性结构-树形结构-图形结构"><a href="#6、集合结构-线性结构-树形结构-图形结构" class="headerlink" title="6、集合结构 线性结构 树形结构 图形结构"></a>6、集合结构 线性结构 树形结构 图形结构</h2><ul>
+<li>1.1、集合结构 说白了就是一个集合，就是一个圆圈中有很多个元素，元素与元素之间没有任何关系  这个很简单</li>
+<li>1.2、线性结构 说白了就是一个条线上站着很多个人。 这条线不一定是直的。也可以是弯的。也可以是值的 相当于一条线被分成了好几段的样子 （发挥你的想象力）。 线性结构是一对一的关系</li>
+<li>1.3、树形结构 说白了  做开发的肯定或多或少的知道xml 解析  树形结构跟他非常类似。也可以想象成一个金字塔。树形结构是一对多的关系</li>
+<li>1.4、图形结构 这个就比较复杂了。他呢 无穷。无边  无向（没有方向）图形机构 你可以理解为多对多 类似于我们人的交集关系</li>
+</ul>
+<h2 id="7、数据结构的存储"><a href="#7、数据结构的存储" class="headerlink" title="7、数据结构的存储"></a>7、数据结构的存储</h2><p>数据结构的存储一般常用的有两种   顺序存储结构 和 链式存储结构</p>
+<ul>
+<li>2.1  顺序存储结构</li>
+</ul>
+<p>发挥想象力啊。 举个列子。数组。1-2-3-4-5-6-7-8-9-10。这个就是一个顺序存储结构 ，存储是按顺序的  举例说明啊。 栈。做开发的都熟悉。栈是先进后出 ，后进先出的形式 对不对 ？！他的你可以这样理解</p>
+<p>hello world 在栈里面从栈底到栈顶的逻辑依次为 h-e-l-l-o-w-o-r-l-d 这就是顺序存储 再比如 队列 ，队列是先进先出的对吧，从头到尾 h-e-l-l-o-w-o-r-l-d 就是这样排对的</p>
+<ul>
+<li>2.2 链式存储结构</li>
+</ul>
+<p>再次发挥想象力 这个稍微复杂一点 这个图片我一直弄好 ，回头找美工问问，再贴上  例如 还是一个数组</p>
+<p>1-2-3-4-5-6-7-8-9-10  链式存储就不一样了 1(地址)-2(地址)-7(地址)-4(地址)-5(地址)-9(地址)-8(地址)-3(地址)-6(地址)-10(地址)。每个数字后面跟着一个地址 而且存储形式不再是顺序 ，也就说顺序乱了，1（地址） 1后面跟着的这个地址指向的是2，2后面的地址指向的是3，3后面的地址指向是谁你应该清楚了吧。他执行的时候是 1(地址)-2(地址)-3(地址)-4(地址)-5(地址)-6(地址)-7(地址)-8(地址)-9(地址)-10(地址)，但是存储的时候就是完全随机的。明白了？！</p>
+<h2 id="8、单向链表-双向链表-循环链表"><a href="#8、单向链表-双向链表-循环链表" class="headerlink" title="8、单向链表\双向链表\循环链表"></a>8、单向链表\双向链表\循环链表</h2><p>还是举例子。理解最重要。不要去死记硬背 哪些什么。定义啊。逻辑啊。理解才是最重要滴</p>
+<ul>
+<li>3.1 单向链表</li>
+</ul>
+<p>A-&gt;B-&gt;C-&gt;D-&gt;E-&gt;F-&gt;G-&gt;H. 这就是单向链表 H 是头 A 是尾 像一个只有一个头的火车一样 只能一个头拉着跑<br><img src="https://upload-images.jianshu.io/upload_images/13252132-681296a63ca929e4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<ul>
+<li>3.2 双向链表</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/13252132-b3d7480416c4f332.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<blockquote>
+<p>数组和链表区别：<br>数组：数组元素在内存上连续存放，可以通过下标查找元素；插入、删除需要移动大量元素，比较适用于元素很少变化的情况<br>链表：链表中的元素在内存中不是顺序存储的，查找慢，插入、删除只需要对元素指针重新赋值，效率高</p>
+</blockquote>
+<ul>
+<li>3.3 循环链表</li>
+</ul>
+<p>循环链表是与单向链表一样，是一种链式的存储结构，所不同的是，循环链表的最后一个结点的指针是指向该循环链表的第一个结点或者表头结点，从而构成一个环形的链。发挥想象力  A-&gt;B-&gt;C-&gt;D-&gt;E-&gt;F-&gt;G-&gt;H-&gt;A. 绕成一个圈。就像蛇吃自己的这就是循环  不需要去死记硬背哪些理论知识。</p>
+<h2 id="9、二叉树／平衡二叉树"><a href="#9、二叉树／平衡二叉树" class="headerlink" title="9、二叉树／平衡二叉树"></a>9、二叉树／平衡二叉树</h2><ul>
+<li>4.1 什么是二叉树</li>
+</ul>
+<p>树形结构下,两个节点以内 都称之为二叉树 不存在大于2 的节点 分为左子树 右子树 有顺序 不能颠倒 ，懵逼了吧，你肯定会想这是什么玩意，什么左子树右子树 ，都什么跟什么鬼？  现在我以普通话再讲一遍，你把二叉树看成一个人 ，人的头呢就是树的根 ，左子树就是左手，右子树就是右手，左右手可以都没有（残疾嘛，声明一下，绝非歧视残疾朋友，勿怪，勿怪就是举个例子，i am very sorry）  , 左右手呢可以有一个，就是不能颠倒。这样讲应该明白了吧</p>
+<p><strong>二叉树有五种表现形式</strong></p>
+<p>1.空的树（没有节点）可以理解为什么都没 像空气一样<br>2.只有根节点。 （理解一个人只有一个头 其他的什么都没，说的有点恐怖）<br>3.只有左子树 （一个头 一个左手 感觉越来越写不下去了）<br>4.只有右子树<br>5.左右子树都有</p>
+<p>二叉树可以转换成森林 树也可以转换成二叉树。这里就不介绍了 你做项目绝对用不到<br>数据结构大致介绍这么多吧。理解为主, 别死记，死记没什么用</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2>]]></content>
+      <categories>
+        <category>iOS</category>
+        <category>iOS算法</category>
+      </categories>
+      <tags>
+        <tag>iOS算法收集</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>iOS动画</title>
+    <url>/iOS/animation/index.html</url>
+    <content><![CDATA[<h2 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h2><p><code>AirBnb</code> 的 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FpcmJuYi9sb3R0aWUtaW9z">Lottie<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="Layar的认识"><a href="#Layar的认识" class="headerlink" title="Layar的认识"></a>Layar的认识</h2><p><code>layer</code> 层是涂层绘制、渲染、以及动画的完成者，它无法直接的处理触摸事件（也可以捕捉事件）<br><code>layer</code> 包含的方面非常多，常见的属性有 <code>Frame</code>、<code>Bounds</code>、<code>Position</code>、<code>AnchorPoint</code>、<code>Contents</code> 等等。<br>想详细了解 <code>CALayer</code> 以及动画的 ，可以看看这本书 - <span class="exturl" data-url="aHR0cHM6Ly9sZWdhY3kuZ2l0Ym9vay5jb20vYm9vay96c2lzbWUvaW9zLS9kZXRhaWxz">Core-Animation<i class="fa fa-external-link-alt"></i></span></p>
+]]></content>
+      <categories>
+        <category>iOS</category>
+        <category>iOS动画</category>
+      </categories>
+      <tags>
+        <tag>Objetive-C</tag>
       </tags>
   </entry>
   <entry>
@@ -5216,6 +5217,43 @@ mach_init(); // from libc.a
       </tags>
   </entry>
   <entry>
+    <title>内存管理</title>
+    <url>/iOS/memorymanagerment/memory.html</url>
+    <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9jbGFuZy5sbHZtLm9yZy9kb2NzL0F1dG9tYXRpY1JlZmVyZW5jZUNvdW50aW5nLmh0bWwjYXV0b3JlbGVhc2Vwb29s">Clang ARC的文档<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="autoReleasePool-什么时候释放"><a href="#autoReleasePool-什么时候释放" class="headerlink" title="autoReleasePool 什么时候释放?"></a><code>autoReleasePool</code> 什么时候释放?</h2><p><code>App</code>启动后，苹果在主线程 <code>RunLoop</code> 里注册了两个 <code>Observer</code>，其回调都是 <code>_wrapRunLoopWithAutoreleasePoolHandler()</code>。</p>
+<p>第一个 <code>Observer</code> 监视的事件是 <code>Entry(即将进入Loop)</code>，其回调内会调用 <code>_objc_autoreleasePoolPush()</code> 创建自动释放池。其 <code>order</code> 是 <code>-2147483647</code>，优先级最高，保证创建释放池发生在其他所有回调之前。</p>
+<p>第二个 <code>Observer</code> 监视了两个事件： <code>BeforeWaiting</code>(准备进入休眠) 时调用<code>_objc_autoreleasePoolPop()</code>  和 <code>_objc_autoreleasePoolPush()</code> 释放旧的池并创建新池；<code>Exit</code>(即将退出Loop) 时调用 <code>_objc_autoreleasePoolPop()</code> 来释放自动释放池。这个 <code>Observer</code> 的 <code>order</code> 是 <code>2147483647</code>，优先级最低，保证其释放池子发生在其他所有回调之后。</p>
+<p>在主线程执行的代码，通常是写在诸如事件回调、<code>Timer</code>回调内的。这些回调会被 <code>RunLoop</code> 创建好的 <code>AutoreleasePool</code> 环绕着，所以不会出现内存泄漏，开发者也不必显示创建 <code>Pool</code> 了。</p>
+<h2 id="在-Obj-C-中，如何检测内存泄漏？你知道哪些方式？"><a href="#在-Obj-C-中，如何检测内存泄漏？你知道哪些方式？" class="headerlink" title="在 Obj-C 中，如何检测内存泄漏？你知道哪些方式？"></a>在 <code>Obj-C</code> 中，如何检测内存泄漏？你知道哪些方式？</h2><p>目前我知道的方式有以下几种</p>
+<ul>
+<li>Memory Leaks</li>
+<li>Alloctions</li>
+<li>Analyse</li>
+<li>Debug Memory Graph</li>
+<li>MLeaksFinder</li>
+</ul>
+<p>泄露的内存主要有以下两种：</p>
+<ul>
+<li><code>Laek Memory</code> 这种是忘记 <code>Release</code> 操作所泄露的内存。</li>
+<li><code>Abandon Memory</code> 这种是循环引用，无法释放掉的内存。</li>
+</ul>
+<p>上面所说的五种方式，其实前四种都比较麻烦，需要不断地调试运行，第五种是腾讯阅读团队出品，效果好一些，感兴趣的可以看一下这两篇文章：</p>
+<ul>
+<li><span class="exturl" data-url="aHR0cDovL3dlcmVhZHRlYW0uZ2l0aHViLmlvLzIwMTYvMDIvMjIvTUxlYWtzRmluZGVyLw==">MLeaksFinder：精准 iOS 内存泄露检测工具<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cDovL3dlcmVhZHRlYW0uZ2l0aHViLmlvLzIwMTYvMDcvMjAvTUxlYWtzRmluZGVyMi8=">MLeaksFinder 新特性<i class="fa fa-external-link-alt"></i></span></li>
+</ul>
+]]></content>
+      <categories>
+        <category>iOS</category>
+        <category>iOS内存管理</category>
+      </categories>
+      <tags>
+        <tag>iOS</tag>
+        <tag>Objective-C</tag>
+        <tag>iOS内存管理</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Mach微内核简介</title>
     <url>/iOS/kernelarchitecture/mach.html</url>
     <content><![CDATA[<h1 id="Mach"><a href="#Mach" class="headerlink" title="Mach"></a>Mach</h1><p>OS X内核的基本服务和基本类型都基于Mach 3.0。苹果对Mach进行了修改和扩展，以更好地满足OS X的功能和性能目标。</p>
@@ -5520,42 +5558,6 @@ mach_init(); // from libc.a
         <tag>操作系统</tag>
         <tag>系统架构</tag>
         <tag>XNU:App如何加载</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>内存管理</title>
-    <url>/iOS/memorymanagerment/memory.html</url>
-    <content><![CDATA[<h2 id="autoReleasePool-什么时候释放"><a href="#autoReleasePool-什么时候释放" class="headerlink" title="autoReleasePool 什么时候释放?"></a><code>autoReleasePool</code> 什么时候释放?</h2><p><code>App</code>启动后，苹果在主线程 <code>RunLoop</code> 里注册了两个 <code>Observer</code>，其回调都是 <code>_wrapRunLoopWithAutoreleasePoolHandler()</code>。</p>
-<p>第一个 <code>Observer</code> 监视的事件是 <code>Entry(即将进入Loop)</code>，其回调内会调用 <code>_objc_autoreleasePoolPush()</code> 创建自动释放池。其 <code>order</code> 是 <code>-2147483647</code>，优先级最高，保证创建释放池发生在其他所有回调之前。</p>
-<p>第二个 <code>Observer</code> 监视了两个事件： <code>BeforeWaiting</code>(准备进入休眠) 时调用<code>_objc_autoreleasePoolPop()</code>  和 <code>_objc_autoreleasePoolPush()</code> 释放旧的池并创建新池；<code>Exit</code>(即将退出Loop) 时调用 <code>_objc_autoreleasePoolPop()</code> 来释放自动释放池。这个 <code>Observer</code> 的 <code>order</code> 是 <code>2147483647</code>，优先级最低，保证其释放池子发生在其他所有回调之后。</p>
-<p>在主线程执行的代码，通常是写在诸如事件回调、<code>Timer</code>回调内的。这些回调会被 <code>RunLoop</code> 创建好的 <code>AutoreleasePool</code> 环绕着，所以不会出现内存泄漏，开发者也不必显示创建 <code>Pool</code> 了。</p>
-<h2 id="在-Obj-C-中，如何检测内存泄漏？你知道哪些方式？"><a href="#在-Obj-C-中，如何检测内存泄漏？你知道哪些方式？" class="headerlink" title="在 Obj-C 中，如何检测内存泄漏？你知道哪些方式？"></a>在 <code>Obj-C</code> 中，如何检测内存泄漏？你知道哪些方式？</h2><p>目前我知道的方式有以下几种</p>
-<ul>
-<li>Memory Leaks</li>
-<li>Alloctions</li>
-<li>Analyse</li>
-<li>Debug Memory Graph</li>
-<li>MLeaksFinder</li>
-</ul>
-<p>泄露的内存主要有以下两种：</p>
-<ul>
-<li><code>Laek Memory</code> 这种是忘记 <code>Release</code> 操作所泄露的内存。</li>
-<li><code>Abandon Memory</code> 这种是循环引用，无法释放掉的内存。</li>
-</ul>
-<p>上面所说的五种方式，其实前四种都比较麻烦，需要不断地调试运行，第五种是腾讯阅读团队出品，效果好一些，感兴趣的可以看一下这两篇文章：</p>
-<ul>
-<li><span class="exturl" data-url="aHR0cDovL3dlcmVhZHRlYW0uZ2l0aHViLmlvLzIwMTYvMDIvMjIvTUxlYWtzRmluZGVyLw==">MLeaksFinder：精准 iOS 内存泄露检测工具<i class="fa fa-external-link-alt"></i></span></li>
-<li><span class="exturl" data-url="aHR0cDovL3dlcmVhZHRlYW0uZ2l0aHViLmlvLzIwMTYvMDcvMjAvTUxlYWtzRmluZGVyMi8=">MLeaksFinder 新特性<i class="fa fa-external-link-alt"></i></span></li>
-</ul>
-]]></content>
-      <categories>
-        <category>iOS</category>
-        <category>iOS内存管理</category>
-      </categories>
-      <tags>
-        <tag>iOS</tag>
-        <tag>Objective-C</tag>
-        <tag>iOS内存管理</tag>
       </tags>
   </entry>
   <entry>

@@ -21,15 +21,15 @@
     var CONFIG = {"hostname":"wangkejie.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="首先是YY大神的理解Autoreleasepool下面是收集的RunLoop相关知识点，一些应用场景点击这里查看 官方文档翻译 一、RunLoop概念RunLoop是通过内部维护的事件循环(Event Loop)来对事件&#x2F;消息进行管理的一个对象。 1、没有消息处理时，休眠已避免资源占用，由用户态切换到内核态(CPU-内核态和用户态)2、有消息需要处理时，立刻被唤醒，由内核态切换到用户态 RunLo">
+  <meta name="description" content="首先是YY大神的理解runloop下面是收集的RunLoop相关知识点，一些应用场景点击这里查看 官方文档翻译 一、RunLoop概念RunLoop是通过内部维护的事件循环(Event Loop)来对事件&#x2F;消息进行管理的一个对象。 1、没有消息处理时，休眠已避免资源占用，由用户态切换到内核态(CPU-内核态和用户态)2、有消息需要处理时，立刻被唤醒，由内核态切换到用户态 RunLoop源码 NSR">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RunLoop相关知识点收集">
 <meta property="og:url" content="https://wangkejie.com/iOS/RunLoop/index.html">
 <meta property="og:site_name" content="王科杰">
-<meta property="og:description" content="首先是YY大神的理解Autoreleasepool下面是收集的RunLoop相关知识点，一些应用场景点击这里查看 官方文档翻译 一、RunLoop概念RunLoop是通过内部维护的事件循环(Event Loop)来对事件&#x2F;消息进行管理的一个对象。 1、没有消息处理时，休眠已避免资源占用，由用户态切换到内核态(CPU-内核态和用户态)2、有消息需要处理时，立刻被唤醒，由内核态切换到用户态 RunLo">
+<meta property="og:description" content="首先是YY大神的理解runloop下面是收集的RunLoop相关知识点，一些应用场景点击这里查看 官方文档翻译 一、RunLoop概念RunLoop是通过内部维护的事件循环(Event Loop)来对事件&#x2F;消息进行管理的一个对象。 1、没有消息处理时，休眠已避免资源占用，由用户态切换到内核态(CPU-内核态和用户态)2、有消息需要处理时，立刻被唤醒，由内核态切换到用户态 RunLoop源码 NSR">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2017-09-15T03:26:39.000Z">
-<meta property="article:modified_time" content="2023-01-30T07:11:36.917Z">
+<meta property="article:modified_time" content="2023-02-01T03:18:30.838Z">
 <meta property="article:author" content="Jack Wang">
 <meta property="article:tag" content="RunLoop">
 <meta name="twitter:card" content="summary">
@@ -271,7 +271,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>首先是YY大神的理解<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmliaXJlbWUuY29tLzIwMTUvMDUvMTgvcnVubG9vcC8=">Autoreleasepool<i class="fa fa-external-link-alt"></i></span><br>下面是收集的RunLoop相关知识点，一些应用场景<a href="./iOS/RunLoop/runloop.html">点击这里查看</a></p>
+        <p>首先是YY大神的理解<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmliaXJlbWUuY29tLzIwMTUvMDUvMTgvcnVubG9vcC8=">runloop<i class="fa fa-external-link-alt"></i></span><br>下面是收集的RunLoop相关知识点，一些应用场景<a href="./iOS/RunLoop/runloop.html">点击这里查看</a></p>
 <p><a href="./iOS/RunLoop/runloopfanyi.html">官方文档翻译</a></p>
 <h2 id="一、RunLoop概念"><a href="#一、RunLoop概念" class="headerlink" title="一、RunLoop概念"></a>一、RunLoop概念</h2><p>RunLoop是通过内部维护的<code>事件循环(Event Loop)</code>来对<code>事件/消息进行管理</code>的一个对象。</p>
 <p>1、没有消息处理时，休眠已避免资源占用，由用户态切换到内核态(CPU-内核态和用户态)<br>2、有消息需要处理时，立刻被唤醒，由内核态切换到用户态</p>

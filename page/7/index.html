@@ -1816,7 +1816,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="autoReleasePool-什么时候释放"><a href="#autoReleasePool-什么时候释放" class="headerlink" title="autoReleasePool 什么时候释放?"></a><code>autoReleasePool</code> 什么时候释放?</h2><p><code>App</code>启动后，苹果在主线程 <code>RunLoop</code> 里注册了两个 <code>Observer</code>，其回调都是 <code>_wrapRunLoopWithAutoreleasePoolHandler()</code>。</p>
+          <p><span class="exturl" data-url="aHR0cHM6Ly9jbGFuZy5sbHZtLm9yZy9kb2NzL0F1dG9tYXRpY1JlZmVyZW5jZUNvdW50aW5nLmh0bWwjYXV0b3JlbGVhc2Vwb29s">Clang ARC的文档<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="autoReleasePool-什么时候释放"><a href="#autoReleasePool-什么时候释放" class="headerlink" title="autoReleasePool 什么时候释放?"></a><code>autoReleasePool</code> 什么时候释放?</h2><p><code>App</code>启动后，苹果在主线程 <code>RunLoop</code> 里注册了两个 <code>Observer</code>，其回调都是 <code>_wrapRunLoopWithAutoreleasePoolHandler()</code>。</p>
 <p>第一个 <code>Observer</code> 监视的事件是 <code>Entry(即将进入Loop)</code>，其回调内会调用 <code>_objc_autoreleasePoolPush()</code> 创建自动释放池。其 <code>order</code> 是 <code>-2147483647</code>，优先级最高，保证创建释放池发生在其他所有回调之前。</p>
 <p>第二个 <code>Observer</code> 监视了两个事件： <code>BeforeWaiting</code>(准备进入休眠) 时调用<code>_objc_autoreleasePoolPop()</code>  和 <code>_objc_autoreleasePoolPush()</code> 释放旧的池并创建新池；<code>Exit</code>(即将退出Loop) 时调用 <code>_objc_autoreleasePoolPop()</code> 来释放自动释放池。这个 <code>Observer</code> 的 <code>order</code> 是 <code>2147483647</code>，优先级最低，保证其释放池子发生在其他所有回调之后。</p>
 <p>在主线程执行的代码，通常是写在诸如事件回调、<code>Timer</code>回调内的。这些回调会被 <code>RunLoop</code> 创建好的 <code>AutoreleasePool</code> 环绕着，所以不会出现内存泄漏，开发者也不必显示创建 <code>Pool</code> 了。</p>
